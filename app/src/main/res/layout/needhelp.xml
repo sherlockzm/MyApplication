@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
+
+<TableRow>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_simple_title" />
+
+    <EditText android:id="@+id/edt_simple_title" android:layout_height="wrap_content" android:layout_width="0dp" android:layout_weight="1" android:hint="简要说明求助内容" android:maxLines="1"/>
+
+</TableRow>
+<TableRow>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_pay" />
+
+    <EditText android:id="@+id/edt_pay" android:layout_height="wrap_content" android:layout_width="0dp" android:layout_weight="1" android:hint="愿意付出的酬劳" android:maxLines="1"/>
+
+</TableRow>
+<TableRow>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_context" />
+
+    <EditText android:id="@+id/edt_detail" android:layout_height="wrap_content" android:layout_width="0dp" android:layout_weight="1" android:hint="详细的求助说明" android:maxLines="20"/>
+
+</TableRow>
+    <Button android:id="@+id/btn_submit" android:text="@string/btn_submit" />
+
+</TableLayout>

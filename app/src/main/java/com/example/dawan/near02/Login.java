@@ -1,0 +1,152 @@
+package com.example.dawan.near02;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.andreabaccega.widget.FormEditText;
+
+import cn.bmob.v3.BmobSMS;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.LogInListener;
+import cn.bmob.v3.listener.RequestSMSCodeListener;
+
+/**
+ * Created by dawan on 2016/2/19.
+ */
+public class Login extends AppCompatActivity {
+
+    //    private EditText edt_tel;
+    private FormEditText edt_tel;
+    private EditText edt_pwd;
+    private EditText edt_ver;
+    private Button btn_getVer;
+    private Button btn_log;
+    private Button btn_reg;
+
+    private Boolean style;
+
+    //点击了获取验证码则密码框不可用
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.login);
+
+        edt_tel = (FormEditText) findViewById(R.id.edt_login_tel);
+//        edt_tel = (EditText)findViewById(R.id.edt_login_tel);
+        edt_pwd = (EditText) findViewById(R.id.edt_login_pwd);
+        edt_ver = (EditText) findViewById(R.id.edt_login_ver);
+        btn_getVer = (Button) findViewById(R.id.btn_getVer_login);
+        btn_log = (Button) findViewById(R.id.btn_login);
+        btn_reg = (Button) findViewById(R.id.btn_reg_in_login);
+        style = false;
+
+//        final FormEditText ver_tel = (FormEditText) findViewById(R.id.edt_login_tel);
+
+        btn_getVer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String telNum = edt_tel.getText().toString();
+                if (verificationInput(new FormEditText[]{edt_tel})) {
+
+                    BmobSMS.requestSMSCode(Login.this, telNum, "测试短信", new RequestSMSCodeListener() {
+                        @Override
+                        public void done(Integer integer, BmobException e) {
+                            if (e == null) {
+                                Log.e("Smile", "短信id" + integer);
+                                style = true;
+                                edt_pwd.setFocusable(false);
+                                edt_pwd.setText("请在下方输入收到的验证码.");
+
+                            }
+                        }
+                    });
+                } else {
+                    Log.e("TEL", "NOT OK!");
+                    Toast.makeText(Login.this, "请输入正确的电话号码", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btn_log.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//验证数据有效性
+                if (verificationInput(new FormEditText[]{edt_tel})) {
+                    String telNum = edt_tel.getText().toString();
+                    String pwd = UserRegister.MD5(edt_pwd.getText().toString());
+                    String ver = edt_ver.getText().toString();
+                    if (style) {
+                        BmobUser.loginBySMSCode(Login.this, telNum, ver, new LogInListener<User>() {
+                            @Override
+                            public void done(User user, BmobException e) {
+                                if (user != null) {
+                                    Log.e("Login", "Succese");
+                                    finish();
+                                } else {
+                                    Log.e("Login", "Fail");
+                                    Toast.makeText(Login.this, "账号或密码有错", Toast.LENGTH_SHORT).show();
+                                    edt_tel.setText("");
+                                    edt_pwd.setText("");
+                                    edt_ver.setText("");
+                                }
+                            }
+                        });
+                    } else {
+
+                        BmobUser.loginByAccount(Login.this, telNum, pwd, new LogInListener<User>() {
+                            @Override
+                            public void done(User user, BmobException e) {
+                                if (user != null) {
+                                    Log.e("Login", "Done!");
+                                    finish();
+                                }else {
+                                    Toast.makeText(Login.this, "账号或密码有误，请重新输入。", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }else {
+                    Log.e("TEL", "NOT OK!");
+                    Toast.makeText(Login.this, "请输入正确的电话号码", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+        });
+
+        btn_reg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login.this, UserRegister.class);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    public Boolean verificationInput(FormEditText arg[]) {
+//        FormEditText[] allFields    = arg;
+
+
+        boolean allValid = true;
+        for (FormEditText field : arg) {
+            allValid = field.testValidity() && allValid;
+        }
+
+        if (allValid) {
+            return true;//验证通过
+        } else {
+            return false;
+            // EditText are going to appear with an exclamation mark and an explicative message.
+        }
+
+
+    }
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <TableRow>
+<TextView android:text="@string/tv_simple_title" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+<TextView android:id="@+id/tv_show_title" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </TableRow>
+    <TableRow>
+<TextView android:text="@string/tv_pay" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+<TextView android:id="@+id/tv_show_pay" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </TableRow>
+    <TableRow>
+    <TextView android:text="@string/tv_context" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+<TextView android:id="@+id/tv_show_detail" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+    </TableRow>
+    <TableRow>
+    <Button android:id="@+id/btn_iHelp" android:text="@string/btn_iHelp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <Button android:id="@+id/btn_notHelp" android:text="@string/btn_notHelp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </TableRow>
+</TableLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:whatever="http://schemas.android.com/apk/res-auto">
+<TableRow>
+    <TextView android:text="@string/tv_name" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <com.andreabaccega.widget.FormEditText whatever:testType="nocheck"
+        android:id="@+id/edt_name" android:hint="请输入昵称,不可修改" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" />
+</TableRow>
+    <TableRow>
+    <TextView android:text="@string/tv_tel" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <com.andreabaccega.widget.FormEditText
+        whatever:testType="phone" whatever:emptyErrorString="@string/phoneNumberEmptyError" whatever:testErrorString="@string/phoneNumberError" android:id="@+id/edt_mobileNumber" android:hint="请输入11位手机号码" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
+        android:inputType="phone" />
+</TableRow>
+<TableRow>
+    <TextView android:text="@string/tv_pwd" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <EditText android:id="@+id/edt_pwd" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
+        android:inputType="textWebPassword" />
+</TableRow>
+    <TableRow>
+    <TextView android:text="@string/tv_pwd_repeat" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <EditText android:id="@+id/edt_pwd_repeat" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
+        android:inputType="textWebPassword" />
+</TableRow>
+    <TableRow>
+    <TextView android:text="@string/tv_verification" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <EditText android:id="@+id/edt_verification" android:hint="请输入接收到的验证码" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" />
+</TableRow>
+
+    <TableRow>
+<Button android:id="@+id/btn_getVerification" android:text="@string/tv_getVerification" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <Button android:id="@+id/btn_reg" android:text="@string/btn_reg" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+</TableRow>
+
+</TableLayout>

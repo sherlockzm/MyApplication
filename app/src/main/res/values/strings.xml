@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Near02</string>
+
+    <!--needhelp相关-->
+    <string name="tv_simple_title">简明标题：</string>
+    <string name="tv_context">详细请求：</string>
+    <string name="tv_pay">酬劳（含购买物品）：</string>
+    <string name="btn_submit">请求帮助</string>
+
+    <!---求助详细信息-->
+    <string name="btn_iHelp">提供帮助</string>
+    <string name="btn_notHelp">爱莫能助</string>
+
+    <!--注册信息-->
+    <string name="tv_name">昵称：</string>
+    <string name="tv_tel">手机号码：</string>
+    <string name="tv_pwd">设置密码：</string>
+    <string name="tv_inputPwd">请输入密码</string>
+    <string name="tv_pwd_repeat">再次输入密码：</string>
+    <string name="tv_verification">验证码：</string>
+    <string name="tv_getVerification">获取验证码</string>
+    <string name="btn_reg">注册</string>
+    <string name="btn_regAndLog">注册并登陆</string>
+    <string name="btn_login">登录</string>
+    <string name="edt_hint_tel">请输入你的手机号码</string>
+    
+    <!-- 校验提示-->
+    <string name="emptyError">不能为空</string>
+    <string name="phoneNumberEmptyError">手机号码不能为空</string>
+    <string name="phoneNumberError">请输入正确的手机号码</string>
+    <string name="textError">不能使用限制字符</string>
+
+    <!-- 修改信息-->
+    <string name="change_pwd">请输入新密码</string>
+    <string name="change_pwd_repeat">请再次输入新密码</string>
+    <string name="current_pwd">请输入原密码</string>
+
+    <string name="chang_tel_ver">请输入验证码</string>
+    <string name="chang_tel_newNum">请输入新手机号码</string>
+    <string name="btn_chang_submit">提交更改</string>
+
+
+</resources>

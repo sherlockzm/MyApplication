@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:whatever="http://schemas.android.com/apk/res-auto" android:stretchColumns="1">
+<TableRow>
+    <TextView android:text="@string/change_pwd" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <com.andreabaccega.widget.FormEditText whatever:testType="nocheck" android:id="@+id/edt_change_pwd" android:inputType="textWebPassword" android:layout_height="wrap_content" android:maxLines="1" />
+</TableRow>
+
+    <TableRow>
+    <TextView android:text="@string/change_pwd" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <com.andreabaccega.widget.FormEditText whatever:testType="nocheck" android:id="@+id/edt_change_pwd_repeat" android:inputType="textWebPassword" android:layout_height="wrap_content" android:maxLines="1" />
+</TableRow>
+<TableRow>
+    <TextView android:text="@string/chang_tel_ver" android:layout_width="wrap_content" android:maxLines="1" />
+    <com.andreabaccega.widget.FormEditText whatever:testType="nocheck" android:id="@+id/edt_change_pwd_ver" android:layout_height="wrap_content" android:maxLines="1"/>
+</TableRow>
+<TableRow>
+    <Button android:id="@+id/btn_change_pwd_getVer" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_getVerification" />
+    <Button android:id="@+id/btn_change_pwd" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/btn_chang_submit" />
+</TableRow>
+
+
+    <TableRow>
+        <TextView android:text="@string/chang_tel_newNum" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" />
+        <com.andreabaccega.widget.FormEditText whatever:testType="phone" android:inputType="phone" android:layout_height="wrap_content" android:maxLines="1" />
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/chang_tel_ver" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <com.andreabaccega.widget.FormEditText whatever:testType="nocheck" android:maxLines="1" />
+    </TableRow>
+    <TableRow>
+        <Button android:id="@+id/btn_change_tel_getVer" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_getVerification" />
+        <Button android:id="@+id/btn_change_tel" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/btn_chang_submit" />
+    </TableRow>
+</TableLayout>
