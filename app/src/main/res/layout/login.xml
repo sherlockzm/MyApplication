@@ -7,7 +7,8 @@
 <TableRow>
     <TextView android:text="@string/tv_tel" android:layout_width="wrap_content"  android:layout_height="wrap_content" />
     <com.andreabaccega.widget.FormEditText  whatever:testType="phone" whatever:emptyErrorString="@string/emptyError"
-        android:id="@+id/edt_login_tel" android:hint="@string/edt_hint_tel" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" />
+        android:id="@+id/edt_login_tel" android:hint="@string/edt_hint_tel" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
+        android:inputType="phone" />
 </TableRow>
     <TableRow>
     <TextView android:text="@string/tv_inputPwd" android:layout_width="wrap_content" android:layout_height="wrap_content" />

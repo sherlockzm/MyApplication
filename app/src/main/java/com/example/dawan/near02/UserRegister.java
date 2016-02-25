@@ -11,11 +11,17 @@ import android.widget.Toast;
 import com.andreabaccega.widget.FormEditText;
 
 import java.security.MessageDigest;
+import java.util.List;
 
+import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobSMS;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.RequestSMSCodeListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by dawan on 2016/2/19.
@@ -44,9 +50,18 @@ public class UserRegister extends AppCompatActivity {
         edt_mobileNumber = (FormEditText) findViewById(R.id.edt_mobileNumber);
         edt_verification = (EditText) findViewById(R.id.edt_verification);
 
+        //输入检测
+        new CheckInput(UserRegister.this,edt_name,12,btn_register);
+//        new CheckInput(UserRegister.this,edt_mobileNumber,11,btn_getVerification);
+
+
+//        new CheckInput().checkMobile(UserRegister.this,edt_mobileNumber,btn_register,btn_getVerification);
+
+
         btn_getVerification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                new CheckInput().checkMobile(UserRegister.this,edt_mobileNumber);
                 String telNum = edt_mobileNumber.getText().toString();
                 BmobSMS.requestSMSCode(UserRegister.this, telNum, "测试短信", new RequestSMSCodeListener() {
                     @Override
@@ -69,10 +84,11 @@ public class UserRegister extends AppCompatActivity {
                 String tel = edt_mobileNumber.getText().toString();
                 String ver = edt_verification.getText().toString();
                 FormEditText inputStr[] = new FormEditText[]{edt_name, edt_mobileNumber};
+                new CheckInput().checkMobile(UserRegister.this,edt_mobileNumber);
                 if (!(new Login().verificationInput(inputStr))) {
                     Log.e("INPUT", "WRONG");
                     Toast.makeText(UserRegister.this,"输入的信息有误。",Toast.LENGTH_SHORT).show();
-                } else if (pwd1!=pwd2){
+                } else if (!pwd1.equals(pwd2)){
                     Log.e("INPUTPASSWORD", "unequal!");
                     Toast.makeText(UserRegister.this,"密码不一致。",Toast.LENGTH_SHORT).show();
                 }else{
@@ -81,11 +97,13 @@ public class UserRegister extends AppCompatActivity {
                     user_reg.setUsername(name);
                     user_reg.setPassword(MD5(pwd1));
                     user_reg.setMobilePhoneNumber(tel);
+                    user_reg.setPayAccount("");
 
                     user_reg.signOrLogin(UserRegister.this, ver, new SaveListener() {
                         @Override
                         public void onSuccess() {
                             Log.e("LOGIN", "LOGINED");
+                            updateInstallation();  //在安装表上注册
                             finish();
                         }
 
@@ -153,6 +171,46 @@ public class UserRegister extends AppCompatActivity {
 
         return hexValue.toString();
 
+    }
+
+    public void updateInstallation(){
+        BmobQuery<MyInstallation> query = new BmobQuery<MyInstallation>();
+        query.addWhereEqualTo("installationId", BmobInstallation.getInstallationId(this));
+
+        User curUser = BmobUser.getCurrentUser(UserRegister.this,User.class);
+        final String curUserId = (String)curUser.getObjectId();
+//        final String curUserId = (String) BmobUser.getObjectByKey(UserRegister.this, "objectId");
+        query.findObjects(this, new FindListener<MyInstallation>() {
+
+            @Override
+            public void onSuccess(List<MyInstallation> object) {
+                // TODO Auto-generated method stub
+                if(object.size() > 0){
+                    MyInstallation mbi = object.get(0);
+                    mbi.setUserId(curUserId);
+                    mbi.update(UserRegister.this,new UpdateListener() {
+
+                        @Override
+                        public void onSuccess() {
+                            // TODO Auto-generated method stub
+                            Log.i("bmob","设备信息更新成功");
+                        }
+
+                        @Override
+                        public void onFailure(int code, String msg) {
+                            // TODO Auto-generated method stub
+                            Log.i("bmob","设备信息更新失败:"+msg);
+                        }
+                    });
+                }else{
+                }
+            }
+
+            @Override
+            public void onError(int code, String msg) {
+                // TODO Auto-generated method stub
+            }
+        });
     }
 
 }

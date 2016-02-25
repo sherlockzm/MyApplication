@@ -9,6 +9,15 @@ public class TransactionRecord extends BmobObject {
 
     private String requestID;
     private String helperID;
+    private String buniessId;
+
+    public String getBuniessId() {
+        return buniessId;
+    }
+
+    public void setBuniessId(String buniessId) {
+        this.buniessId = buniessId;
+    }
 
     public String getRequestID() {
         return requestID;

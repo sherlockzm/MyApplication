@@ -1,12 +1,14 @@
 package com.example.dawan.near02;
 
+import java.io.Serializable;
+
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 
 /**
  * Created by dawan on 2016/2/18.
  */
-public class HelpContext extends BmobObject {
+public class HelpContext extends BmobObject implements Serializable {
 
     private String simple_title;
     private Double pay;
@@ -14,6 +16,25 @@ public class HelpContext extends BmobObject {
     private BmobGeoPoint bmobGeoPoint;
     private int iscomplete;
     private String requestid;
+    private String helperId;
+
+    public String getHelperId() {
+        return helperId;
+    }
+
+    public void setHelperId(String helperId) {
+        this.helperId = helperId;
+    }
+
+    private int station;//是否超时
+
+    public int getStation() {
+        return station;
+    }
+
+    public void setStation(int station) {
+        this.station = station;
+    }
 
     public String getRequestid() {
         return requestid;

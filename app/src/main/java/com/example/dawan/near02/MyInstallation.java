@@ -12,6 +12,20 @@ public class MyInstallation extends BmobInstallation {
 
     private BmobGeoPoint myPoint;
 
+    private String userId = "";
+
+    public MyInstallation(Context context) {
+        super(context);
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public BmobGeoPoint getMyPoint() {
         return myPoint;
     }
@@ -21,8 +35,6 @@ public class MyInstallation extends BmobInstallation {
         this.myPoint = myPoint;
     }
 
-    public MyInstallation(Context context) {
-        super(context);
-    }
+
 
 }

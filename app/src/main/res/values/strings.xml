@@ -3,9 +3,13 @@
 
     <!--needhelp相关-->
     <string name="tv_simple_title">简明标题：</string>
+    <string name="edt_simpleTitle">简要说出你的求助（不多于18个汉字）</string>
     <string name="tv_context">详细请求：</string>
-    <string name="tv_pay">酬劳（含购买物品）：</string>
+    <string name="edt_context">详细说明你的请求，包括限定时间，地点以及其他特殊要求。</string>
+    <string name="tv_pay">酬劳：</string>
+    <string name="edt_pay">包括购买物品(如果需要)支出及报酬。格式：0.00</string>
     <string name="btn_submit">请求帮助</string>
+    <string name="tv_when_request">求助时间</string>
 
     <!---求助详细信息-->
     <string name="btn_iHelp">提供帮助</string>
@@ -34,10 +38,39 @@
     <string name="change_pwd">请输入新密码</string>
     <string name="change_pwd_repeat">请再次输入新密码</string>
     <string name="current_pwd">请输入原密码</string>
+    <string name="chang_tel_curNum">请输入原手机号码：</string>
 
     <string name="chang_tel_ver">请输入验证码</string>
     <string name="chang_tel_newNum">请输入新手机号码</string>
     <string name="btn_chang_submit">提交更改</string>
+
+    <!--main-->
+    <string name="btn_new_request">新求助</string>
+    <string name="btn_fresh">刷新</string>
+
+    <!--title-->
+    <string name="btn_title_user">个人管理</string>
+    <string name="btn_title_record">记录</string>
+    <string name="tv_all_title">顺便帮</string>
+<!--info-->
+    <string name="info_name">真实姓名:</string>
+    <string name="info_ID">身份证号码:</string>
+    <string name="chang_telorpwd">更改或补充信息</string>
+    <string name="info_overage">余额:</string>
+    <string name="info_payAccount">支付宝账号:</string>
+    <string name="btn_takeCash">提现</string>
+    <string name="btn_loginout">退出当前用户</string>
+
+    <!--showRecord-->
+    <string name="showRecord_btn_modify">修改</string>
+    <string name="showRecord_btn_complete">确认完成</string>
+    <string name="showRecord_btn_delete">删除</string>
+    <string name="showRecord_helperName">援助者昵称：</string>
+    <string name="showRecord_helperTel">援助者电话：</string>
+
+    <!--ReecordList-->
+    <string name="btn_recordlist_request">求助列表</string>
+    <string name="btn_recordlist_giveHelp">帮助列表</string>
 
 
 </resources>

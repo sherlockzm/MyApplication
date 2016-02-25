@@ -28,11 +28,9 @@ dependencies {
     compile 'io.nlopez.smartlocation:library:3.2.1'
     compile files('libs/Bmob_Push_V0.6beta_20150408.jar')
     compile files('libs/BmobPay_v2.4_160125.jar')
-//输入检查
+    //输入检查
     compile('com.andreabaccega:android-form-edittext:1.2.1@aar') {
         exclude module: 'design'
     }
-
-//列表下拉刷新
-
+    //列表下拉刷新
 }

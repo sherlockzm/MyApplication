@@ -107,6 +107,11 @@
         </activity>
 
         <activity android:name=".Login"></activity>
+        <activity android:name=".UserInfo"/>
+        <activity android:name=".ChangeInfo"/>
+        <activity android:name=".MyHelpRecord"/>
+        <activity android:name=".ShowRecord"/>
+
     </application>
 
 

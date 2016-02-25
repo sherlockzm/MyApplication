@@ -8,6 +8,24 @@ import cn.bmob.v3.BmobUser;
 public class User extends BmobUser {
 
     private String payAccount;
+    private String realName;
+    private String idNumber;
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
+    }
 
     public String getPayAccount() {
         return payAccount;

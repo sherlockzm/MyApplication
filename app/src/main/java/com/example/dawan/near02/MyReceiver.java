@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.bmob.push.PushConstants;
 
 /**
@@ -17,6 +20,8 @@ public class MyReceiver extends BroadcastReceiver {
 
     private static int NOTIFY_ID = 1000;
     private static final String tag = "NotificationReceiver";
+    private String notificationTitle;
+    private String notificationMessage;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -24,26 +29,35 @@ public class MyReceiver extends BroadcastReceiver {
         if (intent.getAction().equals(PushConstants.ACTION_MESSAGE)) {
             Log.d("bmob", "客户端收到推送内容：" + intent.getStringExtra(PushConstants.EXTRA_PUSH_MESSAGE_STRING));
             String msg = intent.getStringExtra(PushConstants.EXTRA_PUSH_MESSAGE_STRING);
+            try {
+                JSONObject jsonObject = new JSONObject(msg);
+                notificationMessage = jsonObject.getString("alert");
+                Log.d("bmob", notificationMessage);
 
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             //创建通知
-            sendNotification(context, msg);
+            sendNotification(context, notificationMessage);
         }
     }
-    private void sendNotification(Context context, String message) {
-        //【1】获取Notification 管理器的参考
 
-        //【2】设置通知。PendingIntent表示延后触发，是在用户下来状态栏并点击通知时触发，触发时PendingIntent发送intent，本例为打开浏览器到指定页面。
-        Intent intent = new Intent(context,MainActivity.class);
+    private void sendNotification(Context context, String message) {
+
+
+        notificationTitle = "顺帮主提醒你：";
+        Intent intent = new Intent(context, MainActivity.class);
         intent.addCategory("COM.SBB");
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         NotificationManager notifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification.Builder notification = new Notification.Builder(context);
-        Notification.Builder builder = notification.setContentIntent(pi).setAutoCancel(true).setTicker("This is test!").setSmallIcon(R.drawable.abc)
-                .setContentTitle("this is title").setContentText(message).setWhen(System.currentTimeMillis())
-                .setOngoing(true).setVibrate(new long[]{0, 1000, 1000, 1000});
+        Notification.Builder builder = notification.setContentIntent(pi).setAutoCancel(true).setTicker(notificationTitle).setSmallIcon(R.drawable.abc)
+                .setContentTitle(notificationTitle).setContentText(message).setWhen(System.currentTimeMillis())
+                .setOngoing(true).setAutoCancel(true).setDefaults(Notification.DEFAULT_ALL);
         Notification n = notification.build();
 
-        notifyMgr.notify(1,n);
+        notifyMgr.notify(1, n);
     }
+
 
 }

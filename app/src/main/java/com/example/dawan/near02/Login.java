@@ -47,12 +47,14 @@ public class Login extends AppCompatActivity {
         btn_reg = (Button) findViewById(R.id.btn_reg_in_login);
         style = false;
 
-//        final FormEditText ver_tel = (FormEditText) findViewById(R.id.edt_login_tel);
+//        new  CheckInput().checkMobile(Login.this,edt_tel,btn_getVer,btn_log);
 
         btn_getVer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String telNum = edt_tel.getText().toString();
+                new  CheckInput().checkMobile(Login.this,edt_tel);
+
                 if (verificationInput(new FormEditText[]{edt_tel})) {
 
                     BmobSMS.requestSMSCode(Login.this, telNum, "测试短信", new RequestSMSCodeListener() {
@@ -80,7 +82,7 @@ public class Login extends AppCompatActivity {
 //验证数据有效性
                 if (verificationInput(new FormEditText[]{edt_tel})) {
                     String telNum = edt_tel.getText().toString();
-                    String pwd = UserRegister.MD5(edt_pwd.getText().toString());
+                    String pwd = UserRegister.MD5(UserRegister.MD5(edt_pwd.getText().toString()));
                     String ver = edt_ver.getText().toString();
                     if (style) {
                         BmobUser.loginBySMSCode(Login.this, telNum, ver, new LogInListener<User>() {
@@ -126,6 +128,7 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Login.this, UserRegister.class);
                 startActivity(intent);
+                finish();
             }
         });
 
