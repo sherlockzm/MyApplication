@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Near02</string>
+    <string name="app_name">顺便帮</string>
 
     <!--needhelp相关-->
     <string name="tv_simple_title">简明标题：</string>
@@ -9,7 +9,7 @@
     <string name="tv_pay">酬劳：</string>
     <string name="edt_pay">包括购买物品(如果需要)支出及报酬。格式：0.00</string>
     <string name="btn_submit">请求帮助</string>
-    <string name="tv_when_request">求助时间</string>
+    <string name="tv_when_request">求助时间：</string>
 
     <!---求助详细信息-->
     <string name="btn_iHelp">提供帮助</string>
@@ -27,6 +27,7 @@
     <string name="btn_regAndLog">注册并登陆</string>
     <string name="btn_login">登录</string>
     <string name="edt_hint_tel">请输入你的手机号码</string>
+    <string name="verAndPwd">密码或验证码二选一即可</string>
     
     <!-- 校验提示-->
     <string name="emptyError">不能为空</string>
@@ -67,10 +68,13 @@
     <string name="showRecord_btn_delete">删除</string>
     <string name="showRecord_helperName">援助者昵称：</string>
     <string name="showRecord_helperTel">援助者电话：</string>
+    <string name="showScore">你给对方的评分为：</string>
 
     <!--ReecordList-->
     <string name="btn_recordlist_request">求助列表</string>
     <string name="btn_recordlist_giveHelp">帮助列表</string>
+
+
 
 
 </resources>

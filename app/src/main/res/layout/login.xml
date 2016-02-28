@@ -12,11 +12,11 @@
 </TableRow>
     <TableRow>
     <TextView android:text="@string/tv_inputPwd" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-    <EditText android:id="@+id/edt_login_pwd" android:inputType="textWebPassword" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" />
+    <EditText android:id="@+id/edt_login_pwd" android:inputType="textWebPassword" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:hint="@string/verAndPwd" />
 </TableRow>
     <TableRow>
     <TextView android:text="@string/tv_verification" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-    <EditText android:id="@+id/edt_login_ver" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" />
+    <EditText android:id="@+id/edt_login_ver" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:hint="@string/verAndPwd" />
 </TableRow>
 
     <TableRow>

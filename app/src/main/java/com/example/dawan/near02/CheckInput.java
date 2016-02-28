@@ -19,20 +19,15 @@ public class CheckInput {
     public CheckInput() {
     }
 
-    public CheckInput(final Context context, final EditText editText, final int maxLength, final Button button) {
+    public boolean CheckInputHelp(final Context context, final EditText editText, final int maxLength) {
 
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
                 if (editText.getText().length() > maxLength || editText.getText().length() == 0) {
 //                    button.setClickable(false);
                     Toast.makeText(context, "字符超出限制或未输入", Toast.LENGTH_SHORT).show();
+                    return false;
                 } else {
-                    button.setClickable(true);
+                   return true;
                 }
-            }
-        });
-
     }
 
     public void getFocus(EditText editText) {
@@ -100,7 +95,7 @@ public class CheckInput {
 
         String string = editText.getText().toString();
 
-        String regExp = "^[1]([3][0-9]{1}|59|58|88|89)[0-9]{8}$";
+        String regExp = "^((13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$";
 
         Pattern p = Pattern.compile(regExp);
 

@@ -17,6 +17,7 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.GetListener;
 
 /**
  * Created by dawan on 2016/2/23.
@@ -32,20 +33,20 @@ public class MyHelpRecord extends AppCompatActivity {
     private Button btn_show_give;
     private TextView tv_title;
 
-    private String helperId = "";
-    private String userName = "";
-    private String userTel = "";
+    private User pUser;
+    private String userID = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myhelprecord);
 
-        tv_title = (TextView)findViewById(R.id.tv_showRecordList_title);
+        tv_title = (TextView) findViewById(R.id.tv_showRecordList_title);
         listView = (ListView) findViewById(R.id.myHelpRecord);
-        btn_show_request = (Button)findViewById(R.id.btn_showRequestList);
-        btn_show_give = (Button)findViewById(R.id.btn_showGiveHelpList);
+        btn_show_request = (Button) findViewById(R.id.btn_showRequestList);
+        btn_show_give = (Button) findViewById(R.id.btn_showGiveHelpList);
         final String curUserId = BmobUser.getCurrentUser(MyHelpRecord.this, User.class).getObjectId();
-        showList(MyHelpRecord.this,"requestid",curUserId,1);
+        showList(MyHelpRecord.this, "requestid", curUserId, 1);
 
         btn_show_request.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,11 +65,11 @@ public class MyHelpRecord extends AppCompatActivity {
 
     }
 
-    public  void showList(Context context,String row,String id, final int boo){
+    public void showList(final Context context, String row, String id, final int boo) {
 
         BmobQuery<HelpContext> query = new BmobQuery<HelpContext>();//交易列表
         query.addWhereEqualTo(row, id);
-        query.findObjects(MyHelpRecord.this, new FindListener<HelpContext>() {
+        query.findObjects(context, new FindListener<HelpContext>() {
             @Override
             public void onSuccess(List<HelpContext> list) {
                 helpList.clear();
@@ -76,77 +77,45 @@ public class MyHelpRecord extends AppCompatActivity {
                 for (HelpContext helpContext : list) {
                     helpList.add(helpContext);
                 }
-                HelpAdapter helpAdapter = new HelpAdapter(MyHelpRecord.this, R.layout.help_item, helpList);
+                HelpAdapter helpAdapter = new HelpAdapter(context, R.layout.help_item, helpList);
                 listView.setAdapter(helpAdapter);
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        HelpContext gethelpContext = (HelpContext) helpList.get(position);
+                        HelpContext getHelpContext = (HelpContext) helpList.get(position);
 
-                        //添加帮助者信息传递给详细显示
-                        String helpContextId = gethelpContext.getObjectId();  //取得求助信息ID
-                        Log.e("contextId", helpContextId);
-                        BmobQuery<TransactionRecord> queryTranRecord = new BmobQuery<TransactionRecord>();
-                        queryTranRecord.addWhereEqualTo("buniessId", helpContextId);
-                        queryTranRecord.findObjects(MyHelpRecord.this, new FindListener<TransactionRecord>() {
-                            @Override
-                            public void onSuccess(List<TransactionRecord> list) {
-                                for (TransactionRecord record : list) {
-                                    if (boo == 1) {                                   //判断帮助列表还是求助列表
-                                        helperId = record.getHelperID().toString();
-                                    }else{
-                                        helperId = record.getRequestID().toString();
-                                    }
-
-                                    Log.e("Record", "helperID = " + helperId);
-                                }
-                            }
-
-                            @Override
-                            public void onError(int i, String s) {
-
-                                Log.e("Record", "No This Record" + s);
-
-                            }
-                        });
-
+                        if (boo == 0) {
+                            userID = getHelpContext.getRequestid();
+                        } else {
+                            userID = getHelpContext.getHelperId();
+                        }
 
                         BmobQuery<User> queryUser = new BmobQuery<User>();
-                        queryUser.addWhereEqualTo("objectId", helperId);
-                        queryUser.findObjects(MyHelpRecord.this, new FindListener<User>() {
+                        queryUser.getObject(context, userID, new GetListener<User>() {
                             @Override
-                            public void onSuccess(List<User> list) {
-                                for (BmobUser user : list) {
-                                    userName = user.getUsername().toString();
-                                    userTel = user.getMobilePhoneNumber().toString();
-
-                                    Log.e("Record", "找到帮助者资料 " + user.getUsername().toString());
-                                }
+                            public void onSuccess(User user) {
+                                pUser = user;
+                                Log.e("User", "Got it");
                             }
 
                             @Override
-                            public void onError(int i, String s) {
-                                Log.e("Record", "找不到用户资料" + s);
+                            public void onFailure(int i, String s) {
+                                Log.e("User", "Can't Got it.");
 
                             }
                         });
-
-
-                        ////////////////
 
                         Intent intent = new Intent(MyHelpRecord.this, ShowRecord.class);
                         intent.addCategory("SHOWHELP");
                         //传递数据给showRecord
 
-//                            HelpContext gethelpContext = (HelpContext) helpList.get(position);
-
-                        intent.putExtra("HelpContext", gethelpContext);
-                        intent.putExtra("HelperName", userName);
-                        intent.putExtra("HelperTel", userTel);
-                        intent.putExtra("Boo",boo);
-
+                        intent.putExtra("HelpContext", getHelpContext);
+                        if (pUser != null) {
+                            intent.putExtra("UserContext", pUser);
+                        }
+                        intent.putExtra("Boo", boo);
                         startActivity(intent);
                     }
                 });

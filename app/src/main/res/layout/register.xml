@@ -26,7 +26,7 @@
 </TableRow>
     <TableRow>
     <TextView android:text="@string/tv_verification" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-    <EditText android:id="@+id/edt_verification" android:hint="请输入接收到的验证码" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" />
+    <EditText android:id="@+id/edt_verification" android:hint="请输入接收到的验证码[必须]" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" />
 </TableRow>
 
     <TableRow>

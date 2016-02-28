@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -31,6 +32,10 @@ public class ShowHelp extends AppCompatActivity {
     private Button btn_notHelp;
     TransactionRecord record;
 
+    private int isComplete;
+
+    private HelpContext showhelpContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +59,32 @@ public class ShowHelp extends AppCompatActivity {
         tv_title.setText(title);
         tv_pay.setText(pay.toString());
         tv_detail.setText(detail);
+        /////////////////////////////////////////////
+        BmobQuery<HelpContext> query = new BmobQuery<HelpContext>();
+        //判断能否提供帮助
+        query.getObject(ShowHelp.this, objectId, new GetListener<HelpContext>() {
+                    @Override
+                    public void onSuccess(HelpContext helpContext) {
+                        showhelpContext = helpContext;
+                        isComplete = helpContext.getIscomplete();
+                        if (isComplete != 0) {
+                            btn_iHelp.setVisibility(View.GONE);
+                            btn_notHelp.setGravity(Gravity.CENTER);
+                            btn_notHelp.setText("返回");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int i, String s) {
+                        Log.e("Record", "No this record.");
+
+                    }
+                }
+        );
+
+
+        ////////////////////////////////////////////
+
 
         btn_notHelp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,98 +103,87 @@ public class ShowHelp extends AppCompatActivity {
 
                     final String helperId = (String) BmobUser.getObjectByKey(ShowHelp.this, "objectId");
 
-                    Log.e("UserId,helper",helperId);
-                    Log.e("UserId,requester",requestID);
-//                String helperId = BmobInstallation.getInstallationId(ShowHelp.this);//获取帮助者ID
-                    //【判断帮助者和求助者是否同一人
+                    Log.e("UserId,helper", helperId);
+                    Log.e("UserId,requester", requestID);
 
-//                    if (!new CheckInput().checkHelperAndRequester(helperId, requestID)) {
                     if (helperId.equals(requestID)) {
 
                         Toast.makeText(ShowHelp.this, "你不能自己解决自己的求助，谢谢。", Toast.LENGTH_SHORT).show();
                     } else {
-                        record.setHelperID(helperId);
-                        record.setRequestID(requestID);
-                        record.setBuniessId(objectId);
-                        record.save(ShowHelp.this, new SaveListener() {
-                            @Override
-                            public void onSuccess() {
-                                Log.e("Save", "OK!");
-                                HelpContext helpContext = new HelpContext();
-
-                                BmobQuery<HelpContext> query = new BmobQuery<HelpContext>();
-                                //判断能否提供帮助
-                                query.getObject(ShowHelp.this, objectId, new GetListener<HelpContext>() {
-                                    @Override
-                                    public void onSuccess(HelpContext helpContext) {
-                                        if (helpContext.getIscomplete() != 0) {
-                                            AlertDialog.Builder dialog = new AlertDialog.Builder(ShowHelp.this);
-                                            dialog.setTitle("哎呀！");
-                                            dialog.setMessage("被人抢先一步了！");
-                                            dialog.setCancelable(false);
-                                            dialog.setPositiveButton("好吧", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    finish();
-                                                }
-                                            });
-                                            dialog.setNegativeButton("帮别人", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-
-                                                }
-                                            });
-                                            dialog.show();
-                                        } else if (helpContext.getIscomplete() ==1){
-                                            Toast.makeText(ShowHelp.this, "感谢你的热心帮助，该请求已帮众提前响应！", Toast.LENGTH_SHORT).show();
+                                if (isComplete != 0) {
+                                    AlertDialog.Builder dialog = new AlertDialog.Builder(ShowHelp.this);
+                                    dialog.setTitle("哎呀！");
+                                    dialog.setMessage("被人抢先一步了！");
+                                    dialog.setCancelable(false);
+                                    dialog.setPositiveButton("好吧", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
                                             finish();
-                                        }else if (helpContext.getIscomplete() == 0){
-                                            Toast.makeText(ShowHelp.this, "好样的，本帮主看好你喔！加油完成使命！", Toast.LENGTH_SHORT).show();
-                                            Intent intent1 = new Intent(ShowHelp.this,ShowRecord.class);
-                                            startActivity(intent1);
-
-                                        }else {
-                                            Toast.makeText(ShowHelp.this, "你果然很热心，就是手慢了一点，该请求已完成！", Toast.LENGTH_SHORT).show();
                                         }
-                                    }
+                                    });
+                                    dialog.setNegativeButton("帮别人", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                                    @Override
-                                    public void onFailure(int i, String s) {
+                                        }
+                                    });
+                                    dialog.show();
+                                } else if (isComplete == 0) {
+                                    BmobQuery<HelpContext> queryProgress = new BmobQuery<HelpContext>();
+                                    queryProgress.getObject(ShowHelp.this, objectId, new GetListener<HelpContext>() {
+                                        @Override
+                                        public void onSuccess(HelpContext helpContext) {
+                                            if (helpContext.getIscomplete() == 0) {
+                                                showhelpContext.setIscomplete(1);
+                                                showhelpContext.setHelperId(helperId);
+                                                showhelpContext.update(ShowHelp.this, objectId, new UpdateListener() {
+                                                    @Override
+                                                    public void onSuccess() {
+                                                        Log.e("Change", "OK!");
 
-                                    }
-                                });
+                                                        String message = "你的请求已有人响应。";
+                                                        new Function().pushMessage(ShowHelp.this, requestID, message);
 
-                                helpContext.setIscomplete(1);
-                                helpContext.setHelperId(helperId);
-                                helpContext.update(ShowHelp.this, objectId, new UpdateListener() {
-                                    @Override
-                                    public void onSuccess() {
-                                        Log.e("Change", "OK!");
+                                                        //////////////保存该记录
+                                                        record.setHelperID(helperId);
+                                                        record.setRequestID(requestID);
+                                                        record.setBuniessId(objectId);
+                                                        record.save(ShowHelp.this, new SaveListener() {
+                                                            @Override
+                                                            public void onSuccess() {
+                                                                Log.e("SaveRecord", "OK!");
+                                                                Toast.makeText(ShowHelp.this, "好样的，记事长老给你记一功！", Toast.LENGTH_SHORT).show();
+                                                            }
 
-                                        String message = "你的请求已有人响应。";
-                                        new Function().pushMessage(ShowHelp.this,requestID,message);
-//                                        BmobPushManager bmobPush = new BmobPushManager(ShowHelp.this);
-//                                        BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
-//                                        //推送给求助者
-//                                        query.addWhereEqualTo("requesterId", requestID);
-//                                        bmobPush.setQuery(query);
-//                                        bmobPush.pushMessage("你的请求已有人响应！");
+                                                            @Override
+                                                            public void onFailure(int i, String s) {
+                                                                Log.e("SaveRecord", "Fail");
+                                                            }
+                                                        });
+                                                    }
 
-                                    }
+                                                    @Override
+                                                    public void onFailure(int i, String s) {
+                                                        Log.e("Change", "Fail!" + s);
+                                                    }
+                                                });
+                                                finish();
+                                            }
+                                        }
 
-                                    @Override
-                                    public void onFailure(int i, String s) {
-                                        Log.e("Change", "Fail!" + s);
-                                    }
-                                });
-                            }
+                                        @Override
+                                        public void onFailure(int i, String s) {
 
-                            @Override
-                            public void onFailure(int i, String s) {
-                                Log.e("Save", "Fail!");
+                                            Toast.makeText(ShowHelp.this, "该求助已有其他帮众响应或已删除。", Toast.LENGTH_SHORT).show();
 
-                            }
-                        });
+                                        }
+                                    });
+
+
+                                } else {
+                                    Toast.makeText(ShowHelp.this, "你果然很热心，就是手慢了一点，该请求已有帮众先一步响应！", Toast.LENGTH_SHORT).show();
+                                }
+
                     }
                 }
             }

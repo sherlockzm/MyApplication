@@ -12,7 +12,7 @@ public class MyInstallation extends BmobInstallation {
 
     private BmobGeoPoint myPoint;
 
-    private String userId = "";
+    private String userId;
 
     public MyInstallation(Context context) {
         super(context);

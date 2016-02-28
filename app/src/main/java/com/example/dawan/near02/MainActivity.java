@@ -12,7 +12,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import c.b.BP;
@@ -21,6 +25,7 @@ import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
@@ -41,16 +46,46 @@ public class MainActivity extends AppCompatActivity {
 
     BmobGeoPoint myPoint;
 
+    Date timeBefore = null;
+
     private List<HelpContext> helpList = new ArrayList<HelpContext>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        /////////////////////////////////////////
+
+
+        Date dNow = new Date();   //当前时间
+        Date dBefore = new Date();
+
+        Calendar calendar = Calendar.getInstance(); //得到日历
+        calendar.setTime(dNow);//把当前时间赋给日历
+        calendar.add(Calendar.DAY_OF_MONTH, -1);  //设置为前一天
+        dBefore = calendar.getTime();   //得到前一天的时间
+
+
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //设置时间格式
+        String defaultStartDate = sdf.format(dBefore);    //格式化前一天
+
+        try {
+            timeBefore = sdf.parse(defaultStartDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        ///////////
+
+        Log.e("Date", timeBefore + "");
 
         initAll();
 
-        Log.e("MyPoint", myPoint + "");
+//        ConnectivityManager cwjManager=(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo info = cwjManager.getActiveNetworkInfo();
+//        if (info == null && !info.isAvailable()){
+//            Toast.makeText(MainActivity.this,"无互联网连接",Toast.LENGTH_SHORT).show();
+//        }
+
 
 //第一 先定位
         if (myPoint == null) {
@@ -58,27 +93,10 @@ public class MainActivity extends AppCompatActivity {
 
                 Toast.makeText(MainActivity.this, "本应用依赖于GPS才能为你提供服务，请打开GPS后再次启动本应用。期待你的使用^_^", Toast.LENGTH_LONG).show();
             } else {
-//                locationMe(MainActivity.this);
-                try {
                     locationMe(MainActivity.this);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-//                loadList();
-//            Toast.makeText(MainActivity.this, "正在定位你的位置，请稍后。", Toast.LENGTH_SHORT).show();
-//            SmartLocation.with(MainActivity.this).location().start(new OnLocationUpdatedListener() {
-//                @Override
-//                public void onLocationUpdated(Location location) {
-//                    lat = location.getLatitude();
-//                    lon = location.getLongitude();
-//                    Log.e("Latitude", "" + lat);
-//                    Log.e("Longitude", "" + lon);
-//                    myPoint = new BmobGeoPoint(lon, lat);
-//                    Log.e("MyPoint", "" + myPoint);
-//                    loadList();
-//                }
-//            });
             }
+        }else {
+            loadList();
         }
 
 
@@ -115,14 +133,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //用户已经登陆，定位未成功
-                if (new CheckInput().checkLogin(MainActivity.this, User.class,false) && myPoint == null) {
+                if (myPoint == null) {
                     if (!SmartLocation.with(MainActivity.this).location().state().isGpsAvailable()) {
                         Toast.makeText(MainActivity.this, "请先打开GPS再刷新，谢谢。", Toast.LENGTH_SHORT).show();
-                    } else if (new CheckInput().checkLogin(MainActivity.this, User.class,false)&&myPoint != null){//用户已登陆,定位已成功
+                    } else{
                         locationMe(MainActivity.this);
 //                        loadList();
                     }
-                } else if (myPoint != null){
+                } else{//用户未登陆，定位已成功
                     loadList();
                 }
             }
@@ -188,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
     private void loadList() {
 
         ////////////////////////////////
+        //先取得本机器的安装ID，然后把本机器的地理位置更新至安装表，然后通过本地理位置在helpContext表搜索附近10公里范围内的新求助
 
         //update installation and get list of helps.
         BmobQuery<MyInstallation> query = new BmobQuery<MyInstallation>();
@@ -195,13 +214,13 @@ public class MainActivity extends AppCompatActivity {
         query.findObjects(MainActivity.this, new FindListener<MyInstallation>() {
                     @Override
                     public void onSuccess(List<MyInstallation> list) {
-                        if (list.size() > 0) {
+                        if (list.size() > 0 && myPoint != null) {
                             MyInstallation myInstallation = list.get(0);
                             myInstallation.setMyPoint(myPoint);
                             myInstallation.update(MainActivity.this, new UpdateListener() {
                                 @Override
                                 public void onSuccess() {
-                                    Log.e("SetPoint", "SUCCESS");
+                                    Log.e("SetPoint", "SUCCESS"+lat+"//"+lon);
                                     /////////////////////////////////////////////////////////////////////////////
                                     BmobQuery<HelpContext> getHelps1 = new BmobQuery<HelpContext>();
                                     //getHelps.addWhereEqualTo("iscomplete",0);//获取未被执行的求助
@@ -210,14 +229,17 @@ public class MainActivity extends AppCompatActivity {
                                     BmobQuery<HelpContext> getHelps2 = new BmobQuery<HelpContext>();
                                     getHelps2.addWhereEqualTo("iscomplete", 0);//获取未被执行的求助//条件2
 
+                                    BmobQuery<HelpContext> getHelps3 = new BmobQuery<HelpContext>();
+                                    getHelps3.addWhereGreaterThanOrEqualTo("updatedAt",new BmobDate(timeBefore));
+
                                     //执行双条件查询
                                     List<BmobQuery<HelpContext>> andQuerys = new ArrayList<BmobQuery<HelpContext>>();
                                     andQuerys.add(getHelps1);
                                     andQuerys.add(getHelps2);
+                                    andQuerys.add(getHelps3);
                                     BmobQuery<HelpContext> queryAnd = new BmobQuery<HelpContext>();
                                     queryAnd.order("-updatedAt");
                                     queryAnd.and(andQuerys);
-
                                     queryAnd.setLimit(20);
                                     queryAnd.findObjects(MainActivity.this, new FindListener<HelpContext>() {
                                         @Override
@@ -236,7 +258,6 @@ public class MainActivity extends AppCompatActivity {
                                                     Intent intent = new Intent(MainActivity.this, ShowHelp.class);
                                                     intent.addCategory("SHOWHELP");
                                                     //传递数据给showhelp
-
                                                     HelpContext gethelpContext = (HelpContext) helpList.get(position);
 
                                                     String tt = gethelpContext.getSimple_title();
@@ -279,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
                             });
                         } else {
                             Log.e("Empty", "Nothing!");
-                            Toast.makeText(MainActivity.this, "方圆10公里内暂无求助，你可以立刻发布信息，获得帮助。", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, "定位未成功或方圆10公里内暂无求助，你可以立刻发布信息，获得帮助。", Toast.LENGTH_LONG).show();
                         }
                     }
 

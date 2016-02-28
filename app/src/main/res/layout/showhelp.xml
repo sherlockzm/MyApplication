@@ -12,11 +12,11 @@
     <TableRow>
     <TextView android:text="@string/tv_context" android:layout_width="wrap_content" android:layout_height="wrap_content" />
     </TableRow>
-    <TableRow>
-        <TextView android:layout_span="2" android:id="@+id/tv_show_detail" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <TableRow android:layout_width="match_parent">
+        <TextView android:layout_span="3" android:id="@+id/tv_show_detail" android:layout_width="match_parent" android:layout_height="wrap_content" />
     </TableRow>
     <TableRow>
-        <Button android:id="@+id/btn_notHelp" android:text="@string/btn_notHelp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <Button android:id="@+id/btn_iHelp" android:text="@string/btn_iHelp" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <Button android:id="@+id/btn_notHelp" android:text="@string/btn_notHelp" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" />
+        <Button android:id="@+id/btn_iHelp" android:text="@string/btn_iHelp" android:layout_width="0dp" android:layout_weight="2" android:layout_height="wrap_content" />
     </TableRow>
 </TableLayout>

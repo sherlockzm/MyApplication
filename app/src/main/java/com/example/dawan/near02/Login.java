@@ -107,6 +107,7 @@ public class Login extends AppCompatActivity {
                             public void done(User user, BmobException e) {
                                 if (user != null) {
                                     Log.e("Login", "Done!");
+                                    Toast.makeText(Login.this,"你已成功登陆。",Toast.LENGTH_SHORT).show();
                                     finish();
                                 }else {
                                     Toast.makeText(Login.this, "账号或密码有误，请重新输入。", Toast.LENGTH_SHORT).show();

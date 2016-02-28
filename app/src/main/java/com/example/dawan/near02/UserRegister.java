@@ -51,7 +51,6 @@ public class UserRegister extends AppCompatActivity {
         edt_verification = (EditText) findViewById(R.id.edt_verification);
 
         //输入检测
-        new CheckInput(UserRegister.this,edt_name,12,btn_register);
 //        new CheckInput(UserRegister.this,edt_mobileNumber,11,btn_getVerification);
 
 
@@ -67,7 +66,8 @@ public class UserRegister extends AppCompatActivity {
                     @Override
                     public void done(Integer integer, BmobException e) {
                         if (e == null) {
-                            Log.e("Smile", "短信id" + integer);
+                            Toast.makeText(UserRegister.this, "验证码已发送到你手机，请查收。", Toast.LENGTH_SHORT).show();
+                                    Log.e("Smile", "短信id" + integer);
                         }
                     }
                 });

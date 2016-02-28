@@ -1,11 +1,13 @@
 package com.example.dawan.near02;
 
+import java.io.Serializable;
+
 import cn.bmob.v3.BmobUser;
 
 /**
  * Created by dawan on 2016/2/19.
  */
-public class User extends BmobUser {
+public class User extends BmobUser implements Serializable {
 
     private String payAccount;
     private String realName;
