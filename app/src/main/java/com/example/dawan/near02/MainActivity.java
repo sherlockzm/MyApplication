@@ -29,11 +29,13 @@ import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 
 public class MainActivity extends AppCompatActivity {
-
+////////////
     Double lat;
     Double lon;
 
@@ -44,12 +46,14 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listView;
 
+    PtrFrameLayout pFL;
+
     BmobGeoPoint myPoint;
 
     Date timeBefore = null;
 
     private List<HelpContext> helpList = new ArrayList<HelpContext>();
-
+//////////////////
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +81,41 @@ public class MainActivity extends AppCompatActivity {
         ///////////
 
         Log.e("Date", timeBefore + "");
+
+
+        ///////////////////////下拉刷新
+
+
+//        final PtrFrameLayout ptrFrameLayout = new PtrFrameLayout(MainActivity.this);
+//        ptrFrameLayout.setResistance(1.7f);
+//        ptrFrameLayout.setRatioOfHeaderHeightToRefresh(1.2f);
+//        ptrFrameLayout.setDurationToClose(200);
+//        ptrFrameLayout.setDurationToCloseHeader(1000);
+//        ptrFrameLayout.setPullToRefresh(true);
+//        ptrFrameLayout.setKeepHeaderWhenRefresh(true);
+
+        pFL.setPtrHandler(new PtrHandler() {
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return false;
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                frame.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pFL.refreshComplete();
+                    }
+                },1800);
+
+            }
+        });
+
+
+
+
+        //////////////////////
 
         initAll();
 
@@ -200,7 +239,9 @@ public class MainActivity extends AppCompatActivity {
 
         btn_record = (Button) findViewById(R.id.btn_transaction_record);
 
-        listView = (ListView) findViewById(R.id.list_help);
+//        listView = (ListView) findViewById(R.id.list_help);
+
+        pFL = (PtrFrameLayout)findViewById(R.id.list_help);
     }
 
     private void loadList() {
@@ -251,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                             HelpAdapter helpAdapter = new HelpAdapter(MainActivity.this, R.layout.help_item, helpList);
                                             listView.setAdapter(helpAdapter);
+//
                                             //添加点击事件
                                             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                                 @Override
