@@ -4,7 +4,8 @@
     xmlns:hedgehog="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#9ff0f806">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,12 +15,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tv_simple_title" />
+            android:text="@string/tv_simple_title"
+            android:layout_margin="15dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_record_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" />
     </LinearLayout>
     >
 
@@ -31,12 +35,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tv_pay" />
+            android:text="@string/tv_pay"
+            android:layout_margin="15dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_record_pay"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" />
     </LinearLayout>
     >
 
@@ -49,12 +56,15 @@
             android:id="@+id/tv_giveHelpName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/showRecord_helperName" />
+            android:text="@string/showRecord_helperName"
+            android:layout_margin="15dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_record_helperName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" />
     </LinearLayout>
     >
 
@@ -67,12 +77,15 @@
             android:id="@+id/tv_giveHelpTel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/showRecord_helperTel" />
+            android:text="@string/showRecord_helperTel"
+            android:layout_margin="15dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_record_helperTel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" />
     </LinearLayout>
     >
 
@@ -84,7 +97,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tv_context" />
+            android:text="@string/tv_context"
+            android:layout_margin="15dp"
+            android:textStyle="bold" />
         <TextView
             android:id="@+id/tv_record_station"
             android:layout_width="0dp"
@@ -92,7 +107,9 @@
             android:layout_gravity="right"
             android:layout_weight="1"
             android:gravity="right"
-            android:textColor="#f8a8a8" />
+            android:textColor="#f8a8a8"
+            android:layout_margin="15dp"
+            android:layout_marginTop="30dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -103,7 +120,8 @@
         <TextView
             android:id="@+id/tv_record_detail"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" />
     </LinearLayout>
     >
 
@@ -117,14 +135,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/showRecord_btn_delete" />
+            android:text="@string/showRecord_btn_delete"
+            android:layout_margin="15dp"
+            android:background="#7f06f95b" />
 
         <Button
             android:id="@+id/btn_complete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:text="@string/showRecord_btn_complete" />
+            android:text="@string/showRecord_btn_complete"
+            android:layout_margin="15dp"
+            android:background="#7f06f95b" />
         <!--<Button android:id="@+id/btn_modify" android:text="@string/showRecord_btn_modify" android:layout_width="wrap_content" android:layout_height="wrap_content" />-->
     </LinearLayout>
     >
@@ -149,7 +171,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sure"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:background="#7f06f95b" />
     </LinearLayout>
     >
 

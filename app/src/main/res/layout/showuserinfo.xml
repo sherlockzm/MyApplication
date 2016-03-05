@@ -9,7 +9,8 @@
     android:paddingLeft="10dp"
     android:paddingTop="10dp"
     android:paddingRight="10dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="10dp"
+    android:background="#9ff0f806">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,13 +20,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tv_name"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:layout_margin="15dp" />
 
         <TextView
             android:id="@+id/info_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_margin="15dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -36,13 +39,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tv_tel"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:layout_margin="15dp" />
 
         <TextView
             android:id="@+id/info_tel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_margin="15dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -53,14 +58,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/info_name"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:layout_margin="15dp" />
 
         <TextView
             android:id="@+id/tv_info_realName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:layout_margin="15dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -71,13 +78,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/info_ID"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:layout_margin="15dp" />
 
         <TextView
             android:id="@+id/tv_info_ID"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_margin="15dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -88,13 +97,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/info_overage"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:layout_margin="15dp" />
 
         <TextView
             android:id="@+id/tv_overage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_margin="15dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -106,13 +117,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/info_payAccount"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:layout_margin="15dp" />
 
         <TextView
             android:id="@+id/tv_payAccount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_margin="15dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -123,19 +136,25 @@
             android:id="@+id/btn_changeInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/chang_telorpwd" />
+            android:text="@string/chang_telorpwd"
+            android:background="#f1f4721b"
+            android:layout_margin="15dp" />
 
         <Button
             android:id="@+id/btn_takeCash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_takeCash" />
+            android:text="@string/btn_takeCash"
+            android:background="#f1f4721b"
+            android:layout_margin="15dp" />
 
         <Button
             android:id="@+id/btn_user_loginout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_loginout" />
+            android:text="@string/btn_loginout"
+            android:background="#f1f4721b"
+            android:layout_margin="15dp" />
 
     </LinearLayout>
 

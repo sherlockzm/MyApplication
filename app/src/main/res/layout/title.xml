@@ -6,7 +6,9 @@
     android:id="@+id/btn_user_manager"
     android:text="@string/btn_title_record"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:background="#9ff8b406"
+    android:layout_margin="10dp" />
     <TextView
         android:text="@string/tv_all_title"
         android:gravity="center"
@@ -14,10 +16,13 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:textColor="#f71010"
-        android:textSize="24dp" />
+        android:textSize="24dp"
+        android:layout_margin="10dp" />
     <Button
         android:id="@+id/btn_transaction_record"
         android:text="@string/btn_title_record"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="#9ff8b406"
+        android:layout_margin="10dp" />
 </LinearLayout>

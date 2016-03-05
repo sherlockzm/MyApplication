@@ -2,36 +2,54 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:whatever="http://schemas.android.com/apk/res-auto">
+    xmlns:whatever="http://schemas.android.com/apk/res-auto"
+    android:background="#9ff0f806"
+    android:divider="#fb0303"
+    android:dividerPadding="5dp"
+    android:gravity="center"
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp">
 <TableRow>
-    <TextView android:text="@string/tv_name" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <TextView android:text="@string/tv_name" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textStyle="bold" />
     <com.andreabaccega.widget.FormEditText whatever:testType="nocheck"
-        android:id="@+id/edt_name" android:hint="请输入昵称,不可修改" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" />
+        android:id="@+id/edt_name" android:hint="请输入昵称,不可修改" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
+        android:textSize="12dp" />
 </TableRow>
     <TableRow>
-    <TextView android:text="@string/tv_tel" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <TextView android:text="@string/tv_tel" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textStyle="bold" />
     <com.andreabaccega.widget.FormEditText
         whatever:testType="phone" whatever:emptyErrorString="@string/phoneNumberEmptyError" whatever:testErrorString="@string/phoneNumberError" android:id="@+id/edt_mobileNumber" android:hint="请输入11位手机号码" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
-        android:inputType="phone" />
+        android:inputType="phone"
+        android:textSize="12dp" />
 </TableRow>
 <TableRow>
-    <TextView android:text="@string/tv_pwd" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <TextView android:text="@string/tv_pwd" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textStyle="bold" />
     <EditText android:id="@+id/edt_pwd" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
         android:inputType="textWebPassword" />
 </TableRow>
     <TableRow>
-    <TextView android:text="@string/tv_pwd_repeat" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <TextView android:text="@string/tv_pwd_repeat" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textStyle="bold" />
     <EditText android:id="@+id/edt_pwd_repeat" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
         android:inputType="textWebPassword" />
 </TableRow>
     <TableRow>
-    <TextView android:text="@string/tv_verification" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-    <EditText android:id="@+id/edt_verification" android:hint="请输入接收到的验证码[必须]" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" />
+    <TextView android:text="@string/tv_verification" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textStyle="bold" />
+    <EditText android:id="@+id/edt_verification" android:hint="请输入接收到的验证码[必须]" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
+        android:textSize="12dp" />
 </TableRow>
 
     <TableRow>
-<Button android:id="@+id/btn_getVerification" android:text="@string/tv_getVerification" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <Button android:id="@+id/btn_reg" android:text="@string/btn_reg" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+<Button android:id="@+id/btn_getVerification" android:text="@string/tv_getVerification" android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:background="#f1f4721b"
+    android:layout_margin="10dp" />
+        <Button android:id="@+id/btn_reg" android:text="@string/btn_reg" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:background="#f1f4721b"
+            android:layout_margin="10dp" />
 </TableRow>
 
 </TableLayout>

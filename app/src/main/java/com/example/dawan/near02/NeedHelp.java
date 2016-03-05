@@ -98,6 +98,38 @@ public class NeedHelp extends AppCompatActivity {
                     helpContext.setRequestid(installID);//当前手机ID
 
 
+                    //////////////////////////////支付
+//                    BP.pay(NeedHelp.this, "Pay", "Total Pay", 0.02, false, new PListener() {
+//                        @Override
+//                        public void orderId(String s) {
+//
+//
+//                        }
+//
+//                        @Override
+//                        public void succeed() {
+//                            Log.e("Pay","Fail.");
+//
+//                        }
+//
+//                        @Override
+//                        public void fail(int i, String s) {
+//
+//                            Log.e("Pay","Error "+ s);
+//                        }
+//
+//                        @Override
+//                        public void unknow() {
+//
+//                            Log.e("Pay","UnKnow");
+//
+//
+//                        }
+//                    });
+
+
+
+                    ////////////////
 
                     helpContext.save(NeedHelp.this, new SaveListener() {
                         @Override
@@ -126,7 +158,6 @@ public class NeedHelp extends AppCompatActivity {
                     });
 
                 } else {
-
 
                     Toast.makeText(NeedHelp.this, "定位未成功或输入完整信息不完整", Toast.LENGTH_SHORT).show();
                 }

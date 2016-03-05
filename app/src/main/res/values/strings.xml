@@ -60,7 +60,7 @@
     <string name="info_overage">余额:</string>
     <string name="info_payAccount">支付宝账号:</string>
     <string name="btn_takeCash">提现</string>
-    <string name="btn_loginout">退出当前用户</string>
+    <string name="btn_loginout">退出</string>
 
     <!--showRecord-->
     <string name="showRecord_btn_modify">修改</string>

@@ -30,6 +30,31 @@ public class CheckInput {
                 }
     }
 
+    public boolean checkPwd(Context context,EditText editText1,EditText editText2,Integer minLength,Integer maxLength){
+        String edt1 = UserRegister.MD5(editText1.getText().toString());
+        String edt2 = UserRegister.MD5(editText2.getText().toString());
+        if (!edt1.equals(edt2)){
+            Toast.makeText(context,"两次输入的密码不一样.",Toast.LENGTH_SHORT).show();
+            editText1.setText("");
+            editText2.setText("");
+            editText1.setFocusable(true);
+            editText1.setFocusableInTouchMode(true);
+            editText1.requestFocus();
+            return false;
+        }else if (editText1.getText().length() < minLength || editText1.getText().length() > maxLength){
+            Toast.makeText(context,"密码长度不符合要求。",Toast.LENGTH_SHORT).show();
+            editText1.setText("");
+            editText2.setText("");
+            editText1.setFocusable(true);
+            editText1.setFocusableInTouchMode(true);
+            editText1.requestFocus();
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
     public void getFocus(EditText editText) {
 
         editText.setFocusable(true);

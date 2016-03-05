@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" android:background="@drawable/list9229">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,14 +12,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tv_simple_title" />
+            android:text="@string/tv_simple_title"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_item_title"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
@@ -30,23 +32,25 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tv_pay" />
+            android:text="@string/tv_pay" android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_item_pay"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content" />
 
         <TextView
             android:gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tv_when_request" />
+            android:text="@string/tv_when_request" android:textStyle="bold" />
 
         <TextView
             android:gravity="right"
             android:id="@+id/tv_when"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="3"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
@@ -59,7 +63,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tv_context" />
+            android:text="@string/tv_context"  android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/tv_station"

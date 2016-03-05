@@ -2,26 +2,39 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
     xmlns:whatever="http://schemas.android.com/apk/res-auto"
-    android:stretchColumns="1">
+    android:stretchColumns="1"
+    android:background="#9ff0f806"
+    android:padding="5dp">
 <TableRow>
-    <TextView android:text="@string/tv_tel" android:layout_width="wrap_content"  android:layout_height="wrap_content" />
+    <TextView android:text="@string/tv_tel" android:textStyle="bold" android:layout_width="wrap_content"  android:layout_height="wrap_content" />
     <com.andreabaccega.widget.FormEditText  whatever:testType="phone" whatever:emptyErrorString="@string/emptyError"
         android:id="@+id/edt_login_tel" android:hint="@string/edt_hint_tel" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
-        android:inputType="phone" />
+        android:inputType="phone"
+        android:textSize="12dp" />
 </TableRow>
     <TableRow>
-    <TextView android:text="@string/tv_inputPwd" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-    <EditText android:id="@+id/edt_login_pwd" android:inputType="textWebPassword" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:hint="@string/verAndPwd" />
+    <TextView android:text="@string/tv_inputPwd" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <EditText android:id="@+id/edt_login_pwd" android:inputType="textWebPassword" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:hint="@string/verAndPwd"
+        android:textSize="12dp" />
 </TableRow>
     <TableRow>
-    <TextView android:text="@string/tv_verification" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-    <EditText android:id="@+id/edt_login_ver" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:hint="@string/verAndPwd" />
+    <TextView android:text="@string/tv_verification" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <EditText android:id="@+id/edt_login_ver" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:hint="@string/verAndPwd"
+        android:textSize="12dp" />
 </TableRow>
 
     <TableRow>
-        <Button android:id="@+id/btn_getVer_login" android:text="@string/tv_getVerification" android:layout_height="wrap_content" android:layout_width="wrap_content" />
-        <Button android:id="@+id/btn_login" android:layout_width="wrap_content" android:text="@string/btn_login" android:layout_height="wrap_content" />
-        <Button android:id="@+id/btn_reg_in_login" android:text="@string/btn_reg" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <Button android:id="@+id/btn_getVer_login" android:textStyle="bold" android:text="@string/tv_getVerification" android:layout_height="wrap_content" android:layout_width="wrap_content"
+            android:background="#f1f4721b" />
+        <Button android:id="@+id/btn_login" android:layout_width="wrap_content" android:textStyle="bold" android:text="@string/btn_login" android:layout_height="wrap_content"
+            android:background="#fdf7bb06"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:textColor="#f60d0d" />
+        <Button android:id="@+id/btn_reg_in_login" android:textStyle="bold" android:text="@string/btn_reg" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:background="#f1f4721b" />
     </TableRow>
 </TableLayout>
