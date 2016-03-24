@@ -2,18 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" android:background="@drawable/list9229">
+    android:orientation="vertical"
+    android:focusable="false" android:descendantFocusability="blocksDescendants">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tv_simple_title"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#fbfa8907"
+            android:textSize="14dp"
+            android:textIsSelectable="true" />
 
         <TextView
             android:id="@+id/tv_item_title"
@@ -21,36 +26,40 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#fbfa8907"
+            android:textSize="14dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="5dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tv_pay" android:textStyle="bold" />
+            android:text="@string/tv_pay"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_item_pay"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:gravity="right"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/tv_when_request" android:textStyle="bold" />
+            android:text="@string/tv_when_request"
+            android:textStyle="bold" />
 
         <TextView
             android:gravity="right"
             android:id="@+id/tv_when"
-            android:layout_width="0dp"
-            android:layout_weight="3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
@@ -58,28 +67,31 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="5dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tv_context"  android:textStyle="bold"/>
+            android:text="@string/tv_context"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_station"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
             android:layout_weight="1"
-            android:gravity="right"
-            android:textColor="#f8a8a8" />
+            android:textColor="#f8a8a8"
+            android:layout_gravity="right"
+            android:gravity="right" />
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="5dp">
 
         <TextView
             android:id="@+id/tv_item_detail"

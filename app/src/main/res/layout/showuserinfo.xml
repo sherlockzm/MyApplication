@@ -3,32 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:gravity="center_vertical|left"
+    android:gravity="left"
     android:orientation="vertical"
-    android:padding="10dp"
-    android:paddingLeft="10dp"
-    android:paddingTop="10dp"
-    android:paddingRight="10dp"
+    android:padding="20dp"
     android:paddingBottom="10dp"
-    android:background="#9ff0f806">
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:text="@string/tv_name"
+            android:textColor="#fbfa8907"
             android:textSize="18dp"
-            android:layout_margin="15dp" />
+            android:textStyle="bold"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/info_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="15dp" />
+            android:layout_weight="2"
+            android:textSize="16dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -36,18 +38,21 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:text="@string/tv_tel"
+            android:textColor="#fbfa8907"
             android:textSize="18dp"
-            android:layout_margin="15dp" />
+            android:textStyle="bold"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/info_tel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="15dp" />
+            android:layout_weight="2"
+            android:textSize="16dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -55,19 +60,21 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:text="@string/info_name"
+            android:textColor="#fbfa8907"
             android:textSize="18dp"
-            android:layout_margin="15dp" />
+            android:textStyle="bold"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tv_info_realName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="18dp"
-            android:layout_margin="15dp" />
+            android:layout_weight="2"
+            android:textSize="16dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -75,18 +82,21 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:text="@string/info_ID"
+            android:textColor="#fbfa8907"
             android:textSize="18dp"
-            android:layout_margin="15dp" />
+            android:textStyle="bold"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tv_info_ID"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="15dp" />
+            android:layout_weight="2"
+            android:textSize="16dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -94,18 +104,21 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:text="@string/info_overage"
+            android:textColor="#fbfa8907"
             android:textSize="18dp"
-            android:layout_margin="15dp" />
+            android:textStyle="bold"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tv_overage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="15dp" />
+            android:layout_weight="2"
+            android:textSize="16dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -115,47 +128,159 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginBottom="15dp"
             android:text="@string/info_payAccount"
+            android:textColor="#fbfa8907"
             android:textSize="18dp"
-            android:layout_margin="15dp" />
+            android:textStyle="bold"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tv_payAccount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="16dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:orientation="horizontal">
+        <TextView
+            android:text="@string/userInfo_requesterScore"
+            android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="15dp" />
+            android:layout_height="wrap_content"
+            android:textColor="#fbfa8907"
+            android:textStyle="bold"
+            android:textSize="18dp" />
+        <TextView
+            android:id="@+id/tv_userInfo_requesterScore"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left" />
+        <TextView
+            android:text="@string/userInfo_helperScore"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textColor="#fbfa8907"
+            android:textStyle="bold"
+            android:textSize="18dp" />
+        <TextView
+            android:id="@+id/tv_userInfo_helperScore"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left" />
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center">
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_changeInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/chang_telorpwd"
-            android:background="#f1f4721b"
-            android:layout_margin="15dp" />
+            android:layout_margin="5dp"
+            android:background="@drawable/change"
+            android:text="@string/chang_telorpwd" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_takeCash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_takeCash"
-            android:background="#f1f4721b"
-            android:layout_margin="15dp" />
+            android:layout_margin="5dp"
+            android:background="@drawable/cash"
+            android:text="@string/btn_takeCash" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_user_loginout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_loginout"
-            android:background="#f1f4721b"
-            android:layout_margin="15dp" />
+            android:layout_margin="5dp"
+            android:background="@drawable/logout"
+            android:text="@string/btn_loginout" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edt_area"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="@string/edt_area"
+            android:inputType="numberDecimal"
+            android:maxLength="4"
+            android:maxLines="1"
+            android:textSize="12dp" />
+
+        <ImageButton
+            android:id="@+id/btn_defineArea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/area" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_showArea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fbfa8907" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edt_helparea"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="@string/edt_helpArea"
+            android:inputType="numberDecimal"
+            android:maxLength="4"
+            android:maxLines="1"
+            android:textSize="12dp" />
+
+        <ImageButton
+            android:id="@+id/btn_defineHelpArea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/area" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_showHelpArea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fbfa8907" />
+    </LinearLayout>
+
 
 </LinearLayout>

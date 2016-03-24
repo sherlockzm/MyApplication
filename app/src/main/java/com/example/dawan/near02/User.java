@@ -13,6 +13,26 @@ public class User extends BmobUser implements Serializable {
     private String realName;
     private String idNumber;
 
+    private String mark;
+
+    public String getMark() {
+        return mark;
+    }
+
+    public void setMark(String mark) {
+        this.mark = mark;
+    }
+
+    private Double overage = Double.valueOf(0);
+
+    public Double getOverage() {
+        return overage;
+    }
+
+    public void setOverage(Double overage) {
+        this.overage = overage;
+    }
+
     public String getRealName() {
         return realName;
     }

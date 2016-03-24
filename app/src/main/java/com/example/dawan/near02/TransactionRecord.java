@@ -10,6 +10,24 @@ public class TransactionRecord extends BmobObject {
     private String requestID;
     private String helperID;
     private String buniessId;
+    private Double requestPay;
+    private Double payHelper;
+
+    public Double getPayHelper() {
+        return payHelper;
+    }
+
+    public void setPayHelper(Double payHelper) {
+        this.payHelper = payHelper;
+    }
+
+    public Double getRequestPay() {
+        return requestPay;
+    }
+
+    public void setRequestPay(Double requestPay) {
+        this.requestPay = requestPay;
+    }
 
     public String getBuniessId() {
         return buniessId;

@@ -33,8 +33,11 @@ dependencies {
         exclude module: 'design'
     }
     //列表下拉刷新
-    compile 'in.srain.cube:ultra-ptr:1.0.11'
+    compile 'com.yalantis:phoenix:1.2.3'
+    //记录分类浏览
+    compile 'com.karumi:expandableselector:1.0.0'
 
-    //评分
+    //////////////
+
 
 }

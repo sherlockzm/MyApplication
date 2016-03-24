@@ -9,5 +9,19 @@
         <!--<item name="colorAccent">@color/colorAccent</item>-->
     <!--</style>-->
 
-    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar" />
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar" >
+
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <item name="expandableItemStyle">@style/ExpandableItemStyle</item>
+    </style>
+
+    <style name="ExpandableItemStyle">
+        <item name="android:layout_height">@dimen/item_size</item>
+        <item name="android:layout_width">@dimen/item_size</item>
+        <item name="android:background">@drawable/bg_item_with_title</item>
+        <item name="android:layout_margin">@dimen/item_margin</item>
+        <item name="android:textColor">@color/orange</item>
+        <item name="android:textSize">@dimen/item_text_size</item>
+    </style>
+
 </resources>

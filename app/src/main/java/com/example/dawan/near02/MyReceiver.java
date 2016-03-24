@@ -51,9 +51,9 @@ public class MyReceiver extends BroadcastReceiver {
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         NotificationManager notifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification.Builder notification = new Notification.Builder(context);
-        Notification.Builder builder = notification.setContentIntent(pi).setAutoCancel(true).setTicker(notificationTitle).setSmallIcon(R.drawable.abc)
+        Notification.Builder builder = notification.setContentIntent(pi).setTicker(notificationTitle).setSmallIcon(R.drawable.icon28)
                 .setContentTitle(notificationTitle).setContentText(message).setWhen(System.currentTimeMillis())
-                .setOngoing(true).setAutoCancel(true).setDefaults(Notification.DEFAULT_ALL);
+                .setAutoCancel(true).setDefaults(Notification.DEFAULT_ALL);
         Notification n = notification.build();
 
         notifyMgr.notify(1, n);

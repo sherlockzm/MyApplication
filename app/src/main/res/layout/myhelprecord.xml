@@ -3,45 +3,70 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#9ff0f806">
+    android:padding="20dp">
 
     <TextView
-        android:layout_gravity="center" android:gravity="center"
         android:id="@+id/tv_showRecordList_title"
-        android:text="@string/btn_recordlist_request"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:text="@string/btn_recordlist_request"
         android:textColor="#f76060"
         android:textSize="18dp" />
 
-    <ListView
-        android:id="@+id/myHelpRecord"
+    <com.yalantis.phoenix.PullToRefreshView
+        android:id="@+id/pull_to_refresh_record"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"></ListView>
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/myHelpRecord"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"></ListView>
+    </com.yalantis.phoenix.PullToRefreshView>
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="10dp">
+///////展开列表
+        <com.karumi.expandableselector.ExpandableSelector
+            android:id="@+id/es_sizes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/expandable_selector_margin"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_showRequestList"
-            android:text="@string/btn_recordlist_request"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#9ff0f806"
-            android:layout_margin="15dp"
-            android:textColor="#f60d0d" />
+            android:layout_marginRight="10dp"
+            android:background="@drawable/gethelplist"
+            android:text="@string/btn_recordlist_request" />
 
-        <Button
+
+        <ImageButton
             android:id="@+id/btn_showGiveHelpList"
-            android:text="@string/btn_recordlist_giveHelp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#9ff0f806"
-            android:layout_margin="15dp"
-            android:textColor="#f60d0d" />
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/helplist"
+            android:text="@string/btn_recordlist_giveHelp" />
+
+        <com.karumi.expandableselector.ExpandableSelector
+            android:id="@+id/es_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/expandable_selector_margin"/>
     </LinearLayout>
 </LinearLayout>

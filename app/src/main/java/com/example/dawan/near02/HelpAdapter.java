@@ -63,6 +63,12 @@ public class HelpAdapter extends ArrayAdapter<HelpContext>{
             case 2:
                 viewHolder.station.setText("已完成");
                 break;
+            case 3:
+                viewHolder.station.setText("取消中");
+                break;
+            case 4:
+                viewHolder.station.setText("已过期");
+                break;
             default:
                 break;
         }

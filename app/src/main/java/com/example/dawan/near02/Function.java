@@ -1,12 +1,21 @@
 package com.example.dawan.near02;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobPushManager;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobSMS;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.RequestSMSCodeListener;
 
 /**
  * Created by dawan on 2016/2/24.
@@ -26,6 +35,53 @@ public class Function {
         bmobPush.pushMessage(message);
     }
 
+    public void showMessage(Context context,String s){
+
+        Toast.makeText(context,s,Toast.LENGTH_SHORT).show();
+    }
+
+
+
+
+    protected boolean checkNetworkInfo(Context context){
+        ConnectivityManager conMan = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo.State mobile = conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
+        Log.e("MyConnect", mobile.toString());
+//        if(mobile== NetworkInfo.State. DISCONNECTED){
+//
+//            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));//进入无线网络配置界面
+//        }
+        NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+        Log.e("MyConnect", wifi.toString());
+
+        if (mobile == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTED) {
+            return true;
+        } else {
+            String str = "请打开网络连接。";
+            new Function().showMessage(context, str);
+            return false;
+        }
+    }
+
+    public void verMobile(final Context context,String s){
+        if (s == null) {
+            Toast.makeText(context, "请先登陆。", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, Login.class);
+            context.startActivity(intent);
+        } else {
+            BmobSMS.requestSMSCode(context, s, "短信模板", new RequestSMSCodeListener() {
+                @Override
+                public void done(Integer integer, BmobException e) {
+                    if (e == null) {
+                        Toast.makeText(context, "验证码已发送，请查收。", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(context, "验证码发送失败，请重试。", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
 
     public void checkCacaheContext(Context context,BmobQuery<HelpContext> query){
 
@@ -81,15 +137,18 @@ public class Function {
         }
     }
 
-    public void setButton(Button[] button,boolean boo){
+    public void setButton(ImageButton[] imgbutton,Button button, boolean boo){
         if (boo == false){
-            for (Button btn:button){
+            for (ImageButton btn:imgbutton){
                 btn.setVisibility(View.GONE);
+
             }
+            button.setVisibility(View.GONE);
         }else {
-            for (Button btn:button){
+            for (ImageButton btn:imgbutton){
                 btn.setVisibility(View.VISIBLE);
             }
+            button.setVisibility(View.VISIBLE);
         }
     }
 

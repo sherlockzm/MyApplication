@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigationModel
+  ns = "http://schemas.android.com?import=com.android.tools.idea.editors.navigation.model.*">
+  <locations  
+    class = "java.util.ArrayList">
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.dawan.near02.ShowHelp"/>
+      <point      
+        x = "1676"      
+        y = "196"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.dawan.near02.NeedHelp"/>
+      <point      
+        x = "1056"      
+        y = "728"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.dawan.near02.MainActivity"/>
+      <point      
+        x = "236"      
+        y = "832"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.dawan.near02.Info"/>
+      <point      
+        x = "1880"      
+        y = "620"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.dawan.near02.ChangeInfo"/>
+      <point      
+        x = "2520"      
+        y = "732"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.dawan.near02.Login"/>
+      <point      
+        x = "988"      
+        y = "1120"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.dawan.near02.TakeCash"/>
+      <point      
+        x = "380"      
+        y = "732"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.dawan.near02.MyHelpRecord"/>
+      <point      
+        x = "52"      
+        y = "56"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.dawan.near02.UserRegister"/>
+      <point      
+        x = "384"      
+        y = "364"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.dawan.near02.ShowRecord"/>
+      <point      
+        x = "900"      
+        y = "500"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.dawan.near02.UserInfo"/>
+      <point      
+        x = "668"      
+        y = "1032"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "c.b.a.B"/>
+      <point      
+        x = "950"      
+        y = "550"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "c.b.a.A"/>
+      <point      
+        x = "1000"      
+        y = "600"/>
+    </statePointEntry>
+  </locations>
+</navigationModel>

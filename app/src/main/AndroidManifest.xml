@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -33,6 +34,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+//拨打电话权限
+    <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+
 
     <application
         android:allowBackup="true"
@@ -86,19 +90,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".TakeCash"/>
 
-
-        <!-- 支付组件相关-->
-        <activity
-            android:name="c.b.a.A"
-            android:configChanges="orientation|keyboardHidden|navigation"
-            android:exported="false"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name="c.b.a.B"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent" />
 
 
         <!-- 注册相关-->
@@ -111,6 +104,7 @@
         <activity android:name=".ChangeInfo"/>
         <activity android:name=".MyHelpRecord"/>
         <activity android:name=".ShowRecord"/>
+        <activity android:name=".Info"/>
 
     </application>
 

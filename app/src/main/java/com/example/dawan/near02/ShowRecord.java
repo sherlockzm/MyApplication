@@ -1,11 +1,15 @@
 package com.example.dawan.near02;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,10 +42,16 @@ public class ShowRecord extends AppCompatActivity {
     private TextView tv_showScore;
 
     private Button btn_complete;
-    private Button btn_delete;
+    private ImageButton btn_delete;
 
     private RatingBar ratingBar;
-    private Button btn_getScore;
+    private ImageButton btn_getScore;
+
+    private ImageButton ibtn_tel;
+
+    private RatingBar ratingBarOther;
+    private TextView tv_scoreOther;
+    private TextView tv_scoreOtherShow;
 
     private float score = 0;
     private float requesterScore;
@@ -50,23 +60,25 @@ public class ShowRecord extends AppCompatActivity {
     private int progressNow;
     private String scoreID;
 
-    String pUserName ="";
+    private TextView tv_recordName;
+
+    String pUserName = "";
     String pUserTel = "";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.showrecord);
 
-
+        init();
 
         final HelpContext helpContext = (HelpContext) getIntent().getSerializableExtra("HelpContext");        //传递了一个helpContext对象过来
         final User pUser = (User) getIntent().getSerializableExtra("UserContext");
         if (pUser != null) {
             pUserName = pUser.getUsername();
             pUserTel = pUser.getMobilePhoneNumber();
-        }else{
-             pUserName ="";
-             pUserTel = "";
+        } else {
+            pUserName = "";
+            pUserTel = "";
         }
         final int boo = getIntent().getIntExtra("Boo", 1);
 
@@ -78,22 +90,6 @@ public class ShowRecord extends AppCompatActivity {
 
         ///////////////////////////判断是否已经完成，添加评论。
         //获取该对象的状态
-        /////////////////////////////
-
-        tv_title = (TextView) findViewById(R.id.tv_record_title);
-        tv_pay = (TextView) findViewById(R.id.tv_record_pay);
-        tv_detail = (TextView) findViewById(R.id.tv_record_detail);
-        tv_helperName = (TextView) findViewById(R.id.tv_record_helperName);
-        tv_helperTel = (TextView) findViewById(R.id.tv_record_helperTel);
-        tv_giveHelpName = (TextView) findViewById(R.id.tv_giveHelpName);
-        tv_giveHelpTel = (TextView) findViewById(R.id.tv_giveHelpTel);
-        tv_showScore = (TextView) findViewById(R.id.score_show);
-        tv_scoreText = (TextView) findViewById(R.id.tv_scoreText);
-        tv_score_station = (TextView) findViewById(R.id.tv_record_station);
-
-        btn_complete = (Button) findViewById(R.id.btn_complete);
-        btn_delete = (Button) findViewById(R.id.btn_delete);
-        /////////////////////////初始化界面
 
         if (boo == 0) {//为0则显示自己帮别人的列表,自己是帮助者
             tv_giveHelpName.setText("求助者昵称：");
@@ -101,11 +97,12 @@ public class ShowRecord extends AppCompatActivity {
             btn_complete.setText("确认删除");
 
         }
-        tv_title.setText(helpContext.getSimple_title().toString());
+        tv_title.setText(helpContext.getSimple_title());
         tv_pay.setText(helpContext.getPay().toString());
-        tv_detail.setText(helpContext.getDetail().toString());
-        tv_helperName.setText(pUserName.toString());
-        tv_helperTel.setText(pUserTel.toString());
+        tv_helperName.setText(pUserName);
+        tv_helperTel.setText(pUserTel);
+        tv_detail.setText(helpContext.getDetail());
+
         switch (progressNow) {
             case 0:
                 tv_score_station.setText("新请求");
@@ -117,14 +114,14 @@ public class ShowRecord extends AppCompatActivity {
                 tv_score_station.setText("已完成");
                 break;
             case 3:
-                tv_score_station.setText("正在取消");
+                tv_score_station.setText("取消中");
+            case 4:
+                tv_score_station.setText("已过期");
+                break;
             default:
                 break;
         }
-        //////////////////////////////////////////评分相关
-//初始化评分控件
-        ratingBar = (RatingBar) findViewById(R.id.rb_score);
-        btn_getScore = (Button) findViewById(R.id.ibtn_getScore);
+
 
         switch (progressNow) {//根据该求助的状态控制界面显示
             case 2: {//如果该求助已完成，则显示评分按钮,同时隐藏完成按钮，删除按钮，
@@ -148,6 +145,23 @@ public class ShowRecord extends AppCompatActivity {
                                 } else {
                                     Log.e("Score Record", "Can't Find it");
                                 }
+
+                                /////////////////
+                                if (boo == 0 && helperScore != 0) {
+                                    ratingBarOther.setRating(helperScore);
+                                    ratingBarOther.setIsIndicator(true);
+                                    ratingBarOther.setVisibility(View.VISIBLE);
+                                    tv_scoreOther.setVisibility(View.VISIBLE);
+                                    tv_scoreOtherShow.setText(helperScore + "");
+                                } else if (boo == 1 && requesterScore != 0) {
+                                    ratingBarOther.setRating(requesterScore);
+                                    ratingBarOther.setIsIndicator(true);
+                                    ratingBarOther.setVisibility(View.VISIBLE);
+                                    tv_scoreOther.setVisibility(View.VISIBLE);
+                                    tv_scoreOtherShow.setText(requesterScore + "");
+                                }
+
+                                //////////
                                 if (boo == 0 && requesterScore != 0) {//我是帮助者，并且求助者的评分不等于0（即系已经评分的情况下）显示评分，隐藏按钮//当前状态为显示
                                     ratingBar.setRating(requesterScore);
                                     ratingBar.setIsIndicator(true);
@@ -156,10 +170,14 @@ public class ShowRecord extends AppCompatActivity {
 //                            btn_delete.setVisibility(View.INVISIBLE);
                                     tv_scoreText.setVisibility(View.VISIBLE);
                                     tv_showScore.setText(requesterScore + "");
+
+                                    ///////////////对方对我的评分
+
+
                                 } else if (boo == 1 && helperScore != 0) {//我是求助者，并且帮助者评分不为0（我已经对其评分）的情况下//当前状态为显示
                                     ratingBar.setRating(helperScore);
                                     ratingBar.setIsIndicator(true);
-                                    new Function().setButton(new Button[]{btn_delete, btn_getScore, btn_complete}, false);
+                                    new Function().setButton(new ImageButton[]{btn_delete, btn_getScore}, btn_complete, false);
                                     tv_scoreText.setVisibility(View.VISIBLE);
                                     tv_showScore.setText("" + helperScore);
                                 }
@@ -176,9 +194,7 @@ public class ShowRecord extends AppCompatActivity {
                 break;
             }
             case 0: {
-//            new Function().setButton(new Button[]{btn_complete,btn_getScore},false);
                 btn_complete.setVisibility(View.GONE);
-                btn_delete.setGravity(Gravity.CENTER);
                 break;
             }
             case 1: {
@@ -186,7 +202,7 @@ public class ShowRecord extends AppCompatActivity {
                     tv_scoreText.setText("如不能按要求完成，请电话联系求助者发起删除请求。");
                 } else {
                     tv_scoreText.setText("顺便帮众正全力为你解决问题，请稍后。");
-                    new Function().setButton(new Button[]{btn_delete, btn_complete}, true);
+                    new Function().setButton(new ImageButton[]{btn_delete}, btn_complete, true);
                 }
                 break;
             }
@@ -196,7 +212,7 @@ public class ShowRecord extends AppCompatActivity {
                     new Function().setButton(btn_complete, true);
                 } else {
                     tv_scoreText.setText("正在等待大侠确认你的取消帮助请求。");
-                    new Function().setButton(btn_complete,false);
+                    new Function().setButton(btn_complete, false);
 
                 }
                 break;
@@ -211,6 +227,18 @@ public class ShowRecord extends AppCompatActivity {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 score = rating;//取得用户评分
+            }
+        });
+
+        ibtn_tel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String tel = tv_helperTel.getText().toString();
+                if (tel.trim().equals("")) {
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tel));
+                    startActivity(intent);
+                }
             }
         });
 
@@ -395,6 +423,7 @@ public class ShowRecord extends AppCompatActivity {
                                         Log.e("Complete", "Completed!");
                                         Toast.makeText(ShowRecord.this, "该求助已顺利完成，祝天天好心情喔！", Toast.LENGTH_SHORT).show();
                                         Log.e("id", helpContext.getRequestid() + "//" + helperId + "//" + helpContextId);
+
                                         Score newScore = new Score();
                                         newScore.setRequesterId(helpContext.getRequestid());
                                         newScore.setRequesterScore(0);
@@ -405,6 +434,9 @@ public class ShowRecord extends AppCompatActivity {
                                             @Override
                                             public void onSuccess() {
                                                 Log.e("Score", "Save OK");
+                                                ///////////推送给援助者
+                                                String thank = "在你的帮助下，我的问题已解决，谢谢你。";
+                                                new Function().pushMessage(ShowRecord.this, helperId, thank);
                                             }
 
                                             @Override
@@ -414,7 +446,7 @@ public class ShowRecord extends AppCompatActivity {
                                         });
                                         btn_getScore.setVisibility(View.VISIBLE);
                                         ratingBar.setVisibility(View.VISIBLE);
-                                        new Function().setButton(new Button[]{btn_complete, btn_delete}, false);
+                                        new Function().setButton(new ImageButton[]{btn_delete}, btn_complete, false);
                                         //执行余额变动
                                     }
 
@@ -425,7 +457,7 @@ public class ShowRecord extends AppCompatActivity {
 
                                     }
                                 });
-                            }else {
+                            } else {
                                 Toast.makeText(ShowRecord.this, "该求助状态已改变，请刷新。", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -440,19 +472,45 @@ public class ShowRecord extends AppCompatActivity {
                 }
             }
         });
+
+        tv_recordName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tv_recordName.getText().toString().trim() != "") {
+                    BmobQuery<User> userQuery = new BmobQuery<User>();
+                    userQuery.getObject(ShowRecord.this, pUser.getObjectId(), new GetListener<User>() {
+                        @Override
+                        public void onSuccess(User user) {
+                            Intent intent = new Intent(ShowRecord.this, Info.class);
+                            intent.putExtra("INFO", user);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onFailure(int i, String s) {
+
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    /////////登记金额变动。
+    public void pay() {
     }
 
     public void addScore(Score nScore, String scoreId, int role) {
         if (role == 0) {
 
             nScore.setRequesterScore(score);
-//            nScore.setValue("requesterScore",score);
-//            addScore1.setValue("helperId",scoreHelper);
+
             nScore.update(ShowRecord.this, scoreId, new UpdateListener() {
                 @Override
                 public void onSuccess() {
                     Log.e("ScoreSave", "Save requester");
                     Toast.makeText(ShowRecord.this, "评分已成功，你给对方的评分为" + score + "分。", Toast.LENGTH_SHORT).show();
+                    ratingBar.setIsIndicator(true);
                 }
 
                 @Override
@@ -483,9 +541,48 @@ public class ShowRecord extends AppCompatActivity {
 
 
         }
-        new Function().setButton(new Button[]{btn_delete, btn_getScore, btn_complete}, false);
+        new Function().setButton(new ImageButton[]{btn_delete, btn_getScore}, btn_complete, false);
         tv_showScore.setText("" + score);
         tv_showScore.setVisibility(View.VISIBLE);
     }
+
+    private void init() {
+        /////////////////////////////
+
+        tv_title = (TextView) findViewById(R.id.tv_record_title);
+        tv_pay = (TextView) findViewById(R.id.tv_record_pay);
+        tv_detail = (TextView) findViewById(R.id.tv_record_detail);
+        tv_helperName = (TextView) findViewById(R.id.tv_record_helperName);
+        tv_helperTel = (TextView) findViewById(R.id.tv_record_helperTel);
+        tv_giveHelpName = (TextView) findViewById(R.id.tv_giveHelpName);
+        tv_giveHelpTel = (TextView) findViewById(R.id.tv_giveHelpTel);
+        tv_showScore = (TextView) findViewById(R.id.score_show);
+        tv_scoreText = (TextView) findViewById(R.id.tv_scoreText);
+        tv_score_station = (TextView) findViewById(R.id.tv_record_station);
+
+        tv_scoreOther = (TextView) findViewById(R.id.tv_scoreTextOther);
+        tv_scoreOtherShow = (TextView) findViewById(R.id.score_showOther);
+        ratingBarOther = (RatingBar) findViewById(R.id.rb_scoreOther);
+        ibtn_tel = (ImageButton) findViewById(R.id.ibtn_tel);
+
+        btn_complete = (Button) findViewById(R.id.btn_complete);
+        btn_delete = (ImageButton) findViewById(R.id.btn_delete);
+        /////////////////////////初始化界面
+        //////////////////////////////////////////评分相关
+//初始化评分控件
+        ratingBar = (RatingBar) findViewById(R.id.rb_score);
+        btn_getScore = (ImageButton) findViewById(R.id.ibtn_getScore);
+
+        tv_recordName = (TextView)findViewById(R.id.tv_record_helperName);
+
+    }
+
+    protected void onDestroy(){
+        super.onDestroy();
+        pUserName = "";
+        pUserTel = "";
+
+    }
+
 
 }

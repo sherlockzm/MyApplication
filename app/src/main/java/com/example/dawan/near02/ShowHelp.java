@@ -6,9 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,13 +27,15 @@ public class ShowHelp extends AppCompatActivity {
     private TextView tv_detail;
 
 
-    private Button btn_iHelp;
-    private Button btn_notHelp;
+    private ImageButton btn_iHelp;
+    private ImageButton btn_notHelp;
     TransactionRecord record;
 
     private int isComplete;
 
     private HelpContext showhelpContext;
+
+//    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +47,14 @@ public class ShowHelp extends AppCompatActivity {
         tv_title = (TextView) findViewById(R.id.tv_show_title);
         tv_pay = (TextView) findViewById(R.id.tv_show_pay);
         tv_detail = (TextView) findViewById(R.id.tv_show_detail);
-        btn_iHelp = (Button) findViewById(R.id.btn_iHelp);
-        btn_notHelp = (Button) findViewById(R.id.btn_notHelp);
+        btn_iHelp = (ImageButton) findViewById(R.id.btn_iHelp);
+        btn_notHelp = (ImageButton) findViewById(R.id.btn_notHelp);
         //获取数据
         final Intent intent = getIntent();
         String title = intent.getStringExtra("ext_title");
         Double pay = intent.getDoubleExtra("ext_pay", 0);
         String detail = intent.getStringExtra("ext_detail");
+//        position = intent.getIntExtra("ext_position",99);
         final String objectId = intent.getStringExtra("ext_objectId");//该请求的id
         final String requestID = intent.getStringExtra("ext_requestId");//发出请求的用户ID
 
@@ -69,8 +71,8 @@ public class ShowHelp extends AppCompatActivity {
                         isComplete = helpContext.getIscomplete();
                         if (isComplete != 0) {
                             btn_iHelp.setVisibility(View.GONE);
-                            btn_notHelp.setGravity(Gravity.CENTER);
-                            btn_notHelp.setText("返回");
+//                            btn_notHelp.setGravity(Gravity.CENTER);
+//                            btn_notHelp.setText("返回");
                         }
                     }
 
@@ -141,9 +143,6 @@ public class ShowHelp extends AppCompatActivity {
                                                     public void onSuccess() {
                                                         Log.e("Change", "OK!");
 
-                                                        String message = "你的请求已有人响应。";
-                                                        new Function().pushMessage(ShowHelp.this, requestID, message);
-
                                                         //////////////保存该记录
                                                         record.setHelperID(helperId);
                                                         record.setRequestID(requestID);
@@ -151,6 +150,10 @@ public class ShowHelp extends AppCompatActivity {
                                                         record.save(ShowHelp.this, new SaveListener() {
                                                             @Override
                                                             public void onSuccess() {
+
+                                                                String message = "你的请求已有人响应。";
+                                                                new Function().pushMessage(ShowHelp.this, requestID, message);
+
                                                                 Log.e("SaveRecord", "OK!");
                                                                 Toast.makeText(ShowHelp.this, "好样的，记事长老给你记一功！", Toast.LENGTH_SHORT).show();
                                                             }

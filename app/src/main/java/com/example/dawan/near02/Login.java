@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
@@ -26,9 +26,9 @@ public class Login extends AppCompatActivity {
     private FormEditText edt_tel;
     private EditText edt_pwd;
     private EditText edt_ver;
-    private Button btn_getVer;
-    private Button btn_log;
-    private Button btn_reg;
+    private ImageButton btn_getVer;
+    private ImageButton btn_log;
+    private ImageButton btn_reg;
 
     private Boolean style;
 
@@ -42,9 +42,9 @@ public class Login extends AppCompatActivity {
 //        edt_tel = (EditText)findViewById(R.id.edt_login_tel);
         edt_pwd = (EditText) findViewById(R.id.edt_login_pwd);
         edt_ver = (EditText) findViewById(R.id.edt_login_ver);
-        btn_getVer = (Button) findViewById(R.id.btn_getVer_login);
-        btn_log = (Button) findViewById(R.id.btn_login);
-        btn_reg = (Button) findViewById(R.id.btn_reg_in_login);
+        btn_getVer = (ImageButton) findViewById(R.id.btn_getVer_login);
+        btn_log = (ImageButton) findViewById(R.id.btn_login);
+        btn_reg = (ImageButton) findViewById(R.id.btn_reg_in_login);
         style = false;
 
 //        new  CheckInput().checkMobile(Login.this,edt_tel,btn_getVer,btn_log);
@@ -64,7 +64,9 @@ public class Login extends AppCompatActivity {
                                 Log.e("Smile", "短信id" + integer);
                                 style = true;
                                 edt_pwd.setFocusable(false);
+                                new CheckInput().getFocus(edt_ver);
                                 edt_pwd.setText("请在下方输入收到的验证码.");
+                                Toast.makeText(Login.this,"验证码已发送，请查收。",Toast.LENGTH_SHORT).show();
 
                             }
                         }

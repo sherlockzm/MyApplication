@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
@@ -28,13 +28,14 @@ import cn.bmob.v3.listener.UpdateListener;
  */
 public class UserRegister extends AppCompatActivity {
 
-    private Button btn_getVerification;
-    private Button btn_register;
+    private ImageButton btn_getVerification;
+    private ImageButton btn_register;
     private FormEditText edt_mobileNumber;
     private EditText edt_verification;
     private FormEditText edt_name;
     private EditText edt_pwd1;
     private EditText edt_pwd2;
+    private EditText mark;
 
     private User user_reg;
 
@@ -42,13 +43,14 @@ public class UserRegister extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
 
-        btn_getVerification = (Button) findViewById(R.id.btn_getVerification);
-        btn_register = (Button) findViewById(R.id.btn_reg);
+        btn_getVerification = (ImageButton) findViewById(R.id.btn_getVerification);
+        btn_register = (ImageButton) findViewById(R.id.btn_reg);
         edt_name = (FormEditText) findViewById(R.id.edt_name);
         edt_pwd1 = (EditText) findViewById(R.id.edt_pwd);
         edt_pwd2 = (EditText) findViewById(R.id.edt_pwd_repeat);
         edt_mobileNumber = (FormEditText) findViewById(R.id.edt_mobileNumber);
         edt_verification = (EditText) findViewById(R.id.edt_verification);
+        mark = (EditText)findViewById(R.id.mark);
 
         //输入检测
 //        new CheckInput(UserRegister.this,edt_mobileNumber,11,btn_getVerification);
@@ -68,6 +70,8 @@ public class UserRegister extends AppCompatActivity {
                         if (e == null) {
                             Toast.makeText(UserRegister.this, "验证码已发送到你手机，请查收。", Toast.LENGTH_SHORT).show();
                                     Log.e("Smile", "短信id" + integer);
+                        }else {
+                            Log.e("Smile","短信失败。");
                         }
                     }
                 });
@@ -83,6 +87,7 @@ public class UserRegister extends AppCompatActivity {
                 String pwd2 = MD5(edt_pwd2.getText().toString());
                 String tel = edt_mobileNumber.getText().toString();
                 String ver = edt_verification.getText().toString();
+                String userMark = mark.getText().toString();
                 FormEditText inputStr[] = new FormEditText[]{edt_name, edt_mobileNumber};
                 new CheckInput().checkMobile(UserRegister.this,edt_mobileNumber);
                 if (!(new Login().verificationInput(inputStr))) {
@@ -97,7 +102,8 @@ public class UserRegister extends AppCompatActivity {
                     user_reg.setUsername(name);
                     user_reg.setPassword(MD5(pwd1));
                     user_reg.setMobilePhoneNumber(tel);
-                    user_reg.setPayAccount("");
+                    user_reg.setPayAccount("0");
+                    user_reg.setMark(userMark);
 
                     user_reg.signOrLogin(UserRegister.this, ver, new SaveListener() {
                         @Override

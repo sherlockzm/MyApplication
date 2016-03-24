@@ -1,6 +1,7 @@
 package com.example.dawan.near02;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,35 @@ public class CheckInput {
     public CheckInput() {
     }
 
+
+    public boolean checkArea(Context context,EditText editText){
+        if (editText.getText().toString().trim().equals("")||editText.getText().toString()==null){
+            Toast.makeText(context,"不能为空",Toast.LENGTH_SHORT).show();
+            return false;
+        }else {
+            Float area = Float.valueOf(editText.getText().toString());
+            if (area < 0.1 || area > 20) {
+                editText.setText("");
+                Log.e("Area", "Wrong Area!");
+                Toast.makeText(context, "范围设置错误。", Toast.LENGTH_SHORT).show();
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    public boolean checkPWD(Context context,EditText editText1,EditText editText2){
+        if (!editText1.getText().toString().equals(editText2.getText().toString())||editText1.getText().length() < 6){
+            Toast.makeText(context,"新密码前后不一致或密码小于6位，请重新输入。",Toast.LENGTH_SHORT).show();
+            editText1.setText("");
+            editText2.setText("");
+            getFocus(editText1);
+            return false;
+        }else {
+            return true;
+        }
+    }
+
     public boolean CheckInputHelp(final Context context, final EditText editText, final int maxLength) {
 
                 if (editText.getText().length() > maxLength || editText.getText().length() == 0) {
@@ -28,31 +58,6 @@ public class CheckInput {
                 } else {
                    return true;
                 }
-    }
-
-    public boolean checkPwd(Context context,EditText editText1,EditText editText2,Integer minLength,Integer maxLength){
-        String edt1 = UserRegister.MD5(editText1.getText().toString());
-        String edt2 = UserRegister.MD5(editText2.getText().toString());
-        if (!edt1.equals(edt2)){
-            Toast.makeText(context,"两次输入的密码不一样.",Toast.LENGTH_SHORT).show();
-            editText1.setText("");
-            editText2.setText("");
-            editText1.setFocusable(true);
-            editText1.setFocusableInTouchMode(true);
-            editText1.requestFocus();
-            return false;
-        }else if (editText1.getText().length() < minLength || editText1.getText().length() > maxLength){
-            Toast.makeText(context,"密码长度不符合要求。",Toast.LENGTH_SHORT).show();
-            editText1.setText("");
-            editText2.setText("");
-            editText1.setFocusable(true);
-            editText1.setFocusableInTouchMode(true);
-            editText1.requestFocus();
-            return false;
-        } else {
-            return true;
-        }
-
     }
 
     public void getFocus(EditText editText) {
@@ -76,7 +81,7 @@ public class CheckInput {
         if (BmobUser.getCurrentUser(context, clazz) != null) {
             return true;
         } else {
-            Toast.makeText(context, "请先登录并确认已打开GPS", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "请先登录并确认已打开GPS", Toast.LENGTH_SHORT).show();
 //            Intent intent = new Intent(context, Login.class);
 //            context.startActivity(intent);
             return false;

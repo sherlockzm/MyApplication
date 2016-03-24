@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">顺便帮</string>
 
+    <string name="start_notice">本应用依赖于GPS才能为你提供服务，请打开GPS后再次启动本应用。期待你的使用^_^</string>
+
     <!--needhelp相关-->
     <string name="tv_simple_title">简明标题：</string>
     <string name="edt_simpleTitle">简要说出你的求助（不多于18个汉字）</string>
@@ -45,6 +47,8 @@
     <string name="chang_tel_newNum">请输入新手机号码</string>
     <string name="btn_chang_submit">提交更改</string>
 
+    <string name="cur_tel_ver">验证原手机：</string>
+    <string name="new_tel_ver">验证新手机：</string>
     <!--main-->
     <string name="btn_new_request">新求助</string>
     <string name="btn_fresh">刷新</string>
@@ -58,9 +62,11 @@
     <string name="info_ID">身份证号码:</string>
     <string name="chang_telorpwd">更改或补充信息</string>
     <string name="info_overage">余额:</string>
-    <string name="info_payAccount">支付宝账号:</string>
+    <string name="info_payAccount">微信账号:</string>
     <string name="btn_takeCash">提现</string>
-    <string name="btn_loginout">退出</string>
+    <string name="btn_loginout">退出当前用户</string>
+    <string name="edt_area">求助范围100米至20公里（0.1至20,默认10）</string>
+    <string name="edt_helpArea">援助范围100米至20公里（0.1至20,默认10）</string>
 
     <!--showRecord-->
     <string name="showRecord_btn_modify">修改</string>
@@ -69,12 +75,19 @@
     <string name="showRecord_helperName">援助者昵称：</string>
     <string name="showRecord_helperTel">援助者电话：</string>
     <string name="showScore">你给对方的评分为：</string>
+    <string name="showScoreOther">对方给你的评分为：</string>
 
     <!--ReecordList-->
     <string name="btn_recordlist_request">求助列表</string>
     <string name="btn_recordlist_giveHelp">帮助列表</string>
 
+<!--提现-->
+    <string name="edt_takeMoney">提现金额：</string>
+    <string name="takecash_note">提现金额最少100元</string>
+
+    <string name="userInfo_requesterScore">求助得分：</string>
+    <string name="userInfo_helperScore">援助得分：</string>
 
 
-
+    <string name="mark">特征码：</string>
 </resources>
