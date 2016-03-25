@@ -57,4 +57,14 @@
     <ImageButton android:layout_span="2" android:background="@drawable/help" android:id="@+id/btn_submit" android:text="@string/btn_submit" android:layout_gravity="center_horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_marginTop="20dp" />
     </TableRow>
+
+    <LinearLayout>
+        <TextView
+            android:id="@+id/tv_show_notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#7bfa0c0c"
+            android:textSize="17dp" />
+    </LinearLayout>
 </TableLayout>
+

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
@@ -27,7 +28,7 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.listener.CountListener;
-import cn.bmob.v3.listener.GetListener;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 
 /**
@@ -46,7 +47,11 @@ public class NeedHelp extends AppCompatActivity {
     private String installID;
     private String notificationContext;
 
+    private TextView show_notice;
+
     private int count;
+
+    private static final String notice="注意：当前定位未成功，将使用上次的定位信息。";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +64,7 @@ public class NeedHelp extends AppCompatActivity {
         edt_detail = (FormEditText) findViewById(R.id.edt_detail);
         btn_submit = (ImageButton) findViewById(R.id.btn_submit);
         ibtn_clear = (ImageButton) findViewById(R.id.btn_clear);
+        show_notice = (TextView)findViewById(R.id.tv_show_notice);
 
         new CheckInput().getFocus(edt_simple_title);
         ////////////////////////
@@ -80,14 +86,13 @@ public class NeedHelp extends AppCompatActivity {
 
         Intent intent = getIntent();
         longitude = intent.getDoubleExtra("lon", 0);
+
         latitude = intent.getDoubleExtra("lat", 0);
-        bmobGeoPoint = new BmobGeoPoint(longitude, latitude);
-
-        Log.e("geo",longitude+"");
-        Log.e("geo",latitude+"");
 
 
-        setGeo();
+        setGeo(longitude,latitude);
+//        bmobGeoPoint = new BmobGeoPoint(longitude, latitude);
+
 
         ibtn_clear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +112,7 @@ public class NeedHelp extends AppCompatActivity {
                     new Function().checkNetworkInfo(NeedHelp.this);
                     boolean cInput = new Login().verificationInput(new FormEditText[]{edt_simple_title, edt_pay, edt_detail}) &&
                             new CheckInput().CheckInputHelp(NeedHelp.this, edt_simple_title, 18) && new CheckInput().CheckInputHelp(NeedHelp.this, edt_detail, 100);
-                    if (cInput && bmobGeoPoint != null && longitude != 0 && latitude != 0) {
+                    if (cInput && bmobGeoPoint != null) {
 
                         //添加try ，保证先保存在服务器再进行推送。
                         String simpleTitle = edt_simple_title.getText().toString();
@@ -133,7 +138,7 @@ public class NeedHelp extends AppCompatActivity {
                                 BmobPushManager bmobPushManager = new BmobPushManager(NeedHelp.this);
                                 BmobQuery<BmobInstallation> bmobQuery = new BmobQuery<BmobInstallation>();
 //定向推送10公里内用户，范围未来应可修改，但不应超过50公里
-                                bmobQuery.addWhereWithinRadians("myPoint", new BmobGeoPoint(longitude, latitude), myArea);//10表示10公里,现在使用getArea让用户设置
+                                bmobQuery.addWhereWithinRadians("myPoint", bmobGeoPoint, myArea);//10表示10公里,现在使用getArea让用户设置
                                 Log.e("Query", bmobQuery + "");
                                 bmobPushManager.setQuery(bmobQuery);
                                 bmobPushManager.pushMessage(notificationContext);
@@ -303,27 +308,31 @@ public class NeedHelp extends AppCompatActivity {
 
     }
 
-    private void setGeo(){
+    private void setGeo(Double lon,Double lat){
 
-        Log.e("geo",bmobGeoPoint+"KKKKKK");
-
-        if (longitude == 0.0 || latitude == 0.0) {
+        if (lon == 0.0 || lat == 0.0) {
             BmobQuery<MyInstallation> query = new BmobQuery<MyInstallation>();
-            query.getObject(NeedHelp.this, installID, new GetListener<MyInstallation>() {
+
+            query.addWhereEqualTo("userId",installID);
+            query.findObjects(NeedHelp.this, new FindListener<MyInstallation>() {
                 @Override
-                public void onSuccess(MyInstallation myInstallation) {
-                    bmobGeoPoint = myInstallation.getMyPoint();
-                    Log.e("geo",bmobGeoPoint+"");
+                public void onSuccess(List<MyInstallation> list) {
+                    for (MyInstallation installation : list) {
+                        bmobGeoPoint = installation.getMyPoint();
+                        show_notice.setText(notice);
+                        Log.e("geo",bmobGeoPoint+"######"+bmobGeoPoint.getLatitude()+"????"+bmobGeoPoint.getLongitude());
+
+                    }
                 }
 
                 @Override
-                public void onFailure(int i, String s) {
-                    Log.e("GetPoint", "Fail");
-
+                public void onError(int i, String s) {
+                    Log.e("geo","~~~~fail");
                 }
             });
         }else {
-            Log.e("geo",bmobGeoPoint+"");
+            Log.e("geo", bmobGeoPoint + "！！！");
+            bmobGeoPoint = new BmobGeoPoint(lon, lat);
         }
     }
 

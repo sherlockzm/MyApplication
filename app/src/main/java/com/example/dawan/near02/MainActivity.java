@@ -129,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else {
                     //open User Manager activity
-                        Intent infoIntent = new Intent(MainActivity.this, UserInfo.class);
-                        startActivity(infoIntent);
+                    Intent infoIntent = new Intent(MainActivity.this, UserInfo.class);
+                    startActivity(infoIntent);
 
                 }
 
@@ -200,11 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadList() {
 
-        ////////////////////////////////
-        //先取得本机器的安装ID，然后把本机器的地理位置更新至安装表，然后通过本地理位置在helpContext表搜索附近10公里范围内的新求助
 
-        //update installation and get list of helps.
-        ////////////////获取帮助范围
         SharedPreferences getArea = getSharedPreferences("helpArea", Activity.MODE_PRIVATE);
         final Float area = getArea.getFloat("myHelpArea", 10);
         ////////////
@@ -324,12 +320,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void freshList() {
         if (myPoint == null) {
-            if (checkNetworkInfo(MainActivity.this) == 0) {
-                new Function().showMessage(MainActivity.this, "请打开网络连接及GPS。");
-            } else {
-                locationMe(MainActivity.this);
+            switch (checkNetworkInfo(MainActivity.this)) {
+                case 0:
+                    break;
+                case 3:
+                    locationMe(MainActivity.this);
+                    break;
+                case 1:
+
+                    break;
+                case 2:
+
+                    break;
+                default:
+                    break;
             }
-        } else {//用户未登陆，定位已成功
+
+        } else if (checkNetworkInfo(MainActivity.this)==2){//用户未登陆，定位已成功
             loadList();
         }
     }
@@ -349,14 +356,14 @@ public class MainActivity extends AppCompatActivity {
         Log.e("MyConnect", wifi.toString());
 
         if (mobile == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTED) {
-            state = state + 2;////////////网络正常为 1
+            state = state + 2;////////////网络正常为 2
         } else {
             String s = "请打开网络连接。";
             new Function().showMessage(context, s);
         }
 
         if (SmartLocation.with(context).location().state().isGpsAvailable()) {
-            state = state + 1;     /////定位成功为 2
+            state = state + 1;     /////定位成功为 1
         } else {
             String sgps = "请打开GPS";
             new Function().showMessage(context, sgps);
@@ -386,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    protected boolean checkNetworkInfo(){
+    protected boolean checkNetworkInfo() {
         ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo.State mobile = conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
         Log.e("MyConnect", mobile.toString());
@@ -434,7 +441,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
 
 
 }
