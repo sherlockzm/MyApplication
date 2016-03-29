@@ -40,42 +40,56 @@ import io.nlopez.smartlocation.SmartLocation;
 
 public class MainActivity extends AppCompatActivity {
     ////////////
-    Double lat;
-    Double lon;
+    private Double lat;
+    private Double lon;
 
-    ImageButton btn_userManager;
-    ImageButton btn_getHelp;
-    ImageButton btn_record;
+    private ImageButton btn_userManager;
+    private ImageButton btn_getHelp;
+    private ImageButton btn_record;
 
-    ListView listView;
+    private ListView listView;
 
-    BmobGeoPoint myPoint;
+    private BmobGeoPoint myPoint;
 
-    Date timeBefore = null;
+    private Date timeBefore = null;
 
-    PullToRefreshView mPullToRefreshView;
+    private BmobDate dateNow;
+
+    private PullToRefreshView mPullToRefreshView;
 
     final static Integer REFRESH_DELAY = 900;
 
     private List<HelpContext> helpList = new ArrayList<HelpContext>();
 
+
+
     //////////////////
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ///////////////
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /////////////////////////////////////////检测网络连接状态
+        ////////////////////
+        final SharedPreferences check = getSharedPreferences("FIRST",MODE_PRIVATE);
+        Integer mark = check.getInt("MARK",0);
+        if (mark != 1){
+            SharedPreferences.Editor editor = check.edit();
+            editor.putInt("MARK", 1);
+            editor.commit();
+            Intent intent = new Intent(MainActivity.this,AppIntroActivity.class);
+            startActivity(intent);
+        }else {
 
         if (savedInstanceState != null) {
             lon = savedInstanceState.getDouble("Longitude", 0);
             lat = savedInstanceState.getDouble("Latitude", 0);
         }
 
+
+////////////////////////
         /////////////////////
         orderTime();
-        ///////////
 
-///////////////////////////
         initAll();
 
         if (myPoint == null) {///////////如果定位信息为空，则检查网络及GPS，如果都打开则定位并加载列表，如果定位信息不为空，则加载列表
@@ -156,6 +170,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        }
+
     }
 
     public void locationMe(Context context) {
@@ -174,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
 
     }
 
@@ -227,11 +244,16 @@ public class MainActivity extends AppCompatActivity {
                                     BmobQuery<HelpContext> getHelps3 = new BmobQuery<HelpContext>();
                                     getHelps3.addWhereGreaterThanOrEqualTo("createdAt", new BmobDate(timeBefore));
 
+                                    //当前时间必须少于有效时间
+                                    BmobQuery<HelpContext> getHelps4 = new BmobQuery<HelpContext>();
+                                    getHelps4.addWhereGreaterThan("time",dateNow);//有效时间大于当前时间
+
                                     //执行双条件查询
                                     List<BmobQuery<HelpContext>> andQuerys = new ArrayList<BmobQuery<HelpContext>>();
                                     andQuerys.add(getHelps1);
                                     andQuerys.add(getHelps2);
                                     andQuerys.add(getHelps3);
+                                    andQuerys.add(getHelps4);
                                     BmobQuery<HelpContext> queryAnd = new BmobQuery<HelpContext>();
                                     queryAnd.order("-createdAt");
                                     queryAnd.and(andQuerys);
@@ -336,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
 
-        } else if (checkNetworkInfo(MainActivity.this)==2){//用户未登陆，定位已成功
+        } else{//用户未登陆，定位已成功
             loadList();
         }
     }
@@ -425,6 +447,10 @@ public class MainActivity extends AppCompatActivity {
     private void orderTime() {
         Date dNow = new Date();   //当前时间
         Date dBefore = null;
+
+        dateNow = new BmobDate(dNow);
+
+        Log.e("Time","Now"+dateNow);
 
         Calendar calendar = Calendar.getInstance(); //得到日历
         calendar.setTime(dNow);//把当前时间赋给日历

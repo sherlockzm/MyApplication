@@ -37,7 +37,8 @@ dependencies {
     //记录分类浏览
     compile 'com.karumi:expandableselector:1.0.0'
 
-    //////////////
+    //////////////引导页
+    compile 'com.github.paolorotolo:appintro:3.4.0'
 
 
 }

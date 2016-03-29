@@ -3,6 +3,7 @@ package com.example.dawan.near02;
 import java.io.Serializable;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 
 /**
@@ -12,6 +13,7 @@ public class HelpContext extends BmobObject implements Serializable {
 
     private String simple_title;
     private Double pay;
+    private BmobDate time;
     private String detail;
     private BmobGeoPoint bmobGeoPoint;
     private int iscomplete;
@@ -24,6 +26,14 @@ public class HelpContext extends BmobObject implements Serializable {
 
     public void setHelperId(String helperId) {
         this.helperId = helperId;
+    }
+
+    public BmobDate getTime() {
+        return time;
+    }
+
+    public void setTime(BmobDate time) {
+        this.time = time;
     }
 
     private int station;//是否超时

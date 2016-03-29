@@ -41,6 +41,25 @@ public class Function {
     }
 
 
+    public Double trimNull(String d){
+
+        String[] lTime = d.split("\\.");
+
+        if (lTime[0].equals(null)||lTime[0].equals("0")||lTime[0].equals("")){
+            lTime[0] = "0";
+
+            String value = lTime[0].concat(".").concat(lTime[1]);
+            Double dd = Double.valueOf(value);
+
+            return dd;
+        }else {
+
+            return Double.valueOf(d);
+        }
+
+
+
+    }
 
 
     protected boolean checkNetworkInfo(Context context){

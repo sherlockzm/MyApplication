@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">顺便帮</string>
 
+
+    <string name="app_intro">引导</string>
+    <string name="skip">跳过</string>
+    <string name="enter">进入</string>
+
     <string name="start_notice">本应用依赖于GPS才能为你提供服务，请打开GPS后再次启动本应用。期待你的使用^_^</string>
 
     <!--needhelp相关-->
@@ -9,6 +14,8 @@
     <string name="tv_context">详细请求：</string>
     <string name="edt_context">详细说明你的请求，包括限定时间，地点以及其他特殊要求。</string>
     <string name="tv_pay">酬劳：</string>
+    <string name="tv_time">有效期</string>
+    <string name="edt_maxTime">最长24小时(0-24)</string>
     <string name="edt_pay">包括购买物品(如果需要)支出及报酬。格式：0.00</string>
     <string name="btn_submit">请求帮助</string>
     <string name="tv_when_request">求助时间：</string>
@@ -90,4 +97,7 @@
 
 
     <string name="mark">特征码：</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

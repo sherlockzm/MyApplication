@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ public class NeedHelp extends AppCompatActivity {
 
     private FormEditText edt_simple_title;
     private FormEditText edt_pay;
+    private EditText edt_time;
     private FormEditText edt_detail;
     private ImageButton btn_submit;
     private ImageButton ibtn_clear;
@@ -51,16 +53,21 @@ public class NeedHelp extends AppCompatActivity {
 
     private int count;
 
+    private BmobDate timeBefore = null;
+
     private static final String notice="注意：当前定位未成功，将使用上次的定位信息。";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.needhelp);
 
+        limitTime("0.26");
+
         installID = (String) BmobUser.getObjectByKey(NeedHelp.this, "objectId");
 
         edt_simple_title = (FormEditText) findViewById(R.id.edt_simple_title);
         edt_pay = (FormEditText) findViewById(R.id.edt_pay);
+        edt_time = (EditText)findViewById(R.id.edt_time);
         edt_detail = (FormEditText) findViewById(R.id.edt_detail);
         btn_submit = (ImageButton) findViewById(R.id.btn_submit);
         ibtn_clear = (ImageButton) findViewById(R.id.btn_clear);
@@ -99,6 +106,7 @@ public class NeedHelp extends AppCompatActivity {
             public void onClick(View v) {
                 edt_simple_title.setText("");
                 edt_pay.setText("");
+                edt_time.setText("");
                 edt_detail.setText("");
             }
         });
@@ -116,13 +124,21 @@ public class NeedHelp extends AppCompatActivity {
 
                         //添加try ，保证先保存在服务器再进行推送。
                         String simpleTitle = edt_simple_title.getText().toString();
-                        Double pay = Double.parseDouble(String.valueOf(edt_pay.getText()));
+//                        Double pay = Double.parseDouble(String.valueOf(edt_pay.getText()));
+                        Double pay = new Function().trimNull(edt_pay.getText().toString());
+                        Log.e("PAY",pay + "pay");
+                        String time = edt_time.getText().toString();
                         String detail = edt_detail.getText().toString();
+
+
+                        //TODO 时间转为后再存入
+                        limitTime(time);
 
                         HelpContext helpContext = new HelpContext();
                         helpContext.setBmobGeoPoint(bmobGeoPoint);
                         helpContext.setSimple_title(simpleTitle);
                         helpContext.setPay(pay);
+                        helpContext.setTime(timeBefore);
                         helpContext.setDetail(detail);
                         helpContext.setIscomplete(0);
                         helpContext.setStation(0);
@@ -150,6 +166,7 @@ public class NeedHelp extends AppCompatActivity {
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString("Title", "");
                                 editor.putString("Pay", "");
+                                editor.putString("Time","");
                                 editor.putString("Detail", "");
                                 editor.commit();
                                 finish();
@@ -192,6 +209,9 @@ public class NeedHelp extends AppCompatActivity {
         if (edt_pay.getText().toString().trim() != "") {
             savedInstanceState.putString("PAY", edt_pay.getText().toString());
         }
+        if (edt_time.getText().toString().trim()!=""){
+            savedInstanceState.putString("Time",edt_time.getText().toString());
+        }
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -205,6 +225,8 @@ public class NeedHelp extends AppCompatActivity {
 
         String pay = savedInstanceState.getString("PAY");
 
+        String time = savedInstanceState.getString("Time");
+
 
     }
 
@@ -215,6 +237,7 @@ public class NeedHelp extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("Title", edt_simple_title.getText().toString());
         editor.putString("Pay", edt_pay.getText().toString());
+        editor.putString("Time", edt_time.getText().toString());
         editor.putString("Detail", edt_detail.getText().toString());
         editor.commit();
         super.onBackPressed();
@@ -225,9 +248,11 @@ public class NeedHelp extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("SAVEDETAIL", MODE_PRIVATE);
         String title = preferences.getString("Title", "");
         String pay = preferences.getString("Pay", "");
+        String time = preferences.getString("Time","");
         String detail = preferences.getString("Detail", "");
         edt_simple_title.setText(title);
         edt_pay.setText(pay);
+        edt_time.setText(time);
         edt_detail.setText(detail);
     }
 
@@ -334,6 +359,47 @@ public class NeedHelp extends AppCompatActivity {
             Log.e("geo", bmobGeoPoint + "！！！");
             bmobGeoPoint = new BmobGeoPoint(lon, lat);
         }
+    }
+
+
+    private void limitTime(String time) {
+
+
+        int hour = 0;
+        int minute = 0;
+        if (Double.valueOf(time) > 24){
+            hour = 24;
+            minute = 0;
+        }else {
+
+            String[] lTime = time.split("\\.");
+
+            Log.e("NOTHING", lTime[0]);
+
+            if (lTime[0].equals(null) || lTime[0].equals("0") || lTime[0].equals("")) {
+                lTime[0] = "0";
+            }
+            hour = Integer.valueOf(lTime[0]);
+            minute = Integer.valueOf(lTime[1].substring(0, 1)) * 6;
+
+        }
+        Date dNow = new Date();   //当前时间
+        Date dBefore = null;
+
+        Calendar calendar = Calendar.getInstance(); //得到日历
+        calendar.setTime(dNow);
+
+        calendar.add(Calendar.HOUR_OF_DAY,hour);  //设置实际有效时间
+        calendar.add(Calendar.MINUTE,minute);
+        dBefore = calendar.getTime();   //得到有效时间
+
+//        BmobDate bmobDate = new  BmobDate(dBefore);
+
+            timeBefore = new BmobDate(dBefore);
+
+            Log.e("Time", timeBefore+"!BEFORE!");
+
+
     }
 
 }
