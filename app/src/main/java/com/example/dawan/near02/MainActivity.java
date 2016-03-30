@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this,AppIntroActivity.class);
             startActivity(intent);
         }else {
-
         if (savedInstanceState != null) {
             lon = savedInstanceState.getDouble("Longitude", 0);
             lat = savedInstanceState.getDouble("Latitude", 0);
@@ -255,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
                                     andQuerys.add(getHelps3);
                                     andQuerys.add(getHelps4);
                                     BmobQuery<HelpContext> queryAnd = new BmobQuery<HelpContext>();
-                                    queryAnd.order("-createdAt");
+                                    queryAnd.order("time");
                                     queryAnd.and(andQuerys);
                                     queryAnd.setLimit(20);
                                     queryAnd.findObjects(MainActivity.this, new FindListener<HelpContext>() {
@@ -288,12 +287,14 @@ public class MainActivity extends AppCompatActivity {
                                                         String tt = gethelpContext.getSimple_title();
                                                         Double pp = gethelpContext.getPay();
                                                         String dd = gethelpContext.getDetail();
+                                                        String lTime = gethelpContext.getTime().getDate().toString();
                                                         String objectId = gethelpContext.getObjectId();
                                                         String requestId = gethelpContext.getRequestid();
 
                                                         intent.putExtra("ext_title", tt);
                                                         intent.putExtra("ext_pay", pp);
                                                         intent.putExtra("ext_detail", dd);
+                                                        intent.putExtra("ext_limitTime",lTime);
                                                         intent.putExtra("ext_objectId", objectId);
                                                         intent.putExtra("ext_requestId", requestId);
 //                                                        intent.putExtra("ext_position",position);

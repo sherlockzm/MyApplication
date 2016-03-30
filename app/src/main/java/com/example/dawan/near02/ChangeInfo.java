@@ -1,5 +1,6 @@
 package com.example.dawan.near02;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -63,8 +64,7 @@ public class ChangeInfo extends AppCompatActivity{
 
                 if (tel == null) {
                     Toast.makeText(ChangeInfo.this, "请先登陆。", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ChangeInfo.this, Login.class);
-                    startActivity(intent);
+                    toLogin(ChangeInfo.this);
                 } else {
                     if (new CheckInput().checkPWD(ChangeInfo.this, pwd1, pwd2)) {
                         BmobSMS.requestSMSCode(ChangeInfo.this, tel, "短信模板", new RequestSMSCodeListener() {
@@ -93,6 +93,8 @@ public class ChangeInfo extends AppCompatActivity{
                     public void done(BmobException e) {
                         if (e == null){
                             Toast.makeText(ChangeInfo.this,"密码重置成功，请使用新密码登陆。",Toast.LENGTH_SHORT).show();
+                            BmobUser.logOut(ChangeInfo.this);
+                            toLogin(ChangeInfo.this);
                             finish();
                         }else {
                             Toast.makeText(ChangeInfo.this,"密码重置失败。" + e.getErrorCode(),Toast.LENGTH_SHORT).show();
@@ -254,6 +256,11 @@ public class ChangeInfo extends AppCompatActivity{
         edt_addVer = (EditText)findViewById(R.id.edt_add_ver);
 
 
+    }
+
+    public void toLogin(Context context){
+        Intent intent = new Intent(context, Login.class);
+        startActivity(intent);
     }
 
 }

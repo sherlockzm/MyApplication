@@ -25,6 +25,8 @@ public class ShowHelp extends AppCompatActivity {
     private TextView tv_title;
     private TextView tv_pay;
     private TextView tv_detail;
+    private TextView tv_limitTime;
+
 
 
     private ImageButton btn_iHelp;
@@ -49,17 +51,20 @@ public class ShowHelp extends AppCompatActivity {
         tv_detail = (TextView) findViewById(R.id.tv_show_detail);
         btn_iHelp = (ImageButton) findViewById(R.id.btn_iHelp);
         btn_notHelp = (ImageButton) findViewById(R.id.btn_notHelp);
+        tv_limitTime = (TextView) findViewById(R.id.tv_limitTime);
         //获取数据
         final Intent intent = getIntent();
         String title = intent.getStringExtra("ext_title");
         Double pay = intent.getDoubleExtra("ext_pay", 0);
         String detail = intent.getStringExtra("ext_detail");
+        String lTime = intent.getStringExtra("ext_limitTime");
 //        position = intent.getIntExtra("ext_position",99);
         final String objectId = intent.getStringExtra("ext_objectId");//该请求的id
         final String requestID = intent.getStringExtra("ext_requestId");//发出请求的用户ID
 
         tv_title.setText(title);
         tv_pay.setText(pay.toString());
+        tv_limitTime.setText(lTime);
         tv_detail.setText(detail);
         /////////////////////////////////////////////
         BmobQuery<HelpContext> query = new BmobQuery<HelpContext>();

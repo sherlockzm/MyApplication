@@ -61,8 +61,6 @@ public class NeedHelp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.needhelp);
 
-        limitTime("0.26");
-
         installID = (String) BmobUser.getObjectByKey(NeedHelp.this, "objectId");
 
         edt_simple_title = (FormEditText) findViewById(R.id.edt_simple_title);
@@ -79,9 +77,11 @@ public class NeedHelp extends AppCompatActivity {
             String tt = savedInstanceState.getString("TITLE");
             String dt = savedInstanceState.getString("DETAIL");
             String pp = savedInstanceState.getString("PAY");
+            String tTime = savedInstanceState.getString("Time");
 
             edt_simple_title.setText(tt);
             edt_pay.setText(pp);
+            edt_time.setText(tTime);
             edt_detail.setText(dt);
 
         }
@@ -129,6 +129,9 @@ public class NeedHelp extends AppCompatActivity {
                         Log.e("PAY",pay + "pay");
                         String time = edt_time.getText().toString();
                         String detail = edt_detail.getText().toString();
+
+
+
 
 
                         //TODO 时间转为后再存入
@@ -367,7 +370,10 @@ public class NeedHelp extends AppCompatActivity {
 
         int hour = 0;
         int minute = 0;
-        if (Double.valueOf(time) > 24){
+        if (time.trim().equals("")){
+            hour = 24;
+            minute = 0;
+        }else if (Double.valueOf(time) > 24 ||Double.valueOf(time) == 0){
             hour = 24;
             minute = 0;
         }else {
@@ -378,10 +384,10 @@ public class NeedHelp extends AppCompatActivity {
 
             if (lTime[0].equals(null) || lTime[0].equals("0") || lTime[0].equals("")) {
                 lTime[0] = "0";
+            }else if (lTime.length > 1) {
+                hour = Integer.valueOf(lTime[0]);
+                minute = Integer.valueOf(lTime[1].substring(0, 1)) * 6;
             }
-            hour = Integer.valueOf(lTime[0]);
-            minute = Integer.valueOf(lTime[1].substring(0, 1)) * 6;
-
         }
         Date dNow = new Date();   //当前时间
         Date dBefore = null;

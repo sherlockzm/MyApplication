@@ -128,7 +128,7 @@ public class MyHelpRecord extends AppCompatActivity {
         ///添加排序及状态排序
 //        BmobQuery<HelpContext> query1 = new BmobQuery<>();
         query.order("iscomplete");
-        query.order("-createdAt");
+        query.order("time");
         if (iscomplete < 5) {
             query.addWhereEqualTo("iscomplete", iscomplete);
         }
@@ -187,18 +187,6 @@ public class MyHelpRecord extends AppCompatActivity {
                             }
                         });
 
-/*                        Intent intent = new Intent(MyHelpRecord.this, ShowRecord.class);
-
-                        //传递数据给showRecord           更换为程序内广播
-
-                        intent.putExtra("HelpContext", getHelpContext);
-                        if (pUser != null) {
-                            intent.putExtra("UserContext", pUser);
-                            Log.e("Info", pUser.getMobilePhoneNumber()+"/////");
-                        }
-                        intent.putExtra("Boo", boo);
-                        intent.addCategory("SHOWHELP");
-                        startActivity(intent);*/
                     }
                 });
 

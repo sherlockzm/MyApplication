@@ -49,7 +49,7 @@ public class HelpAdapter extends ArrayAdapter<HelpContext>{
         }
         viewHolder.simple_title.setText(helpContext.getSimple_title());
         viewHolder.pay.setText(helpContext.getPay().toString());
-        viewHolder.when_request.setText(helpContext.getUpdatedAt());
+        viewHolder.when_request.setText(helpContext.getTime().getDate().toString());
         viewHolder.detail.setText(helpContext.getDetail());
 
         switch (helpContext.getIscomplete()){

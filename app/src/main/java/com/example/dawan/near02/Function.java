@@ -40,7 +40,6 @@ public class Function {
         Toast.makeText(context,s,Toast.LENGTH_SHORT).show();
     }
 
-
     public Double trimNull(String d){
 
         String[] lTime = d.split("\\.");

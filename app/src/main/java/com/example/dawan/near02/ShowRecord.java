@@ -37,6 +37,7 @@ public class ShowRecord extends AppCompatActivity {
     private TextView tv_giveHelpTel;
     private TextView tv_scoreText;
 
+    private TextView tv_limitTime_show;
     private TextView tv_score_station;
 
     private TextView tv_showScore;
@@ -99,6 +100,7 @@ public class ShowRecord extends AppCompatActivity {
         }
         tv_title.setText(helpContext.getSimple_title());
         tv_pay.setText(helpContext.getPay().toString());
+        tv_limitTime_show.setText(helpContext.getTime().getDate().toString());
         tv_helperName.setText(pUserName);
         tv_helperTel.setText(pUserTel);
         tv_detail.setText(helpContext.getDetail());
@@ -559,6 +561,8 @@ public class ShowRecord extends AppCompatActivity {
         tv_showScore = (TextView) findViewById(R.id.score_show);
         tv_scoreText = (TextView) findViewById(R.id.tv_scoreText);
         tv_score_station = (TextView) findViewById(R.id.tv_record_station);
+
+        tv_limitTime_show = (TextView) findViewById(R.id.tv_limitTime_show);
 
         tv_scoreOther = (TextView) findViewById(R.id.tv_scoreTextOther);
         tv_scoreOtherShow = (TextView) findViewById(R.id.score_showOther);
