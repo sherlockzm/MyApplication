@@ -17,6 +17,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 }
 
 dependencies {
@@ -36,9 +38,8 @@ dependencies {
     compile 'com.yalantis:phoenix:1.2.3'
     //记录分类浏览
     compile 'com.karumi:expandableselector:1.0.0'
-
     //////////////引导页
     compile 'com.github.paolorotolo:appintro:3.4.0'
-
-
+    compile files('libs/AMap_Location_V2.4.0_20160308.jar')
 }
+

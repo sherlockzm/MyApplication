@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">顺便帮</string>
 
+    <string name="tv_nav_user">个人</string>
+    <string name="tv_nav_help">援助</string>
+    <string name="tv_nav_record">记录</string>
 
     <string name="app_intro">引导</string>
     <string name="skip">跳过</string>

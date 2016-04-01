@@ -6,18 +6,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal"
-        android:background="#f737c211"
-        android:layout_marginBottom="20dp">
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="20dp"
+        android:layout_gravity="center"
+        android:gravity="center">
 
-        <TextView
-            android:text="@string/tv_all_title"
+        <TextView android:id="@+id/text1" android:text="@string/tv_nav_user" android:layout_height="wrap_content" android:layout_width="0dp" android:layout_weight="1"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textColor="#fbf9f908"
-            android:textSize="24dp" />
+            android:textStyle="bold"
+            android:textIsSelectable="false" />
+        <TextView android:id="@+id/text2" android:text="@string/tv_nav_help" android:layout_height="wrap_content" android:layout_width="0dp" android:layout_weight="1"
+            android:gravity="center"
+            android:textStyle="bold" />
+        <TextView android:id="@+id/text3" android:text="@string/tv_nav_record" android:layout_height="wrap_content" android:layout_width="0dp" android:layout_weight="1"
+            android:gravity="center"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -32,8 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:divider="@drawable/divider2"
-        android:focusable="true" />
+        android:focusable="true"
+        android:divider="@drawable/divider2" />
 
     </com.yalantis.phoenix.PullToRefreshView>
     <!--  下拉刷新 -->
