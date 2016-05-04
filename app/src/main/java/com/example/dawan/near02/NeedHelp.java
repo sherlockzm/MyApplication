@@ -4,17 +4,28 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
+import com.gun0912.tedpicker.Config;
+import com.gun0912.tedpicker.ImagePickerActivity;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,15 +33,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import cn.bmob.v3.BmobInstallation;
-import cn.bmob.v3.BmobPushManager;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * Created by dawan on 2016/2/18.
@@ -43,11 +54,30 @@ public class NeedHelp extends AppCompatActivity {
     private FormEditText edt_detail;
     private ImageButton btn_submit;
     private ImageButton ibtn_clear;
+    private Button btn_uploadImage;
     private Double latitude;
     private Double longitude;
     BmobGeoPoint bmobGeoPoint;
     private String installID;
     private String notificationContext;
+
+    private ImageView imgView_upload;
+
+    private BmobFile bmobFile;
+
+    String detail;
+    String time;
+    Double pay;
+    String simpleTitle;
+
+    HelpContext helpContext = new HelpContext();
+
+    private Uri imageUri;
+
+    private static final int INTENT_REQUEST_GET_IMAGES = 13;
+
+    private static final int PAY_CODE = 929;
+
 
     private TextView show_notice;
 
@@ -55,7 +85,8 @@ public class NeedHelp extends AppCompatActivity {
 
     private BmobDate timeBefore = null;
 
-    private static final String notice="注意：当前定位未成功，将使用上次的定位信息。";
+    private static final String notice = "注意：当前定位未成功，将使用上次的定位信息。";
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,11 +96,15 @@ public class NeedHelp extends AppCompatActivity {
 
         edt_simple_title = (FormEditText) findViewById(R.id.edt_simple_title);
         edt_pay = (FormEditText) findViewById(R.id.edt_pay);
-        edt_time = (EditText)findViewById(R.id.edt_time);
+        edt_time = (EditText) findViewById(R.id.edt_time);
         edt_detail = (FormEditText) findViewById(R.id.edt_detail);
         btn_submit = (ImageButton) findViewById(R.id.btn_submit);
         ibtn_clear = (ImageButton) findViewById(R.id.btn_clear);
-        show_notice = (TextView)findViewById(R.id.tv_show_notice);
+        show_notice = (TextView) findViewById(R.id.tv_show_notice);
+        btn_uploadImage = (Button) findViewById(R.id.btn_takePhoto);
+
+        imgView_upload = (ImageView) findViewById(R.id.imgV_upload);
+
 
         new CheckInput().getFocus(edt_simple_title);
         ////////////////////////
@@ -97,8 +132,16 @@ public class NeedHelp extends AppCompatActivity {
         latitude = intent.getDoubleExtra("lat", 0);
 
 
-        setGeo(longitude,latitude);
+        setGeo(longitude, latitude);
 //        bmobGeoPoint = new BmobGeoPoint(longitude, latitude);
+
+        btn_uploadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                getImages();
+            }
+        });
 
 
         ibtn_clear.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +151,7 @@ public class NeedHelp extends AppCompatActivity {
                 edt_pay.setText("");
                 edt_time.setText("");
                 edt_detail.setText("");
+                imgView_upload.setImageDrawable(null);
             }
         });
 
@@ -123,69 +167,87 @@ public class NeedHelp extends AppCompatActivity {
                     if (cInput && bmobGeoPoint != null) {
 
                         //添加try ，保证先保存在服务器再进行推送。
-                        String simpleTitle = edt_simple_title.getText().toString();
-//                        Double pay = Double.parseDouble(String.valueOf(edt_pay.getText()));
-                        Double pay = new Function().trimNull(edt_pay.getText().toString());
-                        Log.e("PAY",pay + "pay");
-                        String time = edt_time.getText().toString();
-                        String detail = edt_detail.getText().toString();
+                        simpleTitle = edt_simple_title.getText().toString();
+                        pay = new Function().trimNull(edt_pay.getText().toString());
+                        time = edt_time.getText().toString();
+                        BmobDate lmTime = limitTime(time);
+                        detail = edt_detail.getText().toString();
 
 
-
-
-
-                        //TODO 时间转为后再存入
-                        limitTime(time);
-
-                        HelpContext helpContext = new HelpContext();
                         helpContext.setBmobGeoPoint(bmobGeoPoint);
                         helpContext.setSimple_title(simpleTitle);
                         helpContext.setPay(pay);
-                        helpContext.setTime(timeBefore);
+                        helpContext.setTime(lmTime);
                         helpContext.setDetail(detail);
                         helpContext.setIscomplete(0);
                         helpContext.setStation(0);
                         helpContext.setRequestid(installID);//当前手机ID
 
-                        final Float myArea = getArea();
+                        if (bmobFile != null) {
+                            bmobFile.uploadblock(NeedHelp.this, new UploadFileListener() {
+                                @Override
+                                public void onSuccess() {
 
-                        helpContext.save(NeedHelp.this, new SaveListener() {
-                            @Override
-                            public void onSuccess() {
-                                Log.e("Save", "SUCCESS!" + bmobGeoPoint.getLatitude());
-                                notificationContext = "附近有人请求帮助!如方便，请伸出援助之手。";
-                                BmobPushManager bmobPushManager = new BmobPushManager(NeedHelp.this);
-                                BmobQuery<BmobInstallation> bmobQuery = new BmobQuery<BmobInstallation>();
-//定向推送10公里内用户，范围未来应可修改，但不应超过50公里
-                                bmobQuery.addWhereWithinRadians("myPoint", bmobGeoPoint, myArea);//10表示10公里,现在使用getArea让用户设置
-                                Log.e("Query", bmobQuery + "");
-                                bmobPushManager.setQuery(bmobQuery);
-                                bmobPushManager.pushMessage(notificationContext);
+                                    helpContext.setUploadImg(bmobFile);
 
-//推送给所有人
-//                            BmobPushManager pushManager = new BmobPushManager(NeedHelp.this);
-//                            pushManager.pushMessageAll(notificationContext);
-                                SharedPreferences sharedPreferences = getSharedPreferences("SAVEDETAIL", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString("Title", "");
-                                editor.putString("Pay", "");
-                                editor.putString("Time","");
-                                editor.putString("Detail", "");
-                                editor.commit();
-                                finish();
-                            }
+                                    final Float myArea = getArea();
 
-                            @Override
-                            public void onFailure(int i, String s) {
-                                Log.e("Save", "FAIL");
+                                    helpContext.save(NeedHelp.this, new SaveListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                            Log.e("Save", "SUCCESS!" + bmobGeoPoint.getLatitude());
 
-                            }
-                        });
+                                            new Function().pushForHelp(NeedHelp.this, bmobGeoPoint, myArea);
+
+                                            cleanInput();
+
+                                            gotoPay(pay.toString());
+
+//                                            finish();
+                                        }
+
+                                        @Override
+                                        public void onFailure(int i, String s) {
+                                            Log.e("Save", "FAIL");
+
+                                        }
+                                    });
+
+                                }
+
+                                @Override
+                                public void onFailure(int i, String s) {
+
+                                }
+                            });
+                        } else {
+                            helpContext.setUploadImg();
+                            final Float myArea = getArea();
+                            helpContext.save(NeedHelp.this, new SaveListener() {
+                                @Override
+                                public void onSuccess() {
+                                    new Function().pushForHelp(NeedHelp.this, bmobGeoPoint, myArea);
+                                    cleanInput();
+
+
+                                    gotoPay(pay.toString());
+                                    finish();
+
+                                }
+
+                                @Override
+                                public void onFailure(int i, String s) {
+
+                                }
+                            });
+
+                        }
+                        //TODO 时间转为后再存入
 
                     } else {
                         Toast.makeText(NeedHelp.this, "定位未成功或输入完整信息不完整", Toast.LENGTH_SHORT).show();
                     }
-                }else {
+                } else {
                     new Function().showMessage(NeedHelp.this, "每天只能使用10次求助。你已经用完。");
                 }
             }
@@ -193,6 +255,68 @@ public class NeedHelp extends AppCompatActivity {
 
 
     }
+
+
+    private void getImages() {
+
+        Config config = new Config();
+//        config.setCameraHeight(R.dimen.app_camera_height);
+//        config.setToolbarTitleRes(R.string.custom_title);
+        config.setSelectionMin(1);
+        config.setSelectionLimit(1);
+//        config.setSelectedBottomHeight(R.dimen.bottom_height);
+
+        ImagePickerActivity.setConfig(config);
+
+        Intent intent = new Intent(this, ImagePickerActivity.class);
+        startActivityForResult(intent, INTENT_REQUEST_GET_IMAGES);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == INTENT_REQUEST_GET_IMAGES && resultCode == Activity.RESULT_OK) {
+
+            ArrayList<Uri> image_uris = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
+
+            imageUri = image_uris.get(0);
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+
+            options.inJustDecodeBounds = true;
+
+            BitmapFactory.decodeFile(imageUri.getPath(), options);
+
+            options.inSampleSize = computeInitialSampleSize(options, -1, 256 * 256);
+
+            options.inJustDecodeBounds = false;
+
+            try {
+
+                Bitmap bmp = BitmapFactory.decodeFile(imageUri.getPath(), options);
+
+                imgView_upload.setImageBitmap(bmp);
+
+                saveBitmap2file(bmp, "upload.jpg");
+
+                File upload = new File("/sdcard/upload.jpg");
+
+                bmobFile = new BmobFile(upload);
+
+            } catch (OutOfMemoryError err) {
+
+            }
+
+        }else if (requestCode == PAY_CODE && resultCode == RESULT_OK){
+
+
+        }
+
+    }
+
 
     public Float getArea() {
         SharedPreferences getArea = getSharedPreferences("Area", Activity.MODE_PRIVATE);
@@ -212,8 +336,8 @@ public class NeedHelp extends AppCompatActivity {
         if (edt_pay.getText().toString().trim() != "") {
             savedInstanceState.putString("PAY", edt_pay.getText().toString());
         }
-        if (edt_time.getText().toString().trim()!=""){
-            savedInstanceState.putString("Time",edt_time.getText().toString());
+        if (edt_time.getText().toString().trim() != "") {
+            savedInstanceState.putString("Time", edt_time.getText().toString());
         }
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -247,11 +371,19 @@ public class NeedHelp extends AppCompatActivity {
 
     }
 
+    private void gotoPay(String money){
+
+        Intent intent = new Intent(NeedHelp.this,PaySubmit.class);
+        intent.putExtra("MONEY",money);
+        startActivityForResult(intent,PAY_CODE);
+//        finish();
+    }
+
     private void setSaveText() {
         SharedPreferences preferences = getSharedPreferences("SAVEDETAIL", MODE_PRIVATE);
         String title = preferences.getString("Title", "");
         String pay = preferences.getString("Pay", "");
-        String time = preferences.getString("Time","");
+        String time = preferences.getString("Time", "");
         String detail = preferences.getString("Detail", "");
         edt_simple_title.setText(title);
         edt_pay.setText(pay);
@@ -336,57 +468,66 @@ public class NeedHelp extends AppCompatActivity {
 
     }
 
-    private void setGeo(Double lon,Double lat){
+    private void setGeo(Double lon, Double lat) {
 
         if (lon == 0.0 || lat == 0.0) {
             BmobQuery<MyInstallation> query = new BmobQuery<MyInstallation>();
 
-            query.addWhereEqualTo("userId",installID);
+            query.addWhereEqualTo("userId", installID);
             query.findObjects(NeedHelp.this, new FindListener<MyInstallation>() {
                 @Override
                 public void onSuccess(List<MyInstallation> list) {
                     for (MyInstallation installation : list) {
                         bmobGeoPoint = installation.getMyPoint();
                         show_notice.setText(notice);
-                        Log.e("geo",bmobGeoPoint+"######"+bmobGeoPoint.getLatitude()+"????"+bmobGeoPoint.getLongitude());
+                        Log.e("geo", bmobGeoPoint + "######" + bmobGeoPoint.getLatitude() + "????" + bmobGeoPoint.getLongitude());
 
                     }
                 }
 
                 @Override
                 public void onError(int i, String s) {
-                    Log.e("geo","~~~~fail");
+                    Log.e("geo", "~~~~fail");
                 }
             });
-        }else {
+        } else {
             Log.e("geo", bmobGeoPoint + "！！！");
             bmobGeoPoint = new BmobGeoPoint(lon, lat);
         }
     }
 
 
-    private void limitTime(String time) {
+    private BmobDate limitTime(String time) {
 
 
         int hour = 0;
         int minute = 0;
-        if (time.trim().equals("")){
+        if (time.trim().equals("")) {
             hour = 24;
             minute = 0;
-        }else if (Double.valueOf(time) > 24 ||Double.valueOf(time) == 0){
+        } else if (Double.valueOf(time) > 24 || Double.valueOf(time) <= 0) {
             hour = 24;
             minute = 0;
-        }else {
+        } else {
 
             String[] lTime = time.split("\\.");
 
             Log.e("NOTHING", lTime[0]);
+//            Log.e("NOTHING", lTime[1]);
+            Log.e("NOTHING", lTime.length + "长度");
 
             if (lTime[0].equals(null) || lTime[0].equals("0") || lTime[0].equals("")) {
                 lTime[0] = "0";
-            }else if (lTime.length > 1) {
-                hour = Integer.valueOf(lTime[0]);
+                hour = 0;
+            } else if (lTime.length > 1 && Double.valueOf(time) < 1) {
+                hour = 0;
                 minute = Integer.valueOf(lTime[1].substring(0, 1)) * 6;
+            }else if (lTime.length > 1 && Double.valueOf(lTime[0]) > 0 && Double.valueOf(lTime[1]) > 0){
+                hour =  Integer.valueOf(lTime[0]);
+                minute =  Integer.valueOf(lTime[1]);
+            }else {
+                hour =  Integer.valueOf(lTime[0]);
+                minute = 0;
             }
         }
         Date dNow = new Date();   //当前时间
@@ -395,17 +536,91 @@ public class NeedHelp extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance(); //得到日历
         calendar.setTime(dNow);
 
-        calendar.add(Calendar.HOUR_OF_DAY,hour);  //设置实际有效时间
-        calendar.add(Calendar.MINUTE,minute);
+        calendar.add(Calendar.HOUR_OF_DAY, hour);  //设置实际有效时间
+        calendar.add(Calendar.MINUTE, minute);
         dBefore = calendar.getTime();   //得到有效时间
 
 //        BmobDate bmobDate = new  BmobDate(dBefore);
 
-            timeBefore = new BmobDate(dBefore);
+        return timeBefore = new BmobDate(dBefore);
 
-            Log.e("Time", timeBefore+"!BEFORE!");
+//        Log.e("Time", timeBefore + "!BEFORE!");
+//        Log.e("Time", dBefore + "!BEFORE!");
 
 
     }
+
+
+    private static int computeInitialSampleSize(BitmapFactory.Options options, int minSideLength, int maxNumOfPixels) {
+
+        double w = options.outWidth;
+
+        double h = options.outHeight;
+
+
+        int lowerBound = (maxNumOfPixels == -1) ? 1 :
+
+                (int) Math.ceil(Math.sqrt(w * h / maxNumOfPixels));
+
+        int upperBound = (minSideLength == -1) ? 128 :
+
+                (int) Math.min(Math.floor(w / minSideLength),
+
+                        Math.floor(h / minSideLength));
+
+
+        if (upperBound < lowerBound) {
+
+            // return the larger one when there is no overlapping zone.
+
+            return lowerBound;
+
+        }
+
+
+        if ((maxNumOfPixels == -1) &&
+
+                (minSideLength == -1)) {
+
+            return 1;
+
+        } else if (minSideLength == -1) {
+
+            return lowerBound;
+
+        } else {
+
+            return upperBound;
+
+        }
+
+    }
+
+
+    static boolean saveBitmap2file(Bitmap bmp, String filename) {
+        Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
+        int quality = 20;
+        OutputStream stream = null;
+        try {
+            stream = new FileOutputStream("/sdcard/" + filename);
+        } catch (FileNotFoundException e) {
+// TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return bmp.compress(format, quality, stream);
+    }
+
+
+    private void cleanInput() {
+        SharedPreferences sharedPreferences = getSharedPreferences("SAVEDETAIL", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("Title", "");
+        editor.putString("Pay", "");
+        editor.putString("Time", "");
+        editor.putString("Detail", "");
+        editor.commit();
+    }
+
 
 }

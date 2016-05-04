@@ -4,6 +4,15 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
 
+//    compileSdkVersion 23
+//    buildToolsVersion "23.0.2"
+//    useLibrary 'org.apache.http.legacy'
+
+    //**bmob-sdk:3.4.6版本依赖包，用于兼容Android6.0系统**
+    useLibrary 'org.apache.http.legacy'
+
+
+
     defaultConfig {
         applicationId "com.example.dawan.near02"
         minSdkVersion 16
@@ -18,18 +27,14 @@ android {
         }
     }
 
-
 }
 
 dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.0.1'
-    compile files('libs/BmobSDK_V3.4.5_1111.jar')
-    compile 'cn.bmob.android:bmob-sdk:3.4.5'
+    //    compile 'cn.bmob.android:bmob-sdk:3.4.5'
     //location
     compile 'io.nlopez.smartlocation:library:3.2.1'
-    compile files('libs/Bmob_Push_V0.6beta_20150408.jar')
-    compile files('libs/BmobPay_v2.4_160125.jar')
     //输入检查
     compile('com.andreabaccega:android-form-edittext:1.2.1@aar') {
         exclude module: 'design'
@@ -40,6 +45,20 @@ dependencies {
     compile 'com.karumi:expandableselector:1.0.0'
     //////////////引导页
     compile 'com.github.paolorotolo:appintro:3.4.0'
-    compile files('libs/AMap_Location_V2.4.0_20160308.jar')
+    ///图片，拍照
+    compile 'com.github.jkwiecien:EasyImage:1.2.1'
+    compile 'com.github.ParkSangGwon:TedPicker:v1.0.10'
+    //以下SDK开发者请根据需要自行选择
+    //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务，以下是最新的bmob-sdk:
+    compile 'cn.bmob.android:bmob-sdk:3.4.6'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    //自`V3.4.3版本`开始，使用`okhttp`优化SDK的网络框架
+    compile 'com.squareup.okio:okio:1.4.0'
+    compile 'com.android.support:support-v4:23.2.1'
+    //bmob-push：Bmob的推送包
+    compile 'cn.bmob.android:bmob-push:0.8'
+    //图片
+    compile 'com.github.chrisbanes:PhotoView:1.2.6'
+    compile files('libs/BmobSDK_V3.4.6_0415.jar')
+    compile files('libs/Bmob_Push_V0.8beta_20160420.jar')
 }
-

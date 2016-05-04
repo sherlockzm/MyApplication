@@ -1,10 +1,13 @@
 package com.example.dawan.near02;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -16,11 +19,16 @@ public class HelpAdapter extends ArrayAdapter<HelpContext>{
 
     private LayoutInflater inflater;//画布
     private Context context;//当前上下文
+
+    private Bitmap mIcon1;
+    private Bitmap mIcon2;
+
     private int resourceId;
 
     public HelpAdapter(Context context,int textViewResourceId,List<HelpContext> objects){
         super(context,textViewResourceId,objects);
         resourceId = textViewResourceId;
+        mIcon1 = BitmapFactory.decodeResource(context.getResources(),R.drawable.help1_28);
     }
 
     @Override
@@ -41,6 +49,7 @@ public class HelpAdapter extends ArrayAdapter<HelpContext>{
             viewHolder.when_request = (TextView)view.findViewById(R.id.tv_when);
             viewHolder.detail = (TextView)view.findViewById(R.id.tv_item_detail);
             viewHolder.station = (TextView)view.findViewById(R.id.tv_station);
+            viewHolder.helpImage = (ImageView)view.findViewById(R.id.imgV_help);
             view.setTag(viewHolder);
 
         }else {
@@ -51,6 +60,14 @@ public class HelpAdapter extends ArrayAdapter<HelpContext>{
         viewHolder.pay.setText(helpContext.getPay().toString());
         viewHolder.when_request.setText(helpContext.getTime().getDate().toString());
         viewHolder.detail.setText(helpContext.getDetail());
+
+
+//        mIcon2 = helpContext.getUploadImg().getFilename()
+
+        viewHolder.helpImage.setImageBitmap((position & 1) == 1 ? mIcon1 : mIcon1);
+        //TODO 添加图片
+
+
 
         switch (helpContext.getIscomplete()){
 
@@ -92,5 +109,6 @@ public class HelpAdapter extends ArrayAdapter<HelpContext>{
         TextView when_request;
         TextView detail;
         TextView station;
+        ImageView helpImage;
     }
 }

@@ -2,9 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:focusable="false" android:descendantFocusability="blocksDescendants">
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/imgV_help"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
 
+</LinearLayout>
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +27,6 @@
             android:layout_height="wrap_content"
             android:text="@string/tv_simple_title"
             android:textStyle="bold"
-            android:textColor="#fbfa8907"
             android:textSize="14dp"
             android:textIsSelectable="true" />
 
@@ -27,8 +37,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:textStyle="bold"
-            android:textColor="#fbfa8907"
-            android:textSize="14dp" />
+            android:textSize="16dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -100,5 +109,6 @@
             android:maxLines="2" />
     </LinearLayout>
 
+    </LinearLayout>
 
 </LinearLayout>

@@ -5,25 +5,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin" android:orientation="vertical"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="20dp"
-        android:layout_gravity="center"
-        android:gravity="center">
-
-        <TextView android:id="@+id/text1" android:text="@string/tv_nav_user" android:layout_height="wrap_content" android:layout_width="0dp" android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textIsSelectable="false" />
-        <TextView android:id="@+id/text2" android:text="@string/tv_nav_help" android:layout_height="wrap_content" android:layout_width="0dp" android:layout_weight="1"
-            android:gravity="center"
-            android:textStyle="bold" />
-        <TextView android:id="@+id/text3" android:text="@string/tv_nav_record" android:layout_height="wrap_content" android:layout_width="0dp" android:layout_weight="1"
-            android:gravity="center"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
 
     <com.yalantis.phoenix.PullToRefreshView
         android:id="@+id/pull_to_refresh"
@@ -36,7 +17,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:focusable="true"
-        android:divider="@drawable/divider2" />
+        android:divider="#e9f3c6"
+        android:dividerHeight="3dp" />
 
     </com.yalantis.phoenix.PullToRefreshView>
     <!--  下拉刷新 -->
@@ -46,26 +28,26 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:gravity="center" android:layout_gravity="center">
-        <ImageButton
+<!--        <ImageButton
             android:id="@+id/btn_openReg"
             android:background="@drawable/um"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp" />-->
         <ImageButton
             android:text="@string/btn_new_request"
                         android:id="@+id/btn_GetHelp"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:background="@drawable/help"/>
-        <ImageButton
+            android:background="@drawable/help1"/>
+<!--        <ImageButton
             android:id="@+id/btn_transaction_record"
             android:text="@string/btn_title_record"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/record"
-            android:layout_marginLeft="20dp" />
+            android:layout_marginLeft="20dp" />-->
         <!--<ImageButton-->
             <!--android:id="@+id/btn_fresh"-->
             <!--android:text="@string/btn_fresh"-->

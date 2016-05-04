@@ -1,5 +1,6 @@
 package com.example.dawan.near02;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -110,7 +111,9 @@ public class UserRegister extends AppCompatActivity {
                         public void onSuccess() {
                             Log.e("LOGIN", "LOGINED");
                             updateInstallation();  //在安装表上注册
-                            finish();
+                            Intent intent = new Intent(UserRegister.this,Start_Activity.class);
+                            startActivity(intent);
+//                            finish();
                         }
 
                         @Override

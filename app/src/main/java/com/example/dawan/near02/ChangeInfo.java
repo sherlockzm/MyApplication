@@ -259,7 +259,7 @@ public class ChangeInfo extends AppCompatActivity{
     }
 
     public void toLogin(Context context){
-        Intent intent = new Intent(context, Login.class);
+        Intent intent = new Intent(context, Start_Activity.class);
         startActivity(intent);
     }
 

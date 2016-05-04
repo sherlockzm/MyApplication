@@ -46,7 +46,7 @@ public class MyReceiver extends BroadcastReceiver {
 
 
         notificationTitle = "顺帮主提醒你：";
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, Start_Activity.class);
         intent.addCategory("COM.SBB");
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         NotificationManager notifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

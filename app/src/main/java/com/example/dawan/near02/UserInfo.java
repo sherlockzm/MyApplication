@@ -46,7 +46,9 @@ public class UserInfo extends AppCompatActivity {
     private TextView tv_helpArea;
     private TextView tv_requesterScore;
     private TextView tv_helperScore;
+    private TextView tv_aboutMe;
 
+    private User curUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,15 +71,22 @@ public class UserInfo extends AppCompatActivity {
         ibtn_helpArea = (ImageButton)findViewById(R.id.btn_defineHelpArea);
         edt_helpArea = (EditText)findViewById(R.id.edt_helparea);
 
-        final User curUser = BmobUser.getCurrentUser(UserInfo.this,User.class);
+        tv_aboutMe = (TextView) findViewById(R.id.aboutUs);
 
-        tv_name.setText(curUser.getUsername());
-        tv_tel.setText(curUser.getMobilePhoneNumber());
-        tv_realName.setText(curUser.getRealName());
-        tv_realID.setText(curUser.getIdNumber());
-        tv_payAccount.setText(curUser.getPayAccount());
-        tv_overage.setText(curUser.getOverage().toString());
 
+       if (BmobUser.getCurrentUser(UserInfo.this,User.class) != null) {
+           curUser = BmobUser.getCurrentUser(UserInfo.this,User.class);
+
+           getHelperScore(curUser);
+           getRequesterScore(curUser);
+
+           tv_name.setText(curUser.getUsername());
+           tv_tel.setText(curUser.getMobilePhoneNumber());
+           tv_realName.setText(curUser.getRealName());
+           tv_realID.setText(curUser.getIdNumber());
+           tv_payAccount.setText(curUser.getPayAccount());
+           tv_overage.setText(curUser.getOverage().toString());
+       }
         //新建一个表用于存放余额
 
         btn_changInfo = (ImageButton)findViewById(R.id.btn_changeInfo);
@@ -90,11 +99,18 @@ public class UserInfo extends AppCompatActivity {
         Float curArea = getArea.getFloat("myArea", 10);
         SharedPreferences getHelpArea = getSharedPreferences("helpArea", Activity.MODE_PRIVATE);
         Float helpArea = getHelpArea.getFloat("myHelpArea",10);
-        tv_curArea.setText("当前求助范围为方圆" + curArea + "公里");
-        tv_helpArea.setText("当前援助范围为方圆" + curArea + "公里");
+        tv_curArea.setText("，求助范围" + curArea + "公里");
+        tv_helpArea.setText("当前援助范围" + helpArea + "公里");
 
-        getHelperScore(curUser);
-        getRequesterScore(curUser);
+
+
+        tv_aboutMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserInfo.this,AboutUs.class);
+                startActivity(intent);
+            }
+        });
 
         ibtn_area.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,7 +162,7 @@ public class UserInfo extends AppCompatActivity {
         btn_changInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UserInfo.this, ChangeInfo.class);
+                Intent intent = new Intent(UserInfo.this, ChangeActivity.class);
                 startActivity(intent);
             }
         });

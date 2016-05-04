@@ -4,7 +4,6 @@
     android:padding="20dp">
     <TableRow>
 <TextView android:text="@string/tv_simple_title" android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:textColor="#fbfa8907"
     android:textStyle="bold"
     android:layout_marginBottom="15dp" />
 <TextView android:id="@+id/tv_show_title" android:layout_width="wrap_content" android:layout_height="wrap_content" />
@@ -13,32 +12,37 @@
     <TableRow>
 <TextView android:text="@string/tv_pay" android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:layout_marginBottom="15dp"
-    android:textStyle="bold"
-    android:textColor="#fbfa8907" />
+    android:textStyle="bold" />
 <TextView android:id="@+id/tv_show_pay" android:layout_width="wrap_content" android:layout_height="wrap_content" />
     </TableRow>
 
     <TableRow>
 <TextView android:text="@string/tv_when_request" android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:layout_marginBottom="15dp"
-    android:textStyle="bold"
-    android:textColor="#fbfa8907" />
+    android:textStyle="bold" />
 <TextView android:id="@+id/tv_limitTime" android:layout_width="wrap_content" android:layout_height="wrap_content" />
     </TableRow>
 
     <TableRow>
     <TextView android:text="@string/tv_context" android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:textColor="#fbfa8907"
         android:textStyle="bold" />
     </TableRow>
     <TableRow android:layout_width="match_parent">
         <TextView android:layout_span="3" android:id="@+id/tv_show_detail" android:layout_width="match_parent" android:layout_height="wrap_content" />
     </TableRow>
+    <LinearLayout android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+
+        <ImageView android:id="@+id/detailImage" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </LinearLayout>
     <LinearLayout android:orientation="horizontal" android:gravity="center">
-        <ImageButton android:background="@drawable/cant" android:id="@+id/btn_notHelp" android:text="@string/btn_notHelp" android:layout_width="wrap_content"  android:layout_height="wrap_content"
+        <ImageButton android:background="@drawable/run" android:id="@+id/btn_notHelp" android:text="@string/btn_notHelp" android:layout_width="wrap_content"  android:layout_height="wrap_content"
             android:layout_marginRight="20dp" />
-        <ImageButton android:background="@drawable/abc" android:id="@+id/btn_iHelp" android:text="@string/btn_iHelp" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        <ImageButton android:background="@drawable/help2" android:id="@+id/btn_iHelp" android:text="@string/btn_iHelp" android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_marginLeft="20dp" />
     </LinearLayout>
 </TableLayout>

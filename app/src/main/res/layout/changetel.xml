@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:whatever="http://schemas.android.com/apk/res-auto" android:stretchColumns="1"
+    android:paddingLeft="15dp"
+    android:paddingTop="15dp"
+    android:paddingRight="15dp">
+<TableRow>
+    <TextView android:text="@string/chang_tel_newNum" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1"
+        android:textStyle="bold" />
+    <com.andreabaccega.widget.FormEditText whatever:testType="phone" android:inputType="phone" android:id="@+id/edt_change_newNumber" android:layout_height="wrap_content" android:maxLines="1" />
+</TableRow>
+    <!--<TableRow>-->
+    <!--<TextView android:text="@string/tv_inputPwd" android:layout_width="wrap_content" android:layout_height="wrap_content"-->
+    <!--android:textStyle="bold"-->
+    <!--android:textColor="#fbfa8907" />-->
+    <!--<com.andreabaccega.widget.FormEditText whatever:testType="nocheck" android:id="@+id/edt_change_tel_curPwd" android:inputType="textWebPassword" android:layout_height="wrap_content" android:maxLines="1" />-->
+    <!--</TableRow>-->
+<TableRow android:layout_marginBottom="5dp">
+<TextView android:text="@string/cur_tel_ver" android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:textStyle="bold" />
+<com.andreabaccega.widget.FormEditText whatever:testType="nocheck" android:maxLines="1"
+    android:id="@+id/edt_oldTel_ver" />
+</TableRow>
+<TableRow>
+<TextView android:text="@string/new_tel_ver" android:layout_width="wrap_content"
+    android:textStyle="bold" />
+<EditText android:id="@+id/edt_newtelVer" android:width="0dp" android:layout_weight="1" />
+</TableRow>
+<LinearLayout android:gravity="center">
+<ImageButton android:background="@drawable/vercur" android:id="@+id/btn_change_tel_getVerOld" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_getVerification"
+    android:layout_marginRight="20dp" />
+<ImageButton android:background="@drawable/vernew" android:id="@+id/btn_change_tel_getVerNew" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_getVerification"
+    android:layout_marginRight="20dp" />
+<ImageButton android:background="@drawable/sure" android:id="@+id/btn_change_tel" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/btn_chang_submit"
+    android:layout_marginLeft="20dp" />
+</LinearLayout>
+
+</TableLayout>

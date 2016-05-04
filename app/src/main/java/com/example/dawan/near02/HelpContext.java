@@ -1,10 +1,15 @@
 package com.example.dawan.near02;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.io.Serializable;
 
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobDate;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobGeoPoint;
+import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * Created by dawan on 2016/2/18.
@@ -19,6 +24,37 @@ public class HelpContext extends BmobObject implements Serializable {
     private int iscomplete;
     private String requestid;
     private String helperId;
+    private BmobFile uploadImg;
+
+    public BmobFile getUploadImg() {
+
+        return uploadImg;
+    }
+
+    public void setUploadImg(BmobFile uploadImg) {
+        this.uploadImg = uploadImg;
+    }
+    public void setUploadImg(){
+        this.uploadImg = BmobFile.createEmptyFile();
+    }
+
+    public void UploadImg(final Context context, final BmobFile uploadImg) {
+        uploadImg.uploadblock(context, new UploadFileListener() {
+            @Override
+            public void onSuccess() {
+                new Function().showMessage(context,"上传成功");
+
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+
+                new Function().showMessage(context,"上传失败,"+s);
+                Log.e("IMAGE","上传失败,"+s);
+            }
+        });
+
+    }
 
     public String getHelperId() {
         return helperId;

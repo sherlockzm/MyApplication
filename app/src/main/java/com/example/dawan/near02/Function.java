@@ -2,6 +2,7 @@ package com.example.dawan.near02;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -10,10 +11,16 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobPushManager;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobSMS;
+import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.RequestSMSCodeListener;
 
@@ -23,6 +30,17 @@ import cn.bmob.v3.listener.RequestSMSCodeListener;
 public class Function {
 
     public Function() {
+    }
+
+    public void pushForHelp(NeedHelp context, BmobGeoPoint bmobGeoPoint, Float myArea){
+        String notificationContext = "附近有人请求帮助!如方便，请伸出援助之手。";
+        BmobPushManager bmobPushManager = new BmobPushManager(context);
+        BmobQuery<BmobInstallation> bmobQuery = new BmobQuery<BmobInstallation>();
+//定向推送10公里内用户，范围未来应可修改，但不应超过50公里
+        bmobQuery.addWhereWithinRadians("myPoint", bmobGeoPoint, myArea);//10表示10公里,现在使用getArea让用户设置
+        Log.e("Query", bmobQuery + "");
+        bmobPushManager.setQuery(bmobQuery);
+        bmobPushManager.pushMessage(notificationContext);
     }
 
     public void pushMessage(Context context, String id,String message) {
@@ -139,7 +157,7 @@ public class Function {
     }
 
     /////////////////////////设置按钮是否可用//////////////////////////////
-    public void setButton(Button btn1,boolean boo){
+    public void setButton(ImageButton btn1,boolean boo){
         if (boo == false){
             btn1.setVisibility(View.GONE);
         }else
@@ -155,7 +173,7 @@ public class Function {
         }
     }
 
-    public void setButton(ImageButton[] imgbutton,Button button, boolean boo){
+    public void setButton(ImageButton[] imgbutton,ImageButton button, boolean boo){
         if (boo == false){
             for (ImageButton btn:imgbutton){
                 btn.setVisibility(View.GONE);
@@ -170,5 +188,26 @@ public class Function {
         }
     }
 
+    public void saveBitmap(Bitmap bm) {
+        Log.e("TAG", "保存图片");
+        File f = new File("/sdcard/nearHelp/", "picName");
+        if (f.exists()) {
+            f.delete();
+        }
+        try {
+            FileOutputStream out = new FileOutputStream(f);
+            bm.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+            Log.i("TAG", "已经保存");
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
 
 }

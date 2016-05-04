@@ -5,16 +5,16 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <TextView
-        android:id="@+id/tv_showRecordList_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:paddingBottom="20dp"
-        android:text="@string/btn_recordlist_request"
-        android:textColor="#f76060"
-        android:textSize="18dp" />
+    <!--<TextView-->
+        <!--android:id="@+id/tv_showRecordList_title"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:gravity="center"-->
+        <!--android:paddingBottom="20dp"-->
+        <!--android:text="@string/btn_recordlist_request"-->
+        <!--android:textColor="#f76060"-->
+        <!--android:textSize="18dp" />-->
 
     <com.yalantis.phoenix.PullToRefreshView
         android:id="@+id/pull_to_refresh_record"
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:background="@drawable/gethelplist"
+            android:background="@drawable/rlist"
             android:text="@string/btn_recordlist_request" />
 
 
@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/helplist"
+            android:background="@drawable/helplist1"
             android:text="@string/btn_recordlist_giveHelp" />
 
         <com.karumi.expandableselector.ExpandableSelector

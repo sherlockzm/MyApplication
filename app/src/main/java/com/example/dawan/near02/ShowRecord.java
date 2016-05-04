@@ -1,8 +1,6 @@
 package com.example.dawan.near02;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +16,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.DeleteListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.GetListener;
@@ -42,7 +42,7 @@ public class ShowRecord extends AppCompatActivity {
 
     private TextView tv_showScore;
 
-    private Button btn_complete;
+    private ImageButton btn_complete;
     private ImageButton btn_delete;
 
     private RatingBar ratingBar;
@@ -54,10 +54,13 @@ public class ShowRecord extends AppCompatActivity {
     private TextView tv_scoreOther;
     private TextView tv_scoreOtherShow;
 
+    private ImageView recordImg;
+
     private float score = 0;
     private float requesterScore;
     private float helperScore;
 
+    String sUrl = "";
     private int progressNow;
     private String scoreID;
 
@@ -71,7 +74,10 @@ public class ShowRecord extends AppCompatActivity {
         setContentView(R.layout.showrecord);
 
         init();
+//TODO 删除记录要退款
+        ////////////////////////////
 
+        /////////////////////
         final HelpContext helpContext = (HelpContext) getIntent().getSerializableExtra("HelpContext");        //传递了一个helpContext对象过来
         final User pUser = (User) getIntent().getSerializableExtra("UserContext");
         if (pUser != null) {
@@ -95,7 +101,7 @@ public class ShowRecord extends AppCompatActivity {
         if (boo == 0) {//为0则显示自己帮别人的列表,自己是帮助者
             tv_giveHelpName.setText("求助者昵称：");
             tv_giveHelpTel.setText("求助者电话：");
-            btn_complete.setText("确认删除");
+//            btn_complete.setText("确认删除");
 
         }
         tv_title.setText(helpContext.getSimple_title());
@@ -105,6 +111,13 @@ public class ShowRecord extends AppCompatActivity {
         tv_helperTel.setText(pUserTel);
         tv_detail.setText(helpContext.getDetail());
 
+        BmobFile bmobFile = helpContext.getUploadImg();
+
+        if (bmobFile != null) {
+            sUrl = bmobFile.getFileUrl(ShowRecord.this);
+            AsynImageLoader asynImageLoader = new AsynImageLoader();
+            asynImageLoader.showImageAsyn(recordImg, sUrl, R.drawable.logo);
+        }
         switch (progressNow) {
             case 0:
                 tv_score_station.setText("新请求");
@@ -551,6 +564,7 @@ public class ShowRecord extends AppCompatActivity {
     private void init() {
         /////////////////////////////
 
+        recordImg = (ImageView) findViewById(R.id.record_img);
         tv_title = (TextView) findViewById(R.id.tv_record_title);
         tv_pay = (TextView) findViewById(R.id.tv_record_pay);
         tv_detail = (TextView) findViewById(R.id.tv_record_detail);
@@ -569,7 +583,7 @@ public class ShowRecord extends AppCompatActivity {
         ratingBarOther = (RatingBar) findViewById(R.id.rb_scoreOther);
         ibtn_tel = (ImageButton) findViewById(R.id.ibtn_tel);
 
-        btn_complete = (Button) findViewById(R.id.btn_complete);
+        btn_complete = (ImageButton) findViewById(R.id.btn_complete);
         btn_delete = (ImageButton) findViewById(R.id.btn_delete);
         /////////////////////////初始化界面
         //////////////////////////////////////////评分相关
@@ -577,11 +591,11 @@ public class ShowRecord extends AppCompatActivity {
         ratingBar = (RatingBar) findViewById(R.id.rb_score);
         btn_getScore = (ImageButton) findViewById(R.id.ibtn_getScore);
 
-        tv_recordName = (TextView)findViewById(R.id.tv_record_helperName);
+        tv_recordName = (TextView) findViewById(R.id.tv_record_helperName);
 
     }
 
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
         pUserName = "";
         pUserTel = "";

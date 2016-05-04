@@ -4,7 +4,7 @@
     <string name="tv_nav_user">个人</string>
     <string name="tv_nav_help">援助</string>
     <string name="tv_nav_record">记录</string>
-
+    <string name="tv_needHelp">求助信息</string>
     <string name="app_intro">引导</string>
     <string name="skip">跳过</string>
     <string name="enter">进入</string>
@@ -15,25 +15,31 @@
     <string name="tv_simple_title">简明标题：</string>
     <string name="edt_simpleTitle">简要说出你的求助（不多于18个汉字）</string>
     <string name="tv_context">详细请求：</string>
-    <string name="edt_context">详细说明你的请求，包括限定时间，地点以及其他特殊要求。</string>
-    <string name="tv_pay">酬劳：</string>
-    <string name="tv_time">有效期</string>
-    <string name="edt_maxTime">最长24小时(0-24),默认24小时</string>
+    <string name="edt_context">详细说明你的请求。</string>
+    <string name="tv_pay">酬劳(元)：</string>
+    <string name="tv_time">有效期(小时):</string>
+    <string name="edt_maxTime">0-24小时,默认24</string>
     <string name="edt_pay">包括购买物品(如果需要)支出及报酬。格式：0.00</string>
     <string name="btn_submit">请求帮助</string>
     <string name="tv_when_request">有效期至：</string>
 
-
+<string name="aboutNearHelp">即时帮（原顺便帮）是罗定市铭达网络科技有限公司推出的一款基于LBS的互助式应用，本着方便生活，提升品质，改善心情的宗旨，即时帮致力于解决
+日常生活中不显眼却给我们带来大麻烦的小事。</string>
+    <string name="coryright">Copyright©2016</string>
+    <string name="company">罗定市铭达网络科技有限公司</string>
 
     <!---求助详细信息-->
     <string name="btn_iHelp">提供帮助</string>
     <string name="btn_notHelp">爱莫能助</string>
-
+<string name="changepwd">修改密码</string>
+    <string name="changetel">修改手机</string>
+    <string name="addinfo">添加信息</string>
+    <string name="aboutus">《关于我们》</string>
     <!--注册信息-->
     <string name="tv_name">昵称：</string>
     <string name="tv_tel">手机号码：</string>
     <string name="tv_pwd">设置密码：</string>
-    <string name="tv_inputPwd">请输入密码</string>
+    <string name="tv_inputPwd">密    码：</string>
     <string name="tv_pwd_repeat">再次输入密码：</string>
     <string name="tv_verification">验证码：</string>
     <string name="tv_getVerification">获取验证码</string>
@@ -42,7 +48,8 @@
     <string name="btn_login">登录</string>
     <string name="edt_hint_tel">请输入你的手机号码</string>
     <string name="verAndPwd">密码或验证码二选一即可</string>
-    
+
+    <string name="uploadImage">上传图片</string>
     <!-- 校验提示-->
     <string name="emptyError">不能为空</string>
     <string name="phoneNumberEmptyError">手机号码不能为空</string>
@@ -80,6 +87,12 @@
     <string name="edt_area">求助范围100米至20公里（0.1至20,默认10）</string>
     <string name="edt_helpArea">援助范围100米至20公里（0.1至20,默认10）</string>
 
+    
+    <string name="paypage">支付页面</string>
+    <string name="repayment">支付酬劳：</string>
+    <string name="paychanel">支付方式：</string>
+    <string name="payChanelName">微信支付</string>
+    <string name="paySubmit">确认支付</string>
     <!--showRecord-->
     <string name="showRecord_btn_modify">修改</string>
     <string name="showRecord_btn_complete">确认完成</string>

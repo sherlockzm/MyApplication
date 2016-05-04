@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.karumi.expandableselector.ExpandableItem;
 import com.karumi.expandableselector.ExpandableSelector;
@@ -36,7 +35,9 @@ public class MyHelpRecord extends AppCompatActivity {
 
     private ImageButton btn_show_request;
     private ImageButton btn_show_give;
-    private TextView tv_title;
+//    private TextView tv_title;
+
+    private String curUserId;
 
     private User pUser;
 
@@ -56,7 +57,7 @@ public class MyHelpRecord extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myhelprecord);
 
-        tv_title = (TextView) findViewById(R.id.tv_showRecordList_title);
+//        tv_title = (TextView) findViewById(R.id.tv_showRecordList_title);
         listView = (ListView) findViewById(R.id.myHelpRecord);
         btn_show_request = (ImageButton) findViewById(R.id.btn_showRequestList);
         btn_show_give = (ImageButton) findViewById(R.id.btn_showGiveHelpList);
@@ -66,13 +67,19 @@ public class MyHelpRecord extends AppCompatActivity {
         sizesExpandableSelector = (ExpandableSelector) findViewById(R.id.es_sizes);
         helpExpandableSelector = (ExpandableSelector) findViewById(R.id.es_help);
 
-        final String curUserId = BmobUser.getCurrentUser(MyHelpRecord.this, User.class).getObjectId();
-        showList(MyHelpRecord.this, "requestid", curUserId, 1, 5);
-
+        if(BmobUser.getCurrentUser(MyHelpRecord.this,User.class) != null){
+            curUserId = BmobUser.getCurrentUser(MyHelpRecord.this, User.class).getObjectId();
+        }
+        if (curUserId != null) {
+            showList(MyHelpRecord.this, "requestid", curUserId, 1, 5);
+        }
         /////////////////
-        initializeRequestExpandableSelector(curUserId);//展开列表选择
-
-        initializeHelpExpandableSelector(curUserId);
+        if (curUserId != null) {
+            initializeRequestExpandableSelector(curUserId);//展开列表选择
+        }
+        if (curUserId != null) {
+            initializeHelpExpandableSelector(curUserId);
+        }
         ///////////
         mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
             @Override
@@ -118,17 +125,17 @@ public class MyHelpRecord extends AppCompatActivity {
     public void showList(final Context context, String row, String id, final int boo, final int iscomplete) {
 
         role = boo;
-        if (boo == 0) {
-            tv_title.setText("帮助列表");
-        } else {
-            tv_title.setText("求助列表");
-        }
+//        if (boo == 0) {
+//            tv_title.setText("帮助列表");
+//        } else {
+//            tv_title.setText("求助列表");
+//        }
         BmobQuery<HelpContext> query = new BmobQuery<HelpContext>();//交易列表
         query.addWhereEqualTo(row, id);
         ///添加排序及状态排序
 //        BmobQuery<HelpContext> query1 = new BmobQuery<>();
         query.order("iscomplete");
-        query.order("time");
+        query.order("-time");
         if (iscomplete < 5) {
             query.addWhereEqualTo("iscomplete", iscomplete);
         }

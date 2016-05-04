@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:whatever="http://schemas.android.com/apk/res-auto" android:stretchColumns="1"
+    android:paddingLeft="15dp"
+    android:paddingTop="15dp"
+    android:paddingRight="15dp">
+    <TableRow>
+        <TextView android:text="@string/change_pwd" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textStyle="bold" />
+        <com.andreabaccega.widget.FormEditText whatever:testType="nocheck" android:id="@+id/edt_change_pwd" android:inputType="textWebPassword" android:layout_height="wrap_content" android:maxLines="1" />
+    </TableRow>
+
+    <TableRow>
+        <TextView android:text="@string/tv_pwd_repeat" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textStyle="bold" />
+        <com.andreabaccega.widget.FormEditText whatever:testType="nocheck" android:id="@+id/edt_change_pwd_repeat" android:inputType="textWebPassword" android:layout_height="wrap_content" android:maxLines="1" />
+    </TableRow>
+    <TableRow android:layout_marginBottom="5dp">
+        <TextView android:text="@string/chang_tel_ver" android:layout_width="wrap_content" android:maxLines="1"
+            android:textStyle="bold" />
+        <com.andreabaccega.widget.FormEditText whatever:testType="nocheck" android:id="@+id/edt_change_pwd_ver" android:layout_height="wrap_content" android:maxLines="1"/>
+    </TableRow>
+    <LinearLayout android:gravity="center">
+        <ImageButton android:background="@drawable/ver1" android:id="@+id/btn_change_pwd_getVer" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_getVerification"
+            android:layout_marginRight="20dp" />
+
+        <ImageButton android:background="@drawable/sure" android:id="@+id/btn_change_pwd" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/btn_chang_submit"
+            android:layout_marginLeft="20dp" />
+    </LinearLayout>
+    </TableLayout>
