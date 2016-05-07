@@ -70,6 +70,8 @@ public class NeedHelp extends AppCompatActivity {
     Double pay;
     String simpleTitle;
 
+    String address;
+
     HelpContext helpContext = new HelpContext();
 
     private Uri imageUri;
@@ -85,7 +87,7 @@ public class NeedHelp extends AppCompatActivity {
 
     private BmobDate timeBefore = null;
 
-    private static final String notice = "注意：当前定位未成功，将使用上次的定位信息。";
+    private static final String notice = "注意：定位未成功，将使用上次的定位信息:";
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +133,7 @@ public class NeedHelp extends AppCompatActivity {
 
         latitude = intent.getDoubleExtra("lat", 0);
 
+        address = intent.getStringExtra("address");
 
         setGeo(longitude, latitude);
 //        bmobGeoPoint = new BmobGeoPoint(longitude, latitude);
@@ -138,7 +141,6 @@ public class NeedHelp extends AppCompatActivity {
         btn_uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 getImages();
             }
         });
@@ -376,7 +378,7 @@ public class NeedHelp extends AppCompatActivity {
         Intent intent = new Intent(NeedHelp.this,PaySubmit.class);
         intent.putExtra("MONEY",money);
         startActivityForResult(intent,PAY_CODE);
-//        finish();
+        finish();
     }
 
     private void setSaveText() {
@@ -479,7 +481,7 @@ public class NeedHelp extends AppCompatActivity {
                 public void onSuccess(List<MyInstallation> list) {
                     for (MyInstallation installation : list) {
                         bmobGeoPoint = installation.getMyPoint();
-                        show_notice.setText(notice);
+                        show_notice.setText(notice + address);
                         Log.e("geo", bmobGeoPoint + "######" + bmobGeoPoint.getLatitude() + "????" + bmobGeoPoint.getLongitude());
 
                     }
@@ -493,6 +495,7 @@ public class NeedHelp extends AppCompatActivity {
         } else {
             Log.e("geo", bmobGeoPoint + "！！！");
             bmobGeoPoint = new BmobGeoPoint(lon, lat);
+            show_notice.setText("当前定位位置约为："+address+"不会显示给其他用户。");
         }
     }
 
@@ -599,7 +602,7 @@ public class NeedHelp extends AppCompatActivity {
 
     static boolean saveBitmap2file(Bitmap bmp, String filename) {
         Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
-        int quality = 20;
+        int quality = 100;
         OutputStream stream = null;
         try {
             stream = new FileOutputStream("/sdcard/" + filename);

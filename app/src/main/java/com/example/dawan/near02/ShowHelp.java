@@ -232,18 +232,18 @@ public class ShowHelp extends AppCompatActivity {
 
                 LayoutParams para;
                 para = detailImage.getLayoutParams();
-
                 DisplayMetrics dm2 = getResources().getDisplayMetrics();
 
-                para.height = dm2.heightPixels / 2;
 
-                para.width = dm2.widthPixels;
-                detailImage.setLayoutParams(para);
+                    click = false;
 
-                mAttacher = new PhotoViewAttacher(detailImage);
-                mAttacher.update();
-//                mAttacher.cleanup();
+                    para.height = dm2.heightPixels / 2;
 
+                    para.width = dm2.widthPixels;
+                    detailImage.setLayoutParams(para);
+
+                    mAttacher = new PhotoViewAttacher(detailImage);
+                    mAttacher.update();
 
             }
         });

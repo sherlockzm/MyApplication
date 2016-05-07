@@ -30,11 +30,11 @@
 <EditText android:id="@+id/edt_newtelVer" android:width="0dp" android:layout_weight="1" />
 </TableRow>
 <LinearLayout android:gravity="center">
-<ImageButton android:background="@drawable/vercur" android:id="@+id/btn_change_tel_getVerOld" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_getVerification"
+<ImageButton android:background="@drawable/vertelbutton" android:id="@+id/btn_change_tel_getVerOld" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_getVerification"
     android:layout_marginRight="20dp" />
-<ImageButton android:background="@drawable/vernew" android:id="@+id/btn_change_tel_getVerNew" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_getVerification"
+<ImageButton android:background="@drawable/vernewtelbutton" android:id="@+id/btn_change_tel_getVerNew" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_getVerification"
     android:layout_marginRight="20dp" />
-<ImageButton android:background="@drawable/sure" android:id="@+id/btn_change_tel" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/btn_chang_submit"
+<ImageButton android:background="@drawable/surebutton" android:id="@+id/btn_change_tel" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/btn_chang_submit"
     android:layout_marginLeft="20dp" />
 </LinearLayout>
 

@@ -305,7 +305,7 @@ public class MyHelpRecord extends AppCompatActivity {
                         Log.e("Item", "0");
                         ExpandableItem zeroItem = helpExpandableSelector.getExpandableItem(0);
                         swipeFirstItem(0, zeroItem);
-                        showList(MyHelpRecord.this, "requestid", curUserId, 0, 5);//全部列出来
+                        showList(MyHelpRecord.this, "helperId", curUserId, 0, 5);//全部列出来
                         break;
                     case 1:
                         i = 0;

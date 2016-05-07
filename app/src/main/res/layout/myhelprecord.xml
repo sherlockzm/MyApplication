@@ -49,8 +49,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:background="@drawable/rlist"
-            android:text="@string/btn_recordlist_request" />
+            android:background="@drawable/requestrecord"
+            android:text="@string/btn_recordlist_request"
+            android:visibility="gone" />
 
 
         <ImageButton
@@ -58,8 +59,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/helplist1"
-            android:text="@string/btn_recordlist_giveHelp" />
+            android:background="@drawable/helprecord"
+            android:text="@string/btn_recordlist_giveHelp"
+            android:visibility="gone" />
 
         <com.karumi.expandableselector.ExpandableSelector
             android:id="@+id/es_help"

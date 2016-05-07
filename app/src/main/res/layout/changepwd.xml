@@ -23,10 +23,10 @@
         <com.andreabaccega.widget.FormEditText whatever:testType="nocheck" android:id="@+id/edt_change_pwd_ver" android:layout_height="wrap_content" android:maxLines="1"/>
     </TableRow>
     <LinearLayout android:gravity="center">
-        <ImageButton android:background="@drawable/ver1" android:id="@+id/btn_change_pwd_getVer" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_getVerification"
+        <ImageButton android:background="@drawable/verbutton" android:id="@+id/btn_change_pwd_getVer" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/tv_getVerification"
             android:layout_marginRight="20dp" />
 
-        <ImageButton android:background="@drawable/sure" android:id="@+id/btn_change_pwd" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/btn_chang_submit"
+        <ImageButton android:background="@drawable/surebutton" android:id="@+id/btn_change_pwd" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/btn_chang_submit"
             android:layout_marginLeft="20dp" />
     </LinearLayout>
     </TableLayout>

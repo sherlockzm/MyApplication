@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -16,6 +15,10 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.text.ParseException;
@@ -33,15 +36,16 @@ import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
-import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BDLocationListener {
     //////////百度
-//    private TencentLocationManager mLocationManager;
+    public LocationClient mLocationClient = null;
     ////////////
     private Double lat;
     private Double lon;
+
+    private String address;
 
     private ImageButton btn_getHelp;
 
@@ -69,16 +73,17 @@ public class MainActivity extends AppCompatActivity {
         initAll();
         orderTime();
 
-//        mLocationManager = TencentLocationManager.getInstance(this);
-//        mLocationManager.requestLocationUpdates(TencentLocationRequest.create()
-//                .setRequestLevel(TencentLocationRequest.REQUEST_LEVEL_GEO)
-//                .setInterval(500).setAllowDirection(true), this);
+        mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
+        mLocationClient.registerLocationListener(this);    //注册监听函数
+
+        initLocation();
+        mLocationClient.start();
 //
 
         if (myPoint == null) {///////////如果定位信息为空，则检查网络及GPS，如果都打开则定位并加载列表，如果定位信息不为空，则加载列表
-            if (checkNetworkInfo(MainActivity.this) == 3) {
+//            if (checkNetworkInfo(MainActivity.this) == 3) {
                 locationMe(MainActivity.this);
-            }
+//            }
         } else {
             loadList();
         }
@@ -110,12 +115,31 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, NeedHelp.class);
                     intent.putExtra("lon", lon);
                     intent.putExtra("lat", lat);
+                    intent.putExtra("address",address);
                     startActivity(intent);
                 }
             }
         });
 
 
+    }
+
+    private void initLocation(){
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
+        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
+        int span=30000;
+        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        option.setOpenGps(true);//可选，默认false,设置是否使用gps
+        option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
+        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+        option.setIgnoreKillProcess(false);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
+        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
+        mLocationClient.setLocOption(option);
     }
 
 //    }
@@ -136,21 +160,23 @@ public class MainActivity extends AppCompatActivity {
     public void locationMe(Context context) {
         Toast.makeText(context, "正在定位你的位置，请稍后。", Toast.LENGTH_SHORT).show();
 
-//        TencentLocationRequest.create();
+        mLocationClient.requestLocation();
 
-        SmartLocation.with(context).location().start(new OnLocationUpdatedListener() {
-            @Override
-            public void onLocationUpdated(Location location) {
-                lat = location.getLatitude();
-                lon = location.getLongitude();
-                Log.e("Latitude", "" + lat);
-                Log.e("Longitude", "" + lon);
-                myPoint = new BmobGeoPoint(lon, lat);
-                Log.e("MyPoint", "" + myPoint);
-                loadList();
+        loadList();
 
-            }
-        });
+//        SmartLocation.with(context).location().start(new OnLocationUpdatedListener() {
+//            @Override
+//            public void onLocationUpdated(Location location) {
+//                lat = location.getLatitude();
+//                lon = location.getLongitude();
+//                Log.e("Latitude", "" + lat);
+//                Log.e("Longitude", "" + lon);
+//                myPoint = new BmobGeoPoint(lon, lat);
+//                Log.e("MyPoint", "" + myPoint);
+//                loadList();
+//
+//            }
+//        });
 
 
     }
@@ -296,7 +322,8 @@ public class MainActivity extends AppCompatActivity {
     private void freshList() {
         if (myPoint == null) {
 
-            switch (checkNetworkInfo(MainActivity.this)) {
+            locationMe(MainActivity.this);
+/*            switch (checkNetworkInfo(MainActivity.this)) {
                 case 0:
                     break;
                 case 3:
@@ -310,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 default:
                     break;
-            }
+            }*/
 
         } else {//用户未登陆，定位已成功
             loadList();
@@ -423,4 +450,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onReceiveLocation(BDLocation bdLocation) {
+
+        lat = bdLocation.getLatitude();
+        lon = bdLocation.getLongitude();
+
+        address = bdLocation.getAddrStr();
+
+        myPoint = new BmobGeoPoint(lon,lat);
+
+        Log.e("Location",lat + "Lat");
+        Log.e("Location",lon + "Lon");
+
+    }
 }

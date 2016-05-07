@@ -181,7 +181,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="@drawable/change1"
+            android:background="@drawable/changebutton"
             android:text="@string/chang_telorpwd" />
 
         <ImageButton
@@ -189,7 +189,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="@drawable/takecash1"
+            android:background="@drawable/takecash"
             android:text="@string/btn_takeCash" />
 
         <ImageButton
@@ -197,7 +197,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="@drawable/loginout"
+            android:background="@drawable/logoutbutton"
             android:text="@string/btn_loginout" />
 
     </LinearLayout>

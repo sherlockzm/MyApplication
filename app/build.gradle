@@ -27,6 +27,12 @@ android {
         }
     }
 
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
 }
 
 dependencies {
@@ -61,4 +67,11 @@ dependencies {
     compile 'com.github.chrisbanes:PhotoView:1.2.6'
     compile files('libs/BmobSDK_V3.4.6_0415.jar')
     compile files('libs/Bmob_Push_V0.8beta_20160420.jar')
+
+    compile files('libs/BaiduLBS_Android.jar')
+
+    compile files('libs/locSDK_6.05.jar')
+    compile files('libs/baidumapapi_v3_5_0.jar')
+
+
 }
