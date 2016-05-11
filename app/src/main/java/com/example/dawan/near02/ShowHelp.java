@@ -46,7 +46,6 @@ public class ShowHelp extends AppCompatActivity {
 //    图片
 
     PhotoViewAttacher mAttacher;
-    boolean click = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +79,6 @@ public class ShowHelp extends AppCompatActivity {
 
             AsynImageLoader asynImageLoader = new AsynImageLoader();
             asynImageLoader.showImageAsyn(detailImage, sUrl, R.drawable.logo);
-
 
         }
         tv_title.setText(title);
@@ -233,9 +231,6 @@ public class ShowHelp extends AppCompatActivity {
                 LayoutParams para;
                 para = detailImage.getLayoutParams();
                 DisplayMetrics dm2 = getResources().getDisplayMetrics();
-
-
-                    click = false;
 
                     para.height = dm2.heightPixels / 2;
 

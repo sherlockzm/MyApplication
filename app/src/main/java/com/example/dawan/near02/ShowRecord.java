@@ -1,17 +1,19 @@
 package com.example.dawan.near02;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.ViewGroup.LayoutParams;
 
 import java.util.List;
 
@@ -22,6 +24,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by dawan on 2016/2/23.
@@ -68,6 +71,7 @@ public class ShowRecord extends AppCompatActivity {
 
     String pUserName = "";
     String pUserTel = "";
+    PhotoViewAttacher mAttacher;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -507,6 +511,32 @@ public class ShowRecord extends AppCompatActivity {
                         }
                     });
                 }
+            }
+        });
+
+        recordImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recordImg.setDrawingCacheEnabled(true);
+                Bitmap cacheImage = Bitmap.createBitmap(recordImg.getDrawingCache());
+
+                recordImg.setDrawingCacheEnabled(false);
+
+                recordImg.setImageBitmap(cacheImage);
+
+
+                LayoutParams para;
+                para = recordImg.getLayoutParams();
+                DisplayMetrics dm2 = getResources().getDisplayMetrics();
+
+
+                para.height = dm2.heightPixels / 2;
+
+                para.width = dm2.widthPixels;
+                recordImg.setLayoutParams(para);
+
+                mAttacher = new PhotoViewAttacher(recordImg);
+                mAttacher.update();
             }
         });
     }
