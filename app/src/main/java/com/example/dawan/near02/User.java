@@ -15,6 +15,16 @@ public class User extends BmobUser implements Serializable {
 
     private String mark;
 
+    private int act = 0;
+
+    public int getAct() {
+        return act;
+    }
+
+    public void setAct(int act) {
+        this.act = act;
+    }
+
     public String getMark() {
         return mark;
     }

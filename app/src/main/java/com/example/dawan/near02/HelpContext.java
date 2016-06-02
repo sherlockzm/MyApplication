@@ -25,6 +25,24 @@ public class HelpContext extends BmobObject implements Serializable {
     private String requestid;
     private String helperId;
     private BmobFile uploadImg;
+    private int act = 0;
+    private String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public int getAct() {
+        return act;
+    }
+
+    public void setAct(int act) {
+        this.act = act;
+    }
 
     public BmobFile getUploadImg() {
 

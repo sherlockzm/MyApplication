@@ -184,6 +184,7 @@ public class NeedHelp extends AppCompatActivity {
                         helpContext.setIscomplete(0);
                         helpContext.setStation(0);
                         helpContext.setRequestid(installID);//当前手机ID
+                        helpContext.setAddress(address);
 
                         if (bmobFile != null) {
                             bmobFile.uploadblock(NeedHelp.this, new UploadFileListener() {
@@ -495,7 +496,7 @@ public class NeedHelp extends AppCompatActivity {
         } else {
             Log.e("geo", bmobGeoPoint + "！！！");
             bmobGeoPoint = new BmobGeoPoint(lon, lat);
-            show_notice.setText("当前定位位置约为："+address+"不会显示给其他用户。");
+            show_notice.setText("当前定位位置约为：" + address + "（不会显示给其他用户。）");
         }
     }
 

@@ -43,6 +43,14 @@
         <ImageButton android:background="@drawable/run" android:id="@+id/btn_notHelp" android:text="@string/btn_notHelp" android:layout_width="wrap_content"  android:layout_height="wrap_content"
             android:layout_marginRight="20dp" />
         <ImageButton android:background="@drawable/help2" android:id="@+id/btn_iHelp" android:text="@string/btn_iHelp" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_act"
+            android:background="@drawable/act"
             android:layout_marginLeft="20dp" />
     </LinearLayout>
 </TableLayout>

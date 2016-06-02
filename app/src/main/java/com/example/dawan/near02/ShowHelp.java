@@ -14,9 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
@@ -37,11 +41,20 @@ public class ShowHelp extends AppCompatActivity {
 
     private ImageButton btn_iHelp;
     private ImageButton btn_notHelp;
+    ImageButton btn_act;
+
     TransactionRecord record;
 
     private int isComplete;
 
     private HelpContext showhelpContext;
+
+    int userAct = 0;
+    int contextAct = 0;
+
+    User nowUser;
+
+    String nowUserID;
 
 //    图片
 
@@ -61,6 +74,8 @@ public class ShowHelp extends AppCompatActivity {
         btn_notHelp = (ImageButton) findViewById(R.id.btn_notHelp);
         tv_limitTime = (TextView) findViewById(R.id.tv_limitTime);
         detailImage = (ImageView) findViewById(R.id.detailImage);
+        btn_act = (ImageButton) findViewById(R.id.btn_act);
+
 
         HelpContext helpContext = (HelpContext) getIntent().getSerializableExtra("ext_helpContext");
 
@@ -70,7 +85,27 @@ public class ShowHelp extends AppCompatActivity {
         String lTime = helpContext.getTime().getDate().toString();
         final String objectId = helpContext.getObjectId();
         final String requestID = helpContext.getRequestid();
+        contextAct = helpContext.getAct();
+        nowUser = BmobUser.getCurrentUser(ShowHelp.this, User.class);
 
+        nowUserID = nowUser.getObjectId();
+
+
+        if (requestID != null) {
+            BmobQuery<User> queryAct = new BmobQuery<>();
+            queryAct.getObject(ShowHelp.this, requestID, new GetListener<User>() {
+                @Override
+                public void onSuccess(User user) {
+                    userAct = user.getAct();
+                }
+
+                @Override
+                public void onFailure(int i, String s) {
+
+                }
+            });
+
+        }
 
         BmobFile bmobFile = helpContext.getUploadImg();
         if (bmobFile != null) {
@@ -240,6 +275,178 @@ public class ShowHelp extends AppCompatActivity {
                     mAttacher = new PhotoViewAttacher(detailImage);
                     mAttacher.update();
 
+            }
+        });
+
+        btn_act.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//获取当前用户ID
+//                User nowUser = BmobUser.getCurrentUser(ShowHelp.this,User.class);
+
+                //TODO 检查当前用户是否已经举报
+
+                BmobQuery<Act> actedQuery1 = new BmobQuery<Act>();
+
+                actedQuery1.addWhereEqualTo("acterId", nowUserID);
+
+                BmobQuery<Act> actBmobQuery2 = new BmobQuery<Act>();
+
+                actBmobQuery2.addWhereEqualTo("contextId", objectId);
+
+                List<BmobQuery<Act>> andQuerys = new ArrayList<BmobQuery<Act>>();
+
+                andQuerys.add(actedQuery1);
+                andQuerys.add(actBmobQuery2);
+
+                BmobQuery<Act> andQuery = new BmobQuery<Act>();
+                andQuery.and(andQuerys);
+                andQuery.findObjects(ShowHelp.this, new FindListener<Act>() {
+                    @Override
+                    public void onSuccess(List<Act> list) {
+
+                        Log.e("List", "次数" + list.size());
+                        if (list.size() == 0) {
+                            ///
+
+                            userAct = userAct + 1;
+                            //TODO 更新用户表
+                            if (requestID != null) {
+
+                                User updateUserAct = new User();
+                                updateUserAct.setAct(userAct);
+                                updateUserAct.update(ShowHelp.this, requestID, new UpdateListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Log.e("ACT", "更新个人举报信息成功。");
+                                    }
+
+                                    @Override
+                                    public void onFailure(int i, String s) {
+                                        Log.e("ACT", "更新个人举报信息失败。");
+                                    }
+                                });
+
+                            }
+
+                            contextAct = contextAct + 1;
+                            //TODO 更新求助信息表
+
+                            if (objectId != null) {
+
+                                HelpContext updateHelpAct = new HelpContext();
+                                updateHelpAct.setAct(contextAct);
+                                updateHelpAct.update(ShowHelp.this, objectId, new UpdateListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Log.e("ACT", "更新求助举报信息成功。");
+                                    }
+
+                                    @Override
+                                    public void onFailure(int i, String s) {
+                                        Log.e("ACT", "更新求助举报信息成功。");
+                                    }
+                                });
+                            }
+
+                            //TODO 插入举报表
+
+
+                            if (nowUser != null) {
+
+                                Act act = new Act();
+                                act.setContextId(objectId);
+                                act.setRequestId(requestID);
+                                act.setActerId(nowUser.getObjectId());
+                                act.save(ShowHelp.this, new SaveListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Log.e("ACT", "Save ACT SUCCESS");
+                                    }
+
+                                    @Override
+                                    public void onFailure(int i, String s) {
+                                        Log.e("ACT", "Save ACT Fail");
+                                    }
+                                });
+                            }
+
+
+                            ///
+                        } else {
+                            new Function().showMessage(ShowHelp.this, "一条求助只能举报一次。");
+                        }
+                    }
+
+                    @Override
+                    public void onError(int i, String s) {
+
+                    }
+                });
+
+
+//
+//                userAct = userAct + 1;
+//                //TODO 更新用户表
+//                if (requestID != null){
+//
+//                    User updateUserAct = new User();
+//                    updateUserAct.setAct(userAct);
+//                    updateUserAct.update(ShowHelp.this, requestID, new UpdateListener() {
+//                        @Override
+//                        public void onSuccess() {
+//                            Log.e("ACT","更新个人举报信息成功。");
+//                        }
+//
+//                        @Override
+//                        public void onFailure(int i, String s) {
+//                            Log.e("ACT","更新个人举报信息失败。");
+//                        }
+//                    });
+//
+//                }
+//
+//                contextAct = contextAct + 1;
+//                //TODO 更新求助信息表
+//
+//                if (objectId != null){
+//
+//                    HelpContext updateHelpAct = new HelpContext();
+//                    updateHelpAct.setAct(contextAct);
+//                    updateHelpAct.update(ShowHelp.this, objectId, new UpdateListener() {
+//                        @Override
+//                        public void onSuccess() {
+//                            Log.e("ACT","更新求助举报信息成功。");
+//                        }
+//
+//                        @Override
+//                        public void onFailure(int i, String s) {
+//                            Log.e("ACT","更新求助举报信息成功。");
+//                        }
+//                    });
+//                }
+//
+//                //TODO 插入举报表
+//
+//
+//                if (nowUser != null) {
+//
+//                    Act act = new Act();
+//                    act.setContextId(objectId);
+//                    act.setRequestId(requestID);
+//                    act.setActerId(nowUser.getObjectId());
+//                    act.save(ShowHelp.this, new SaveListener() {
+//                        @Override
+//                        public void onSuccess() {
+//                            Log.e("ACT","Save ACT SUCCESS");
+//                        }
+//
+//                        @Override
+//                        public void onFailure(int i, String s) {
+//                            Log.e("ACT","Save ACT Fail");
+//                        }
+//                    });
+//                }
             }
         });
 
