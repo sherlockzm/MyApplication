@@ -19,6 +19,8 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.text.ParseException;
@@ -32,9 +34,11 @@ import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.UpdateListener;
 import io.nlopez.smartlocation.SmartLocation;
 
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
 
     private List<HelpContext> helpList = new ArrayList<HelpContext>();
 
+
+    int userAct = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,12 +117,19 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
             @Override
             public void onClick(View v) {
 //                ((ImageButton) v).setImageDrawable(getResources().getDrawable(R.drawable.helpp));
-                if (new CheckInput().checkLogin(MainActivity.this, User.class)) {
-                    Intent intent = new Intent(MainActivity.this, NeedHelp.class);
-                    intent.putExtra("lon", lon);
-                    intent.putExtra("lat", lat);
-                    intent.putExtra("address",address);
-                    startActivity(intent);
+
+                int i = 0;
+                i = countUserAct();
+                if (i >=10){
+                    new Function().showMessage(MainActivity.this,"你已被禁止发言。");
+                }else {
+                    if (new CheckInput().checkLogin(MainActivity.this, User.class)) {
+                        Intent intent = new Intent(MainActivity.this, NeedHelp.class);
+                        intent.putExtra("lon", lon);
+                        intent.putExtra("lat", lat);
+                        intent.putExtra("address", address);
+                        startActivity(intent);
+                    }
                 }
             }
         });
@@ -192,6 +205,12 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
 //        BmobPush.startWork(this, "0ada059e29146de6527ae4025358df83");
         //支付相关
 
+        final IWXAPI msgApi = WXAPIFactory.createWXAPI(MainActivity.this, null);
+
+// 将该app注册到微信
+
+        msgApi.registerApp("wxd1579d8c233b79c1");
+
 
 //        btn_userManager = (ImageButton) findViewById(R.id.btn_openReg);
 
@@ -238,12 +257,17 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
                                     BmobQuery<HelpContext> getHelps4 = new BmobQuery<HelpContext>();
                                     getHelps4.addWhereGreaterThan("time", dateNow);//有效时间大于当前时间
 
+                                    //举报次数少于3次
+                                    BmobQuery<HelpContext> getHelps5 = new BmobQuery<HelpContext>();
+                                    getHelps4.addWhereLessThan("act", 3);//有效时间大于当前时间
+
                                     //执行双条件查询
                                     List<BmobQuery<HelpContext>> andQuerys = new ArrayList<BmobQuery<HelpContext>>();
                                     andQuerys.add(getHelps1);
                                     andQuerys.add(getHelps2);
                                     andQuerys.add(getHelps3);
                                     andQuerys.add(getHelps4);
+                                    andQuerys.add(getHelps5);
                                     BmobQuery<HelpContext> queryAnd = new BmobQuery<HelpContext>();
                                     queryAnd.order("time");
                                     queryAnd.and(andQuerys);
@@ -464,4 +488,30 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
         Log.e("Location",lon + "Lon");
 
     }
+
+
+
+    private int countUserAct(){
+
+        final String curId = (String) BmobUser.getObjectByKey(MainActivity.this, "objectId");
+
+        BmobQuery<User> queryAct = new BmobQuery<>();
+        queryAct.getObject(MainActivity.this, curId, new GetListener<User>() {
+            @Override
+            public void onSuccess(User user) {
+                userAct = user.getAct();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+
+                userAct = 0;
+
+            }
+        });
+
+        return userAct;
+
+    }
+
 }
