@@ -28,7 +28,7 @@ public class Login extends AppCompatActivity {
     private EditText edt_ver;
     private ImageButton btn_getVer;
     private ImageButton btn_log;
-    private ImageButton btn_reg;
+//    private ImageButton btn_reg;
 
     private Boolean style;
 
@@ -44,7 +44,7 @@ public class Login extends AppCompatActivity {
         edt_ver = (EditText) findViewById(R.id.edt_login_ver);
         btn_getVer = (ImageButton) findViewById(R.id.btn_getVer_login);
         btn_log = (ImageButton) findViewById(R.id.btn_login);
-        btn_reg = (ImageButton) findViewById(R.id.btn_reg_in_login);
+//        btn_reg = (ImageButton) findViewById(R.id.btn_reg_in_login);
         style = false;
 
 //        new  CheckInput().checkMobile(Login.this,edt_tel,btn_getVer,btn_log);
@@ -130,14 +130,14 @@ public class Login extends AppCompatActivity {
 
         });
 
-        btn_reg.setOnClickListener(new View.OnClickListener() {
+/*        btn_reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Login.this, UserRegister.class);
                 startActivity(intent);
                 finish();
             }
-        });
+        });*/
 
     }
 

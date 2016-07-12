@@ -8,18 +8,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.ViewGroup.LayoutParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
+import cn.bmob.v3.AsyncCustomEndpoints;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.listener.DeleteListener;
+import cn.bmob.v3.listener.CloudCodeListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.SaveListener;
@@ -53,6 +57,8 @@ public class ShowRecord extends AppCompatActivity {
 
     private ImageButton ibtn_tel;
 
+    private ImageButton ibtn_rePay;
+
     private RatingBar ratingBarOther;
     private TextView tv_scoreOther;
     private TextView tv_scoreOtherShow;
@@ -64,7 +70,7 @@ public class ShowRecord extends AppCompatActivity {
     private float helperScore;
 
     String sUrl = "";
-    private int progressNow;
+    private String progressNow;
     private String scoreID;
 
     private TextView tv_recordName;
@@ -73,15 +79,21 @@ public class ShowRecord extends AppCompatActivity {
     String pUserTel = "";
     PhotoViewAttacher mAttacher;
 
+    Double mval = 0.0;
+
+    Double oMval = 0.0;
+    String otherOverageObjId="";
+
+    String overageObjId="";
+
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.showrecord);
 
         init();
-//TODO 删除记录要退款
-        ////////////////////////////
 
-        /////////////////////
         final HelpContext helpContext = (HelpContext) getIntent().getSerializableExtra("HelpContext");        //传递了一个helpContext对象过来
         final User pUser = (User) getIntent().getSerializableExtra("UserContext");
         if (pUser != null) {
@@ -97,7 +109,9 @@ public class ShowRecord extends AppCompatActivity {
         ///////////////////////////按钮事件
         final String helpContextId = helpContext.getObjectId();
         final String helperId = helpContext.getHelperId();
+        final int pStation = helpContext.getpStation();
         progressNow = helpContext.getIscomplete();
+
 
         ///////////////////////////判断是否已经完成，添加评论。
         //获取该对象的状态
@@ -123,27 +137,48 @@ public class ShowRecord extends AppCompatActivity {
             asynImageLoader.showImageAsyn(recordImg, sUrl, R.drawable.logo);
         }
         switch (progressNow) {
-            case 0:
+            case "0":
                 tv_score_station.setText("新请求");
                 break;
-            case 1:
+            case "1":
                 tv_score_station.setText("进行中");
                 break;
-            case 2:
+            case "2":
                 tv_score_station.setText("已完成");
                 break;
-            case 3:
+            case "3":
                 tv_score_station.setText("取消中");
-            case 4:
+                break;
+            case "4":
                 tv_score_station.setText("已过期");
+                break;
+            case "9":
+                tv_score_station.setText("已取消");
                 break;
             default:
                 break;
         }
 
+        if (pStation == 0) {
+            ibtn_rePay.setVisibility(View.VISIBLE);
+            tv_score_station.setText("待支付");
+
+            ibtn_rePay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ShowRecord.this, SurePay.class);
+                    intent.putExtra("ORDER", helpContext);
+                    intent.putExtra("MVAL",mval);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            ibtn_rePay.setVisibility(View.GONE);
+        }
+
 
         switch (progressNow) {//根据该求助的状态控制界面显示
-            case 2: {//如果该求助已完成，则显示评分按钮,同时隐藏完成按钮，删除按钮，
+            case "2": {//如果该求助已完成，则显示评分按钮,同时隐藏完成按钮，删除按钮，
                 btn_getScore.setVisibility(View.VISIBLE);
                 ratingBar.setVisibility(View.VISIBLE);
                 btn_complete.setVisibility(View.GONE);
@@ -212,11 +247,11 @@ public class ShowRecord extends AppCompatActivity {
                 );
                 break;
             }
-            case 0: {
+            case "0": {
                 btn_complete.setVisibility(View.GONE);
                 break;
             }
-            case 1: {
+            case "1": {
                 if (boo == 0) {
                     tv_scoreText.setText("如不能按要求完成，请电话联系求助者发起删除请求。");
                 } else {
@@ -225,7 +260,7 @@ public class ShowRecord extends AppCompatActivity {
                 }
                 break;
             }
-            case 3: {
+            case "3": {
                 if (boo == 0) {//求助者请求撤销求助
                     tv_scoreText.setText("求助者请求撤销求助。大侠，你愿意接受该请求吗？");
                     new Function().setButton(btn_complete, true);
@@ -235,6 +270,10 @@ public class ShowRecord extends AppCompatActivity {
 
                 }
                 break;
+            }
+            case "9":{
+                new Function().setButton(btn_complete,false);
+                new Function().setButton(btn_delete,false);
             }
             default:
                 break;
@@ -248,6 +287,14 @@ public class ShowRecord extends AppCompatActivity {
                 score = rating;//取得用户评分
             }
         });
+
+        getOverage(helpContext.getRequestid());
+        getOverageId(helpContext.getRequestid());
+        getOtherOverage(helperId);
+        getOtherOverageId(helperId);
+
+        Log.e("OTHER",otherOverageObjId);
+        Log.e("Other",oMval+"");
 
         ibtn_tel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,30 +362,33 @@ public class ShowRecord extends AppCompatActivity {
                     BmobQuery<HelpContext> query = new BmobQuery<HelpContext>();
                     query.getObject(ShowRecord.this, helpContextId, new GetListener<HelpContext>() {
                         @Override
-                        public void onSuccess(HelpContext helpContext) {
-                            int progress = helpContext.getIscomplete();
+                        public void onSuccess(final HelpContext helpContext) {
+                            String progress = helpContext.getIscomplete();
                             switch (progress) {
-                                case 0: {
-                                    helpContext.setObjectId(helpContextId);
-                                    helpContext.delete(ShowRecord.this, new DeleteListener() {
-                                        @Override
-                                        public void onSuccess() {
-                                            Log.e("Change", "Delete Success!");
-                                            Toast.makeText(ShowRecord.this, "记录已删除.", Toast.LENGTH_LONG).show();
-                                            finish();
-                                        }
+                                case "0": {//TODO 在有人响应求助前，删除求助信息，退还款项
 
-                                        @Override
-                                        public void onFailure(int i, String s) {
-                                            Log.e("Change", "Delete Fail!");
+//                                    getOverageId(helpContext.getRequestid());
+//
+//                                    getOverage(helpContext.getRequestid());
 
-                                        }
-                                    });
+                                    Double pm = mval + helpContext.getPay();
+
+                                    Log.e("mval","mval = " + mval);
+
+                                    setOverage(overageObjId,pm.toString());
+
+                                    setCancelStation(helpContext.getObjectId());
+
+                                    new Function().showMessage(ShowRecord.this,"该求助已取消。");
+
+                                    //TODO  更改状态
+
+                                    finish();
                                     break;
                                 }
-                                case 1: {
+                                case "1": {
                                     //改变iscomplete 为3
-                                    helpContext.setIscomplete(3);
+                                    helpContext.setIscomplete("3");
                                     btn_complete.setVisibility(View.GONE);
                                     helpContext.update(ShowRecord.this, helpContextId, new UpdateListener() {
                                         @Override
@@ -357,22 +407,20 @@ public class ShowRecord extends AppCompatActivity {
                                     Toast.makeText(ShowRecord.this, "你正在申请删除，请耐心等待确认。", Toast.LENGTH_SHORT).show();
                                     break;
                                 }
-                                case 2: {
+                                case "2": {
                                     Toast.makeText(ShowRecord.this, "已完成，不可删除。", Toast.LENGTH_SHORT).show();
                                     break;
                                 }
-                                case 3: {
+                                case "3": {
                                     Toast.makeText(ShowRecord.this, "你已经申请删除，请耐心等待确认。", Toast.LENGTH_SHORT).show();
                                     break;
                                 }
                                 default:
+                                    Toast.makeText(ShowRecord.this, "当前状态不可删除。", Toast.LENGTH_SHORT).show();
                                     break;
 
                             }
-//
-//                                String message = "求助者请求取消求助。你是否同意。";
-//                                Toast.makeText(ShowRecord.this, "提交援助者确认.", Toast.LENGTH_LONG).show();
-//                                new Function().pushMessage(ShowRecord.this, helperId, message);
+
                         }
 
                         /////////////////////////////////////////////////////////////////////
@@ -396,26 +444,36 @@ public class ShowRecord extends AppCompatActivity {
                     BmobQuery<HelpContext> delQuery = new BmobQuery<HelpContext>();
                     delQuery.getObject(ShowRecord.this, helpContextId, new GetListener<HelpContext>() {
                         @Override
-                        public void onSuccess(HelpContext helpContext) {
-                            if (helpContext.getIscomplete() == 3) {
-                                helpContext.delete(ShowRecord.this, new DeleteListener() {
+                        public void onSuccess(final HelpContext helpContext) {
+                            if (helpContext.getIscomplete().equals("3")) {
+                                helpContext.setIscomplete("9");
+                                helpContext.update(ShowRecord.this, helpContextId, new UpdateListener() {
                                     @Override
                                     public void onSuccess() {
-                                        Log.e("Delete", "Delete Success");
-                                        Toast.makeText(ShowRecord.this, "该求助已成功删除.", Toast.LENGTH_SHORT).show();
+                                        //TODO 同意取消求助，酬劳返回
+//                                        getOverage(helpContext.getRequestid());
+//                                        getOverageId(helpContext.getRequestid());
+
+                                        Double pm = mval + helpContext.getPay();
+
+                                        setOverage(overageObjId,pm.toString());
+
+                                        Toast.makeText(ShowRecord.this, "感谢你的理解，该求助已取消。", Toast.LENGTH_SHORT).show();
+
+                                        //TODO 更改状态
                                         finish();
+
+
                                     }
 
                                     @Override
                                     public void onFailure(int i, String s) {
-                                        Log.e("Delete", "Delete Fail.");
-                                        Toast.makeText(ShowRecord.this, "删除失败。", Toast.LENGTH_SHORT).show();
-
-
+                                        new Function().showMessage(ShowRecord.this, "状态更新失败，请检查网络重试。");
                                     }
                                 });
+
                             } else {
-                                Toast.makeText(ShowRecord.this, "如当初一时手快，请点击左侧的申请删除按钮，不能单方面删除喔。", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(ShowRecord.this, "如当初一时手快，请点击左侧的申请删除按钮，不能单方面删除喔。", Toast.LENGTH_SHORT).show();
 
                             }
                         }
@@ -434,8 +492,8 @@ public class ShowRecord extends AppCompatActivity {
                     queryProgress.getObject(ShowRecord.this, helpContextId, new GetListener<HelpContext>() {
                         @Override
                         public void onSuccess(HelpContext qqhelpContext) {
-                            if (qqhelpContext.getIscomplete() == 1) {
-                                helpContext.setIscomplete(2);
+                            if (qqhelpContext.getIscomplete().equals("1")) {
+                                helpContext.setIscomplete("2");
                                 helpContext.update(ShowRecord.this, helpContextId, new UpdateListener() {
                                     @Override
                                     public void onSuccess() {
@@ -466,7 +524,15 @@ public class ShowRecord extends AppCompatActivity {
                                         btn_getScore.setVisibility(View.VISIBLE);
                                         ratingBar.setVisibility(View.VISIBLE);
                                         new Function().setButton(new ImageButton[]{btn_delete}, btn_complete, false);
-                                        //执行余额变动
+                                        //TODO 求助正常完成， 执行余额变动
+//                                        getOverage(helpContext.getHelperId());
+//                                        getOverageId(helpContext.getHelperId());
+
+                                        Double pm = oMval + helpContext.getPay();
+
+                                        setOverage(otherOverageObjId,pm.toString());
+
+                                        finish();
                                     }
 
                                     @Override
@@ -541,9 +607,6 @@ public class ShowRecord extends AppCompatActivity {
         });
     }
 
-    /////////登记金额变动。
-    public void pay() {
-    }
 
     public void addScore(Score nScore, String scoreId, int role) {
         if (role == 0) {
@@ -623,12 +686,217 @@ public class ShowRecord extends AppCompatActivity {
 
         tv_recordName = (TextView) findViewById(R.id.tv_record_helperName);
 
+        ibtn_rePay = (ImageButton) findViewById(R.id.wxpay);
+
     }
 
     protected void onDestroy() {
         super.onDestroy();
         pUserName = "";
         pUserTel = "";
+
+    }
+
+    private void getOverage(String userID){
+        //test对应你刚刚创建的云端逻辑名称
+        String cloudCodeName = "userOverage";
+        JSONObject params = new JSONObject();
+
+        Log.e("USERID","USERID = " + userID);
+//name是上传到云端的参数名称，值是bmob，云端逻辑可以通过调用request.body.name获取这个值
+        try {
+            params.put("userId", userID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//创建云端逻辑对象
+        AsyncCustomEndpoints cloudCode = new AsyncCustomEndpoints();
+//异步调用云端逻辑
+        cloudCode.callEndpoint(ShowRecord.this, cloudCodeName, params, new CloudCodeListener() {
+
+            //执行成功时调用，返回result对象
+            @Override
+            public void onSuccess(Object result) {
+                Log.e("Success","get overage success" + result);
+                mval = Double.valueOf(result.toString());
+                Log.e("Result","Result to mval :" + mval);
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                Log.e("Fail","Get overage fail");
+
+            }
+
+
+        });
+    }
+
+    private void getOverageId(String userID){
+        //test对应你刚刚创建的云端逻辑名称
+        String cloudCodeName = "userOverageObjId";
+        JSONObject params = new JSONObject();
+//name是上传到云端的参数名称，值是bmob，云端逻辑可以通过调用request.body.name获取这个值
+        try {
+            params.put("userId", userID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//创建云端逻辑对象
+        AsyncCustomEndpoints cloudCode = new AsyncCustomEndpoints();
+//异步调用云端逻辑
+        cloudCode.callEndpoint(ShowRecord.this, cloudCodeName, params, new CloudCodeListener() {
+
+            //执行成功时调用，返回result对象
+            @Override
+            public void onSuccess(Object result) {
+                Log.e("Success","get overage success" + result);
+                overageObjId = result.toString();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                Log.e("Fail","Get overage fail");
+
+            }
+
+
+        });
+
+    }
+
+    private void setOverage(String objId,String overage){
+        //test对应你刚刚创建的云端逻辑名称
+        String cloudCodeName = "getOverage";
+        JSONObject params = new JSONObject();
+//name是上传到云端的参数名称，值是bmob，云端逻辑可以通过调用request.body.name获取这个值
+        try {
+            params.put("id", objId);
+            params.put("overage", overage);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//创建云端逻辑对象
+        AsyncCustomEndpoints cloudCode = new AsyncCustomEndpoints();
+//异步调用云端逻辑
+        cloudCode.callEndpoint(ShowRecord.this, cloudCodeName, params, new CloudCodeListener() {
+
+            //执行成功时调用，返回result对象
+            @Override
+            public void onSuccess(Object result) {
+                Log.e("Success","set overage success" + result);
+
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                Log.e("Fail","Get overage fail");
+
+            }
+
+
+        });
+
+    }
+
+    private void setCancelStation(String objid){
+        //test对应你刚刚创建的云端逻辑名称
+        String cloudCodeName = "setCancelStation";
+        JSONObject params = new JSONObject();
+//name是上传到云端的参数名称，值是bmob，云端逻辑可以通过调用request.body.name获取这个值
+        try {
+            params.put("objId", objid);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//创建云端逻辑对象
+        AsyncCustomEndpoints cloudCode = new AsyncCustomEndpoints();
+//异步调用云端逻辑
+        cloudCode.callEndpoint(ShowRecord.this, cloudCodeName, params, new CloudCodeListener() {
+
+            //执行成功时调用，返回result对象
+            @Override
+            public void onSuccess(Object result) {
+                Log.e("Success","set CancelStation success" + result);
+
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                Log.e("Fail","set CancelStation fail");
+
+            }
+
+
+        });
+    }
+
+
+    private void getOtherOverage(String userID){
+        //test对应你刚刚创建的云端逻辑名称
+        String cloudCodeName = "userOverage";
+        JSONObject params = new JSONObject();
+
+        Log.e("USERID","USERID = " + userID);
+//name是上传到云端的参数名称，值是bmob，云端逻辑可以通过调用request.body.name获取这个值
+        try {
+            params.put("userId", userID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//创建云端逻辑对象
+        AsyncCustomEndpoints cloudCode = new AsyncCustomEndpoints();
+//异步调用云端逻辑
+        cloudCode.callEndpoint(ShowRecord.this, cloudCodeName, params, new CloudCodeListener() {
+
+            //执行成功时调用，返回result对象
+            @Override
+            public void onSuccess(Object result) {
+                Log.e("Success","get other overage success" + result);
+                oMval = Double.valueOf(result.toString());
+                Log.e("Result","Result to mval :" + oMval);
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                Log.e("Fail","Get overage fail");
+
+            }
+
+
+        });
+    }
+
+    private void getOtherOverageId(String userID){
+        //test对应你刚刚创建的云端逻辑名称
+        String cloudCodeName = "userOverageObjId";
+        JSONObject params = new JSONObject();
+//name是上传到云端的参数名称，值是bmob，云端逻辑可以通过调用request.body.name获取这个值
+        try {
+            params.put("userId", userID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//创建云端逻辑对象
+        AsyncCustomEndpoints cloudCode = new AsyncCustomEndpoints();
+//异步调用云端逻辑
+        cloudCode.callEndpoint(ShowRecord.this, cloudCodeName, params, new CloudCodeListener() {
+
+            //执行成功时调用，返回result对象
+            @Override
+            public void onSuccess(Object result) {
+                Log.e("Success","get other overage success" + result);
+                otherOverageObjId = result.toString();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                Log.e("Fail","Get overage fail");
+
+            }
+
+
+        });
 
     }
 

@@ -149,7 +149,6 @@
         <activity android:name=".AddInfo"/>
         <activity android:name=".ChangeActivity"/>
         <activity android:name=".AboutUs"/>
-        <activity android:name=".PaySubmit"/>
 
         <activity android:name=".MainActivity" >
         </activity>
@@ -158,13 +157,31 @@
         <activity android:name="com.gun0912.tedpicker.ImagePickerActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".SurePay" />
+
+        <activity
+            android:name="cn.beecloud.BCWechatPaymentActivity"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity-alias
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:targetActivity="cn.beecloud.BCWechatPaymentActivity" />
+
+        //测试版需要
+        <!--<activity-->
+        <!--android:name="cn.beecloud.BCMockPayActivity"-->
+        <!--android:screenOrientation="portrait"-->
+        <!--android:theme="@android:style/Theme.Translucent.NoTitleBar" />-->
+
 
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
         </service>
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="suH4ug47Mqtf1IjuF7Wys8t1pVFkm0cz" />
+            android:value="key" />
 
     </application>
 

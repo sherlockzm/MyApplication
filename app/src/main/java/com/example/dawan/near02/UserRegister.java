@@ -110,6 +110,9 @@ public class UserRegister extends AppCompatActivity {
                         @Override
                         public void onSuccess() {
                             Log.e("LOGIN", "LOGINED");
+                            User curUser = BmobUser.getCurrentUser(UserRegister.this,User.class);
+                            final String curUserId = (String)curUser.getObjectId();
+                            updateUserOverage(curUserId,"0");
                             updateInstallation();  //在安装表上注册
                             Intent intent = new Intent(UserRegister.this,Start_Activity.class);
                             startActivity(intent);
@@ -128,6 +131,22 @@ public class UserRegister extends AppCompatActivity {
 
     }
 
+    public void updateUserOverage(String userid,String overage){
+        UserOverage userOverage = new UserOverage();
+        userOverage.setUserId(userid);
+        userOverage.setUserOverage(overage);
+        userOverage.save(UserRegister.this, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                Log.e("User","add overage count");
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+
+            }
+        });
+    }
 
     //MD5加密
     public static String MD5(String str) {

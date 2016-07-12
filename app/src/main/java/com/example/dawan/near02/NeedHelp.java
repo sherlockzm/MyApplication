@@ -22,6 +22,9 @@ import com.andreabaccega.widget.FormEditText;
 import com.gun0912.tedpicker.Config;
 import com.gun0912.tedpicker.ImagePickerActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -33,11 +36,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import cn.beecloud.BCPay;
+import cn.bmob.v3.AsyncCustomEndpoints;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobGeoPoint;
+import cn.bmob.v3.listener.CloudCodeListener;
 import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
@@ -70,7 +76,13 @@ public class NeedHelp extends AppCompatActivity {
     Double pay;
     String simpleTitle;
 
+    Double mval;
+
+//    String uId;
+
     String address;
+
+    String TAG = "Error";
 
     HelpContext helpContext = new HelpContext();
 
@@ -93,8 +105,10 @@ public class NeedHelp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.needhelp);
-
+//TODO 添加获取定位按钮，解决定位失败问题
         installID = (String) BmobUser.getObjectByKey(NeedHelp.this, "objectId");
+
+        BCPay.initWechatPay(NeedHelp.this, "wxd1579d8c233b79c1");
 
         edt_simple_title = (FormEditText) findViewById(R.id.edt_simple_title);
         edt_pay = (FormEditText) findViewById(R.id.edt_pay);
@@ -107,6 +121,7 @@ public class NeedHelp extends AppCompatActivity {
 
         imgView_upload = (ImageView) findViewById(R.id.imgV_upload);
 
+        getOverage(installID);
 
         new CheckInput().getFocus(edt_simple_title);
         ////////////////////////
@@ -135,7 +150,9 @@ public class NeedHelp extends AppCompatActivity {
 
         address = intent.getStringExtra("address");
 
+
         setGeo(longitude, latitude);
+
 //        bmobGeoPoint = new BmobGeoPoint(longitude, latitude);
 
         btn_uploadImage.setOnClickListener(new View.OnClickListener() {
@@ -157,17 +174,26 @@ public class NeedHelp extends AppCompatActivity {
             }
         });
 
+
+        /*
+
+        保存但不推送，待支付成功后再推送，
+        求助添加支付标识，支付成功的才显示
+
+         */
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //检验输入的内容
+
+                Log.e("TAG", "Clicked");
 
                 if (count == 0) {
                     new Function().checkNetworkInfo(NeedHelp.this);
                     boolean cInput = new Login().verificationInput(new FormEditText[]{edt_simple_title, edt_pay, edt_detail}) &&
                             new CheckInput().CheckInputHelp(NeedHelp.this, edt_simple_title, 18) && new CheckInput().CheckInputHelp(NeedHelp.this, edt_detail, 100);
                     if (cInput && bmobGeoPoint != null) {
-
+                        Log.e("TAG", "Clicked2");
                         //添加try ，保证先保存在服务器再进行推送。
                         simpleTitle = edt_simple_title.getText().toString();
                         pay = new Function().trimNull(edt_pay.getText().toString());
@@ -181,16 +207,18 @@ public class NeedHelp extends AppCompatActivity {
                         helpContext.setPay(pay);
                         helpContext.setTime(lmTime);
                         helpContext.setDetail(detail);
-                        helpContext.setIscomplete(0);
-                        helpContext.setStation(0);
+                        helpContext.setIscomplete("0");
+                        helpContext.setStation("0");
                         helpContext.setRequestid(installID);//当前手机ID
                         helpContext.setAddress(address);
+                        helpContext.setpStation(0);
 
                         if (bmobFile != null) {
                             bmobFile.uploadblock(NeedHelp.this, new UploadFileListener() {
                                 @Override
                                 public void onSuccess() {
 
+                                    Log.e("TAG", "Clicked3");
                                     helpContext.setUploadImg(bmobFile);
 
                                     final Float myArea = getArea();
@@ -200,11 +228,12 @@ public class NeedHelp extends AppCompatActivity {
                                         public void onSuccess() {
                                             Log.e("Save", "SUCCESS!" + bmobGeoPoint.getLatitude());
 
-                                            new Function().pushForHelp(NeedHelp.this, bmobGeoPoint, myArea);
+//                                            new Function().pushForHelp(NeedHelp.this, bmobGeoPoint, myArea);//支付成功后再推送
 
+                                            Log.e("TAG", "Clicked4");
                                             cleanInput();
 
-                                            gotoPay(pay.toString());
+                                            gotoPay();//
 
 //                                            finish();
                                         }
@@ -212,6 +241,7 @@ public class NeedHelp extends AppCompatActivity {
                                         @Override
                                         public void onFailure(int i, String s) {
                                             Log.e("Save", "FAIL");
+                                            Log.e("TAG", "Clicked11");
 
                                         }
                                     });
@@ -220,27 +250,29 @@ public class NeedHelp extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(int i, String s) {
-
+                                    Log.e("TAG", "Clicked9");
                                 }
                             });
                         } else {
+
+                            Log.e("TAG", "Clicked8");
                             helpContext.setUploadImg();
-                            final Float myArea = getArea();
+//                            final Float myArea = getArea();
                             helpContext.save(NeedHelp.this, new SaveListener() {
                                 @Override
                                 public void onSuccess() {
-                                    new Function().pushForHelp(NeedHelp.this, bmobGeoPoint, myArea);
+//                                    new Function().pushForHelp(NeedHelp.this, bmobGeoPoint, myArea);
                                     cleanInput();
+                                    Log.e("TAG", "Clicked21");
 
-
-                                    gotoPay(pay.toString());
-                                    finish();
+                                    gotoPay();
+//                                    finish();
 
                                 }
 
                                 @Override
                                 public void onFailure(int i, String s) {
-
+                                    Log.e("TAG", "Clicked20");
                                 }
                             });
 
@@ -374,12 +406,14 @@ public class NeedHelp extends AppCompatActivity {
 
     }
 
-    private void gotoPay(String money){
+    private void gotoPay() {
+        //TODO 传递订单号
 
-        Intent intent = new Intent(NeedHelp.this,PaySubmit.class);
-        intent.putExtra("MONEY",money);
-        startActivityForResult(intent,PAY_CODE);
-        finish();
+        Intent intent = new Intent(NeedHelp.this, SurePay.class);
+        intent.putExtra("ORDER", helpContext);
+        intent.putExtra("MVAL",mval);
+        startActivity(intent);
+//        finish();
     }
 
     private void setSaveText() {
@@ -494,9 +528,9 @@ public class NeedHelp extends AppCompatActivity {
                 }
             });
         } else {
-            Log.e("geo", bmobGeoPoint + "！！！");
             bmobGeoPoint = new BmobGeoPoint(lon, lat);
-            show_notice.setText("当前定位位置约为：" + address + "（不会显示给其他用户。）");
+            Log.e("geo", bmobGeoPoint + "！！！");
+            show_notice.setText("当前定位位置约为：" + address + "（若显示为null请勿发送求助，请退出后重新进入。）");
         }
     }
 
@@ -543,7 +577,7 @@ public class NeedHelp extends AppCompatActivity {
         calendar.add(Calendar.HOUR_OF_DAY, hour);  //设置实际有效时间
         calendar.add(Calendar.MINUTE, minute);
         dBefore = calendar.getTime();   //得到有效时间
-
+        Log.e("NOTHING", "WWWWWW");
 //        BmobDate bmobDate = new  BmobDate(dBefore);
 
         return timeBefore = new BmobDate(dBefore);
@@ -624,6 +658,50 @@ public class NeedHelp extends AppCompatActivity {
         editor.putString("Time", "");
         editor.putString("Detail", "");
         editor.commit();
+        edt_simple_title.setText("");
+        edt_pay.setText("");
+        edt_time.setText("");
+        edt_detail.setText("");
+    }
+
+
+    private void getOverage(String userID){
+
+
+
+
+
+        //test对应你刚刚创建的云端逻辑名称
+        String cloudCodeName = "userOverage";
+        JSONObject params = new JSONObject();
+//name是上传到云端的参数名称，值是bmob，云端逻辑可以通过调用request.body.name获取这个值
+        try {
+            params.put("userId", userID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//创建云端逻辑对象
+        AsyncCustomEndpoints cloudCode = new AsyncCustomEndpoints();
+//异步调用云端逻辑
+        cloudCode.callEndpoint(NeedHelp.this, cloudCodeName, params, new CloudCodeListener() {
+
+            //执行成功时调用，返回result对象
+            @Override
+            public void onSuccess(Object result) {
+                Log.e("Success","get overage success" + result);
+                mval = Double.valueOf(result.toString());
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                Log.e("Fail","Get overage fail");
+
+            }
+
+
+        });
+
+
     }
 
 

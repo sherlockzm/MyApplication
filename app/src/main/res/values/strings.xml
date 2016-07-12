@@ -15,7 +15,7 @@
     <string name="tv_simple_title">简明标题：</string>
     <string name="edt_simpleTitle">简要说出你的求助（不多于18个汉字）</string>
     <string name="tv_context">详细请求：</string>
-    <string name="edt_context">详细说明你的请求。</string>
+    <string name="edt_context">详细说明你的请求，包括限定时间，地点以及其他特殊要求。</string>
     <string name="tv_pay">酬劳(元)：</string>
     <string name="tv_time">有效期(小时):</string>
     <string name="edt_maxTime">0-24小时,默认24</string>

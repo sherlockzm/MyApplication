@@ -18,8 +18,10 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 
+import cn.bmob.v3.AsyncCustomEndpoints;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.CloudCodeListener;
 import cn.bmob.v3.listener.FindStatisticsListener;
 
 /**
@@ -48,6 +50,8 @@ public class UserInfo extends AppCompatActivity {
     private TextView tv_helperScore;
     private TextView tv_aboutMe;
 
+    private String overage;
+
     private User curUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,8 @@ public class UserInfo extends AppCompatActivity {
         tv_aboutMe = (TextView) findViewById(R.id.aboutUs);
 
 
+
+
        if (BmobUser.getCurrentUser(UserInfo.this,User.class) != null) {
            curUser = BmobUser.getCurrentUser(UserInfo.this,User.class);
 
@@ -85,7 +91,10 @@ public class UserInfo extends AppCompatActivity {
            tv_realName.setText(curUser.getRealName());
            tv_realID.setText(curUser.getIdNumber());
            tv_payAccount.setText(curUser.getPayAccount());
-           tv_overage.setText(curUser.getOverage().toString());
+
+           getOverage(curUser.getObjectId());
+
+
        }
         //新建一个表用于存放余额
 
@@ -153,7 +162,7 @@ public class UserInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 BmobUser.logOut(UserInfo.this);
-                Intent outIntent = new Intent(UserInfo.this,Login.class);
+                Intent outIntent = new Intent(UserInfo.this,Start_Activity.class);
                 startActivity(outIntent);
                 finish();
             }
@@ -243,6 +252,43 @@ public class UserInfo extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void getOverage(String userID){
+
+        //test对应你刚刚创建的云端逻辑名称
+        String cloudCodeName = "userOverage";
+        JSONObject params = new JSONObject();
+//name是上传到云端的参数名称，值是bmob，云端逻辑可以通过调用request.body.name获取这个值
+        try {
+            params.put("userId", userID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//创建云端逻辑对象
+        AsyncCustomEndpoints cloudCode = new AsyncCustomEndpoints();
+//异步调用云端逻辑
+        cloudCode.callEndpoint(UserInfo.this, cloudCodeName, params, new CloudCodeListener() {
+
+            //执行成功时调用，返回result对象
+            @Override
+            public void onSuccess(Object result) {
+                Log.e("Success","get overage success" + result);
+                tv_overage.setText(result.toString());
+                String mo = result.toString();
+
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                Log.e("Fail","Get overage fail");
+
+            }
+
+
+        });
+
+
     }
 
 

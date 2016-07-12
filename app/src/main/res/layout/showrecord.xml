@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/tools"
-    xmlns:hedgehog="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -183,6 +181,13 @@
             android:layout_marginLeft="20dp"
             android:textStyle="bold"
             android:background="@drawable/completebutton" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/wxpay"
+            android:background="@drawable/paybutton"
+            android:layout_marginLeft="20dp" />
         <!--<Button android:id="@+id/btn_modify" android:text="@string/showRecord_btn_modify" android:layout_width="wrap_content" android:layout_height="wrap_content" />-->
     </LinearLayout>
 

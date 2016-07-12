@@ -21,12 +21,21 @@ public class HelpContext extends BmobObject implements Serializable {
     private BmobDate time;
     private String detail;
     private BmobGeoPoint bmobGeoPoint;
-    private int iscomplete;
+    private String iscomplete;
     private String requestid;
     private String helperId;
     private BmobFile uploadImg;
     private int act = 0;
     private String address;
+    private int pStation;
+
+    public int getpStation() {
+        return pStation;
+    }
+
+    public void setpStation(int pStation) {
+        this.pStation = pStation;
+    }
 
     public String getAddress() {
         return address;
@@ -90,13 +99,13 @@ public class HelpContext extends BmobObject implements Serializable {
         this.time = time;
     }
 
-    private int station;//是否超时
+    private String station;//是否超时
 
-    public int getStation() {
+    public String getStation() {
         return station;
     }
 
-    public void setStation(int station) {
+    public void setStation(String station) {
         this.station = station;
     }
 
@@ -108,11 +117,11 @@ public class HelpContext extends BmobObject implements Serializable {
         this.requestid = requestid;
     }
 
-    public int getIscomplete() {
+    public String getIscomplete() {
         return iscomplete;
     }
 
-    public void setIscomplete(int iscomplete) {
+    public void setIscomplete(String iscomplete) {
         this.iscomplete = iscomplete;
     }
 

@@ -15,7 +15,6 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:paddingBottom="10dp"
-            android:text="登陆"
             android:textSize="22dp"
             android:textStyle="bold"
             android:typeface="monospace" />
@@ -103,7 +102,7 @@
         android:layout_marginTop="20dp">
         <ImageButton
             android:id="@+id/btn_getVer_login"
-            android:background="@drawable/yanzheng"
+            android:background="@drawable/verbutton"
             android:text="@string/tv_getVerification"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
@@ -111,19 +110,19 @@
 
         <ImageButton
             android:id="@+id/btn_login"
-            android:background="@drawable/login"
+            android:background="@drawable/logbutton"
             android:layout_width="wrap_content"
             android:text="@string/btn_login"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
 
-        <ImageButton
-            android:id="@+id/btn_reg_in_login"
-            android:background="@drawable/reg"
-            android:text="@string/btn_reg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <!--<ImageButton-->
+            <!--android:id="@+id/btn_reg_in_login"-->
+            <!--android:background="@drawable/reg"-->
+            <!--android:text="@string/btn_reg"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
     </LinearLayout>
 
 </TableLayout>

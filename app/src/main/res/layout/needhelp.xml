@@ -94,71 +94,6 @@
 
     </LinearLayout>
 
-    <!--    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:orientation="horizontal">
-
-            <com.andreabaccega.widget.FormEditText
-                android:id="@+id/edt_pay"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:hint="@string/edt_pay"
-                android:inputType="numberDecimal"
-                android:maxLength="6"
-                android:maxLines="1"
-                android:paddingRight="10dp"
-                android:textSize="12dp"
-                app:emptyErrorString="@string/emptyError"
-                app:testType="nocheck" />
-            <TextView
-                android:text="元    "
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>-->
-    <!--
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                android:text="@string/tv_time"
-                android:textColor="#fbfa8907"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-    -->
-    <!--
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:orientation="horizontal">
-
-            <EditText
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:hint="@string/edt_maxTime"
-                android:paddingLeft="10dp"
-                android:textSize="12dp"
-                android:id="@+id/edt_time"
-                android:inputType="numberDecimal"
-                android:lines="1"
-                android:longClickable="false"
-                android:maxLength="4" />
-            <TextView
-                android:text="小时"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -241,7 +176,7 @@
             android:layout_marginLeft="50dp"
             android:layout_marginTop="20dp"
             android:layout_span="2"
-            android:background="@drawable/help1"
+            android:background="@drawable/helpbuttonsmall"
             android:text="@string/btn_submit" />
         </LinearLayout>
     </LinearLayout>

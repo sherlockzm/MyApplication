@@ -71,20 +71,23 @@ public class HelpAdapter extends ArrayAdapter<HelpContext>{
 
         switch (helpContext.getIscomplete()){
 
-            case 0:
+            case "0":
                 viewHolder.station.setText("新请求");
                 break;
-            case 1:
+            case "1":
                 viewHolder.station.setText("进行中");
                 break;
-            case 2:
+            case "2":
                 viewHolder.station.setText("已完成");
                 break;
-            case 3:
+            case "3":
                 viewHolder.station.setText("取消中");
                 break;
-            case 4:
+            case "4":
                 viewHolder.station.setText("已过期");
+                break;
+            case "9":
+                viewHolder.station.setText("已取消");
                 break;
             default:
                 break;

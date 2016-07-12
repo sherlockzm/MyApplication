@@ -36,6 +36,7 @@ public class ShowHelp extends AppCompatActivity {
     private TextView tv_detail;
     private TextView tv_limitTime;
     private ImageView detailImage;
+    private TextView hpStation;
 
     String sUrl = "";
 
@@ -45,7 +46,7 @@ public class ShowHelp extends AppCompatActivity {
 
     TransactionRecord record;
 
-    private int isComplete;
+    private String isComplete;
 
     private HelpContext showhelpContext;
 
@@ -75,6 +76,8 @@ public class ShowHelp extends AppCompatActivity {
         tv_limitTime = (TextView) findViewById(R.id.tv_limitTime);
         detailImage = (ImageView) findViewById(R.id.detailImage);
         btn_act = (ImageButton) findViewById(R.id.btn_act);
+        hpStation = (TextView) findViewById(R.id.hpstation);
+
 
 
         HelpContext helpContext = (HelpContext) getIntent().getSerializableExtra("ext_helpContext");
@@ -85,11 +88,19 @@ public class ShowHelp extends AppCompatActivity {
         String lTime = helpContext.getTime().getDate().toString();
         final String objectId = helpContext.getObjectId();
         final String requestID = helpContext.getRequestid();
+        final int pStation = helpContext.getpStation();
+        isComplete = helpContext.getIscomplete();
         contextAct = helpContext.getAct();
         nowUser = BmobUser.getCurrentUser(ShowHelp.this, User.class);
 
-        nowUserID = nowUser.getObjectId();
-
+        if (nowUser != null) {
+            nowUserID = nowUser.getObjectId();
+        }
+        if (pStation == 0) {
+            hpStation.setText("未支付");
+        } else {
+            hpStation.setText("已支付");
+        }
 
         if (requestID != null) {
             BmobQuery<User> queryAct = new BmobQuery<>();
@@ -121,27 +132,31 @@ public class ShowHelp extends AppCompatActivity {
         tv_limitTime.setText(lTime);
         tv_detail.setText(detail);
         /////////////////////////////////////////////
-        BmobQuery<HelpContext> query = new BmobQuery<HelpContext>();
-        //判断能否提供帮助
-        query.getObject(ShowHelp.this, objectId, new GetListener<HelpContext>() {
-                    @Override
-                    public void onSuccess(HelpContext helpContext) {
-                        showhelpContext = helpContext;
-                        isComplete = helpContext.getIscomplete();
-                        if (isComplete != 0) {
-                            btn_iHelp.setVisibility(View.GONE);
-//                            btn_notHelp.setGravity(Gravity.CENTER);
-//                            btn_notHelp.setText("返回");
-                        }
-                    }
+//        BmobQuery<HelpContext> query = new BmobQuery<HelpContext>();
+//        //判断能否提供帮助
+//        query.getObject(ShowHelp.this, objectId, new GetListener<HelpContext>() {
+//                    @Override
+//                    public void onSuccess(HelpContext helpContext) {
+//                        showhelpContext = helpContext;
+//                        isComplete = helpContext.getIscomplete();
+//                        if (isComplete != "0") {
+//                            btn_iHelp.setVisibility(View.GONE);
+////                            btn_notHelp.setGravity(Gravity.CENTER);
+////                            btn_notHelp.setText("返回");
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(int i, String s) {
+//                        Log.e("Record", "No this record.");
+//
+//                    }
+//                }
+//        );
 
-                    @Override
-                    public void onFailure(int i, String s) {
-                        Log.e("Record", "No this record.");
-
-                    }
-                }
-        );
+//        if (isComplete != "0"){
+//            btn_iHelp.setVisibility(View.GONE);
+//        }
 
 
         ////////////////////////////////////////////
@@ -171,7 +186,7 @@ public class ShowHelp extends AppCompatActivity {
 
                         Toast.makeText(ShowHelp.this, "你不能自己解决自己的求助，谢谢。", Toast.LENGTH_SHORT).show();
                     } else {
-                        if (isComplete != 0) {
+                        if (!isComplete.equals("0")) {
                             AlertDialog.Builder dialog = new AlertDialog.Builder(ShowHelp.this);
                             dialog.setTitle("哎呀！");
                             dialog.setMessage("被人抢先一步了！");
@@ -189,15 +204,15 @@ public class ShowHelp extends AppCompatActivity {
                                 }
                             });
                             dialog.show();
-                        } else if (isComplete == 0) {
+                        } else if (isComplete.equals("0")) {
                             BmobQuery<HelpContext> queryProgress = new BmobQuery<HelpContext>();
                             queryProgress.getObject(ShowHelp.this, objectId, new GetListener<HelpContext>() {
                                 @Override
                                 public void onSuccess(HelpContext helpContext) {
-                                    if (helpContext.getIscomplete() == 0) {
-                                        showhelpContext.setIscomplete(1);
-                                        showhelpContext.setHelperId(helperId);
-                                        showhelpContext.update(ShowHelp.this, objectId, new UpdateListener() {
+                                    if (helpContext.getIscomplete().equals("0")) {
+                                        helpContext.setIscomplete("1");
+                                        helpContext.setHelperId(helperId);
+                                        helpContext.update(ShowHelp.this, objectId, new UpdateListener() {
                                             @Override
                                             public void onSuccess() {
                                                 Log.e("Change", "OK!");
@@ -384,69 +399,6 @@ public class ShowHelp extends AppCompatActivity {
                     }
                 });
 
-
-//
-//                userAct = userAct + 1;
-//                //TODO 更新用户表
-//                if (requestID != null){
-//
-//                    User updateUserAct = new User();
-//                    updateUserAct.setAct(userAct);
-//                    updateUserAct.update(ShowHelp.this, requestID, new UpdateListener() {
-//                        @Override
-//                        public void onSuccess() {
-//                            Log.e("ACT","更新个人举报信息成功。");
-//                        }
-//
-//                        @Override
-//                        public void onFailure(int i, String s) {
-//                            Log.e("ACT","更新个人举报信息失败。");
-//                        }
-//                    });
-//
-//                }
-//
-//                contextAct = contextAct + 1;
-//                //TODO 更新求助信息表
-//
-//                if (objectId != null){
-//
-//                    HelpContext updateHelpAct = new HelpContext();
-//                    updateHelpAct.setAct(contextAct);
-//                    updateHelpAct.update(ShowHelp.this, objectId, new UpdateListener() {
-//                        @Override
-//                        public void onSuccess() {
-//                            Log.e("ACT","更新求助举报信息成功。");
-//                        }
-//
-//                        @Override
-//                        public void onFailure(int i, String s) {
-//                            Log.e("ACT","更新求助举报信息成功。");
-//                        }
-//                    });
-//                }
-//
-//                //TODO 插入举报表
-//
-//
-//                if (nowUser != null) {
-//
-//                    Act act = new Act();
-//                    act.setContextId(objectId);
-//                    act.setRequestId(requestID);
-//                    act.setActerId(nowUser.getObjectId());
-//                    act.save(ShowHelp.this, new SaveListener() {
-//                        @Override
-//                        public void onSuccess() {
-//                            Log.e("ACT","Save ACT SUCCESS");
-//                        }
-//
-//                        @Override
-//                        public void onFailure(int i, String s) {
-//                            Log.e("ACT","Save ACT Fail");
-//                        }
-//                    });
-//                }
             }
         });
 
