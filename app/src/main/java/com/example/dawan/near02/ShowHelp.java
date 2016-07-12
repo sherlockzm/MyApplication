@@ -36,6 +36,7 @@ public class ShowHelp extends AppCompatActivity {
     private TextView tv_detail;
     private TextView tv_limitTime;
     private ImageView detailImage;
+    private TextView hpStation;
 
     String sUrl = "";
 
@@ -75,6 +76,8 @@ public class ShowHelp extends AppCompatActivity {
         tv_limitTime = (TextView) findViewById(R.id.tv_limitTime);
         detailImage = (ImageView) findViewById(R.id.detailImage);
         btn_act = (ImageButton) findViewById(R.id.btn_act);
+        hpStation = (TextView) findViewById(R.id.hpstation);
+
 
 
         HelpContext helpContext = (HelpContext) getIntent().getSerializableExtra("ext_helpContext");
@@ -85,11 +88,18 @@ public class ShowHelp extends AppCompatActivity {
         String lTime = helpContext.getTime().getDate().toString();
         final String objectId = helpContext.getObjectId();
         final String requestID = helpContext.getRequestid();
+        final int pStation = helpContext.getpStation();
         contextAct = helpContext.getAct();
         nowUser = BmobUser.getCurrentUser(ShowHelp.this, User.class);
 
-        nowUserID = nowUser.getObjectId();
-
+        if (nowUser != null) {
+            nowUserID = nowUser.getObjectId();
+        }
+        if (pStation == 0) {
+            hpStation.setText("未支付");
+        } else {
+            hpStation.setText("已支付");
+        }
 
         if (requestID != null) {
             BmobQuery<User> queryAct = new BmobQuery<>();

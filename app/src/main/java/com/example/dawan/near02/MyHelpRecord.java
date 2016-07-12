@@ -136,7 +136,7 @@ public class MyHelpRecord extends AppCompatActivity {
 //        BmobQuery<HelpContext> query1 = new BmobQuery<>();
         query.order("iscomplete");
         query.order("-time");
-        if (iscomplete < 5) {
+        if (iscomplete < 10) {
             query.addWhereEqualTo("iscomplete", iscomplete);
         }
         ////
@@ -219,6 +219,7 @@ public class MyHelpRecord extends AppCompatActivity {
         expandableItems.add(new ExpandableItem("已完成"));
         expandableItems.add(new ExpandableItem("取消中"));
         expandableItems.add(new ExpandableItem("已过期"));
+        expandableItems.add(new ExpandableItem("已取消"));
         sizesExpandableSelector.showExpandableItems(expandableItems);
 
         sizesExpandableSelector.setOnExpandableItemClickListener(new OnExpandableItemClickListener() {
@@ -229,7 +230,7 @@ public class MyHelpRecord extends AppCompatActivity {
                         i = 5;
                         ExpandableItem zeroItem = sizesExpandableSelector.getExpandableItem(0);
                         swipeFirstItem(0, zeroItem);
-                        showList(MyHelpRecord.this, "requestid", curUserId, 1, 5);//全部列出来
+                        showList(MyHelpRecord.this, "requestid", curUserId, 1, 10);//全部列出来
                         break;
                     case 1:
                         i = 0;
@@ -268,6 +269,12 @@ public class MyHelpRecord extends AppCompatActivity {
                         swipeFirstItem(6, seventh);
                         showList(MyHelpRecord.this, "requestid", curUserId, 1, 5);//已过期
                         break;
+                    case 9:
+                        i = 6;
+                        ExpandableItem ninth = sizesExpandableSelector.getExpandableItem(7);
+                        swipeFirstItem(7, ninth);
+                        showList(MyHelpRecord.this, "requestid", curUserId, 1, 9);//已取消
+                        break;
                     default:
                 }
 //                sizesExpandableSelector.collapse();
@@ -293,6 +300,7 @@ public class MyHelpRecord extends AppCompatActivity {
         expandableItems.add(new ExpandableItem("已完成"));
         expandableItems.add(new ExpandableItem("取消中"));
         expandableItems.add(new ExpandableItem("已过期"));
+        expandableItems.add(new ExpandableItem("已取消"));
         helpExpandableSelector.showExpandableItems(expandableItems);
 
         helpExpandableSelector.setOnExpandableItemClickListener(new OnExpandableItemClickListener() {
@@ -305,7 +313,7 @@ public class MyHelpRecord extends AppCompatActivity {
                         Log.e("Item", "0");
                         ExpandableItem zeroItem = helpExpandableSelector.getExpandableItem(0);
                         swipeFirstItem(0, zeroItem);
-                        showList(MyHelpRecord.this, "helperId", curUserId, 0, 5);//全部列出来
+                        showList(MyHelpRecord.this, "helperId", curUserId, 0, 10);//全部列出来
                         break;
                     case 1:
                         i = 0;
@@ -337,6 +345,12 @@ public class MyHelpRecord extends AppCompatActivity {
                         ExpandableItem sixth = helpExpandableSelector.getExpandableItem(5);
                         swipeFirstItem(5, sixth);
                         showList(MyHelpRecord.this, "helperId", curUserId, 0, 4);//已过期
+                        break;
+                    case 9:
+                        i = 6;
+                        ExpandableItem ninth = sizesExpandableSelector.getExpandableItem(7);
+                        swipeFirstItem(7, ninth);
+                        showList(MyHelpRecord.this, "helperId", curUserId, 0, 9);//已取消
                         break;
 
                     default:

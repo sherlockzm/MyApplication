@@ -22,23 +22,25 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.RequestSMSCodeListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by dawan on 2016/2/24.
  */
 public class Function {
 
+
     public Function() {
     }
 
-    public void pushForHelp(NeedHelp context, BmobGeoPoint bmobGeoPoint, Float myArea){
+    public void pushForHelp(Context context, BmobGeoPoint bmobGeoPoint, Float myArea) {
         String notificationContext = "附近有人请求帮助!如方便，请伸出援助之手。";
         BmobPushManager bmobPushManager = new BmobPushManager(context);
         BmobQuery<BmobInstallation> bmobQuery = new BmobQuery<BmobInstallation>();
-//定向推送10公里内用户，范围未来应可修改，但不应超过50公里
-        bmobQuery.addWhereWithinRadians("myPoint", bmobGeoPoint, myArea);//10表示10公里,现在使用getArea让用户设置
-        Log.e("Query", bmobQuery + "");
+        bmobQuery.addWhereWithinRadians("myPoint", bmobGeoPoint, myArea);
+        Log.e("Query", bmobGeoPoint + "");
         bmobPushManager.setQuery(bmobQuery);
         bmobPushManager.pushMessage(notificationContext);
     }
@@ -52,6 +54,72 @@ public class Function {
         bmobPush.setQuery(query);
         bmobPush.pushMessage(message);
     }
+
+
+    public void changeOverage(final Context context, final HelpContext helpContext) {
+
+        helpContext.setIscomplete(5);
+        String helpContextId = helpContext.getObjectId();
+        helpContext.update(context, helpContextId, new UpdateListener() {
+            @Override
+            public void onSuccess() {
+                Log.e("Update", "已取消求助");
+                //TODO  更改账户余额
+                if (helpContext.getpStation() == 1) {
+                    final String requestId = helpContext.getRequestid();
+                    final Double pay = helpContext.getPay();
+                    BmobQuery<User> getOverage = new BmobQuery<User>();
+                    getOverage.getObject(context, requestId, new GetListener<User>() {
+                        @Override
+                        public void onSuccess(User user) {
+                            Double overage = user.getOverage();
+                            overage = overage + pay;
+                            User user2 = new User();
+                            user2.setOverage(overage);
+                            user2.update(context, requestId, new UpdateListener() {
+                                @Override
+                                public void onSuccess() {
+                                    helpContext.setIscomplete(9);
+                                    helpContext.update(context, new UpdateListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                            Log.e("Update", "求助状态已更新");
+                                        }
+
+                                        @Override
+                                        public void onFailure(int i, String s) {
+                                            Log.e("Update", "求助状态更新失败");
+                                        }
+                                    });
+                                    Log.e("Update Overage", "已退还付款");
+                                    new Function().showMessage(context, "删除成功，付款已退还。");
+                                }
+
+                                @Override
+                                public void onFailure(int i, String s) {
+                                    Log.e("Update Overage", "退款失败");
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(int i, String s) {
+                            Log.e("Update", "查询用户失败，请先登录");
+                            new Function().showMessage(context, "获取当前用户信息失败，请先登录。");
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+
+            }
+        });
+
+    }
+
 
     public void showMessage(Context context,String s){
 

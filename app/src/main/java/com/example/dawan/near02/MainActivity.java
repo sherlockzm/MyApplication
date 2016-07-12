@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,8 +17,6 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.yalantis.phoenix.PullToRefreshView;
 
 import java.text.ParseException;
@@ -30,6 +26,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import cn.beecloud.BCPay;
+import cn.beecloud.BeeCloud;
 import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobInstallation;
@@ -40,7 +38,6 @@ import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.UpdateListener;
-import io.nlopez.smartlocation.SmartLocation;
 
 public class MainActivity extends AppCompatActivity implements BDLocationListener {
     //////////百度
@@ -88,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
 
         if (myPoint == null) {///////////如果定位信息为空，则检查网络及GPS，如果都打开则定位并加载列表，如果定位信息不为空，则加载列表
 //            if (checkNetworkInfo(MainActivity.this) == 3) {
-                locationMe(MainActivity.this);
+            locationMe(MainActivity.this);
 //            }
         } else {
             loadList();
@@ -120,9 +117,9 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
 
                 int i = 0;
                 i = countUserAct();
-                if (i >=10){
-                    new Function().showMessage(MainActivity.this,"你已被禁止发言。");
-                }else {
+                if (i >= 10) {
+                    new Function().showMessage(MainActivity.this, "你已被禁止发言。");
+                } else {
                     if (new CheckInput().checkLogin(MainActivity.this, User.class)) {
                         Intent intent = new Intent(MainActivity.this, NeedHelp.class);
                         intent.putExtra("lon", lon);
@@ -137,12 +134,12 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
 
     }
 
-    private void initLocation(){
+    private void initLocation() {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
         );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
-        int span=30000;
+        int span = 30000;
         option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);//可选，默认false,设置是否使用gps
@@ -203,14 +200,11 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
         // 启动推送服务
         BmobPush.startWork(this);
 //        BmobPush.startWork(this, "0ada059e29146de6527ae4025358df83");
-        //支付相关
 
-        final IWXAPI msgApi = WXAPIFactory.createWXAPI(MainActivity.this, null);
 
-// 将该app注册到微信
-
-        msgApi.registerApp("wxd1579d8c233b79c1");
-
+//        BeeCloud.setSandbox(true);
+        BeeCloud.setAppIdAndSecret("d4cf5e35-36ad-494a-815f-809c523fbc63",
+                "003a433e-d93f-43f6-aca7-d363dddf32b5");
 
 //        btn_userManager = (ImageButton) findViewById(R.id.btn_openReg);
 
@@ -259,7 +253,12 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
 
                                     //举报次数少于3次
                                     BmobQuery<HelpContext> getHelps5 = new BmobQuery<HelpContext>();
-                                    getHelps4.addWhereLessThan("act", 3);//有效时间大于当前时间
+                                    getHelps5.addWhereLessThan("act", 3);
+
+                                    //已经支付成功
+                                    BmobQuery<HelpContext> getHelps6 = new BmobQuery<HelpContext>();
+                                    getHelps6.addWhereEqualTo("pStation", 1);
+
 
                                     //执行双条件查询
                                     List<BmobQuery<HelpContext>> andQuerys = new ArrayList<BmobQuery<HelpContext>>();
@@ -268,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
                                     andQuerys.add(getHelps3);
                                     andQuerys.add(getHelps4);
                                     andQuerys.add(getHelps5);
+                                    andQuerys.add(getHelps6);
                                     BmobQuery<HelpContext> queryAnd = new BmobQuery<HelpContext>();
                                     queryAnd.order("time");
                                     queryAnd.and(andQuerys);
@@ -297,7 +297,6 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
                                                         Intent intent = new Intent(MainActivity.this, ShowHelp.class);
                                                         intent.addCategory("SHOWHELP");
                                                         //传递数据给showhelp
-
 
                                                         HelpContext gethelpContext = helpList.get(position);
 
@@ -368,77 +367,77 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
         }
     }
 
-    public int checkNetworkInfo(Context context) {
-
-        Integer state = 0;
-
-        ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo.State mobile = conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
-        Log.e("MyConnect", mobile.toString());
-//        if(mobile== NetworkInfo.State. DISCONNECTED){
+//    public int checkNetworkInfo(Context context) {
 //
-//            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));//进入无线网络配置界面
-//        }
-        NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-        Log.e("MyConnect", wifi.toString());
-
-        if (mobile == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTED) {
-            state = state + 2;////////////网络正常为 2
-        } else {
-            String s = "请打开网络连接。";
-            new Function().showMessage(context, s);
-        }
-
-        if (SmartLocation.with(context).location().state().isGpsAvailable()) {
-            state = state + 1;     /////定位成功为 1
-        } else {
-            String sgps = "请打开GPS";
-            new Function().showMessage(context, sgps);
-        }
-        switch (state) {
-            case 0: {
-                return 0;
-
-            }
-            case 1: {
-                return 1;
-
-            }
-            case 2: {
-                return 2;
-            }
-            case 3: {
-                return 3;
-
-            }
-            default: {
-                return 4;
-
-            }
-
-        }
-
-    }
-
-    protected boolean checkNetworkInfo() {
-        ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo.State mobile = conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
-        Log.e("MyConnect", mobile.toString());
-//        if(mobile== NetworkInfo.State. DISCONNECTED){
+//        Integer state = 0;
 //
-//            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));//进入无线网络配置界面
+//        ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo.State mobile = conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
+//        Log.e("MyConnect", mobile.toString());
+////        if(mobile== NetworkInfo.State. DISCONNECTED){
+////
+////            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));//进入无线网络配置界面
+////        }
+//        NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+//        Log.e("MyConnect", wifi.toString());
+//
+//        if (mobile == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTED) {
+//            state = state + 2;////////////网络正常为 2
+//        } else {
+//            String s = "请打开网络连接。";
+//            new Function().showMessage(context, s);
 //        }
-        NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-        Log.e("MyConnect", wifi.toString());
-
-        if (mobile == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTED) {
-            return true;
-        } else {
-            String str = "请打开网络连接。";
-            new Function().showMessage(MainActivity.this, str);
-            return false;
-        }
-    }
+//
+//        if (SmartLocation.with(context).location().state().isGpsAvailable()) {
+//            state = state + 1;     /////定位成功为 1
+//        } else {
+//            String sgps = "请打开GPS";
+//            new Function().showMessage(context, sgps);
+//        }
+//        switch (state) {
+//            case 0: {
+//                return 0;
+//
+//            }
+//            case 1: {
+//                return 1;
+//
+//            }
+//            case 2: {
+//                return 2;
+//            }
+//            case 3: {
+//                return 3;
+//
+//            }
+//            default: {
+//                return 4;
+//
+//            }
+//
+//        }
+//
+//    }
+//
+//    protected boolean checkNetworkInfo() {
+//        ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo.State mobile = conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
+//        Log.e("MyConnect", mobile.toString());
+////        if(mobile== NetworkInfo.State. DISCONNECTED){
+////
+////            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));//进入无线网络配置界面
+////        }
+//        NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+//        Log.e("MyConnect", wifi.toString());
+//
+//        if (mobile == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTED) {
+//            return true;
+//        } else {
+//            String str = "请打开网络连接。";
+//            new Function().showMessage(MainActivity.this, str);
+//            return false;
+//        }
+//    }
 
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
@@ -477,21 +476,31 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
 
-        lat = bdLocation.getLatitude();
-        lon = bdLocation.getLongitude();
 
-        address = bdLocation.getAddrStr();
+        int ldresult = bdLocation.getLocType();
 
-        myPoint = new BmobGeoPoint(lon,lat);
+//        Log.e("Location",address);
+        Log.e("Location", "" + ldresult);
+        Log.e("Location", "" + lon);
+        Log.e("Location", "" + lat);
 
-        Log.e("Location",lat + "Lat");
-        Log.e("Location",lon + "Lon");
+        if (ldresult == 61 || ldresult == 161 || ldresult == 66) {
+
+            lat = bdLocation.getLatitude();
+            lon = bdLocation.getLongitude();
+
+            address = bdLocation.getAddrStr();
+
+            myPoint = new BmobGeoPoint(lon, lat);
+
+            Log.e("Location", lat + "Lat");
+            Log.e("Location", lon + "Lon");
+        } else myPoint = null;
 
     }
 
 
-
-    private int countUserAct(){
+    private int countUserAct() {
 
         final String curId = (String) BmobUser.getObjectByKey(MainActivity.this, "objectId");
 
@@ -511,6 +520,17 @@ public class MainActivity extends AppCompatActivity implements BDLocationListene
         });
 
         return userAct;
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //清理当前的activity引用
+        BCPay.clear();
+        //使用微信的，在initWechatPay的activity结束时detach
+        BCPay.detachWechat();
+
 
     }
 

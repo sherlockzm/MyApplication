@@ -17,6 +17,10 @@ import android.view.ViewGroup.LayoutParams;
 
 import java.util.List;
 
+import cn.beecloud.BCPay;
+import cn.beecloud.async.BCCallback;
+import cn.beecloud.async.BCResult;
+import cn.beecloud.entity.BCPayResult;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.DeleteListener;
@@ -53,6 +57,8 @@ public class ShowRecord extends AppCompatActivity {
 
     private ImageButton ibtn_tel;
 
+    private ImageButton ibtn_rePay;
+
     private RatingBar ratingBarOther;
     private TextView tv_scoreOther;
     private TextView tv_scoreOtherShow;
@@ -73,11 +79,13 @@ public class ShowRecord extends AppCompatActivity {
     String pUserTel = "";
     PhotoViewAttacher mAttacher;
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.showrecord);
 
         init();
+
 //TODO 删除记录要退款
         ////////////////////////////
 
@@ -97,7 +105,9 @@ public class ShowRecord extends AppCompatActivity {
         ///////////////////////////按钮事件
         final String helpContextId = helpContext.getObjectId();
         final String helperId = helpContext.getHelperId();
+        final int pStation = helpContext.getpStation();
         progressNow = helpContext.getIscomplete();
+
 
         ///////////////////////////判断是否已经完成，添加评论。
         //获取该对象的状态
@@ -137,8 +147,26 @@ public class ShowRecord extends AppCompatActivity {
             case 4:
                 tv_score_station.setText("已过期");
                 break;
+            case 5:
+                tv_score_station.setText("已取消");
             default:
                 break;
+        }
+
+        if (pStation == 0) {
+            ibtn_rePay.setVisibility(View.VISIBLE);
+            tv_score_station.setText("待支付");
+
+            ibtn_rePay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ShowRecord.this, SurePay.class);
+                    intent.putExtra("ORDER", helpContext);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            ibtn_rePay.setVisibility(View.GONE);
         }
 
 
@@ -315,25 +343,73 @@ public class ShowRecord extends AppCompatActivity {
                     BmobQuery<HelpContext> query = new BmobQuery<HelpContext>();
                     query.getObject(ShowRecord.this, helpContextId, new GetListener<HelpContext>() {
                         @Override
-                        public void onSuccess(HelpContext helpContext) {
+                        public void onSuccess(final HelpContext helpContext) {
                             int progress = helpContext.getIscomplete();
                             switch (progress) {
                                 case 0: {
-                                    helpContext.setObjectId(helpContextId);
-                                    helpContext.delete(ShowRecord.this, new DeleteListener() {
-                                        @Override
-                                        public void onSuccess() {
-                                            Log.e("Change", "Delete Success!");
-                                            Toast.makeText(ShowRecord.this, "记录已删除.", Toast.LENGTH_LONG).show();
-                                            finish();
-                                        }
-
-                                        @Override
-                                        public void onFailure(int i, String s) {
-                                            Log.e("Change", "Delete Fail!");
-
-                                        }
-                                    });
+                                    new Function().changeOverage(ShowRecord.this, helpContext);
+                                    finish();
+//                                    helpContext.setObjectId(helpContextId);
+//                                    helpContext.setIscomplete(5);
+//                                    helpContext.update(ShowRecord.this, helpContextId, new UpdateListener() {
+//                                        @Override
+//                                        public void onSuccess() {
+//                                            Log.e("Update","已取消求助");
+//                                            //TODO  更改账户余额
+//                                            if (helpContext.getpStation()== 1) {
+//                                                final String requestId = helpContext.getRequestid();
+//                                                final Double pay = helpContext.getPay();
+//                                                BmobQuery<User> getOverage = new BmobQuery<User>();
+//                                                getOverage.getObject(ShowRecord.this, requestId, new GetListener<User>() {
+//                                                    @Override
+//                                                    public void onSuccess(User user) {
+//                                                        Double overage = user.getOverage();
+//                                                        overage = overage + pay;
+//                                                        User user2 = new User();
+//                                                        user2.setOverage(overage);
+//                                                        user2.update(ShowRecord.this, requestId, new UpdateListener() {
+//                                                            @Override
+//                                                            public void onSuccess() {
+//                                                                Log.e("Update Overage","已退还付款");
+//                                                                new Function().showMessage(ShowRecord.this,"删除成功，付款已退还。");
+//                                                            }
+//
+//                                                            @Override
+//                                                            public void onFailure(int i, String s) {
+//                                                                Log.e("Update Overage","退款失败");
+//
+//                                                            }
+//                                                        });
+//                                                    }
+//
+//                                                    @Override
+//                                                    public void onFailure(int i, String s) {
+//                                                        Log.e("Update","查询用户失败，请先登录");
+//                                                        new Function().showMessage(ShowRecord.this,"获取当前用户信息失败，请先登录。");
+//                                                    }
+//                                                });
+//                                            }
+//                                        }
+//
+//                                        @Override
+//                                        public void onFailure(int i, String s) {
+//
+//                                        }
+//                                    });
+//                                    helpContext.delete(ShowRecord.this, new DeleteListener() {
+//                                        @Override
+//                                        public void onSuccess() {
+//                                            Log.e("Change", "Delete Success!");
+//                                            Toast.makeText(ShowRecord.this, "记录已删除.", Toast.LENGTH_LONG).show();
+//                                            finish();
+//                                        }
+//
+//                                        @Override
+//                                        public void onFailure(int i, String s) {
+//                                            Log.e("Change", "Delete Fail!");
+//
+//                                        }
+//                                    });
                                     break;
                                 }
                                 case 1: {
@@ -396,26 +472,38 @@ public class ShowRecord extends AppCompatActivity {
                     BmobQuery<HelpContext> delQuery = new BmobQuery<HelpContext>();
                     delQuery.getObject(ShowRecord.this, helpContextId, new GetListener<HelpContext>() {
                         @Override
-                        public void onSuccess(HelpContext helpContext) {
+                        public void onSuccess(final HelpContext helpContext) {
                             if (helpContext.getIscomplete() == 3) {
-                                helpContext.delete(ShowRecord.this, new DeleteListener() {
+                                helpContext.setIscomplete(9);
+                                helpContext.update(ShowRecord.this, helpContextId, new UpdateListener() {
                                     @Override
                                     public void onSuccess() {
-                                        Log.e("Delete", "Delete Success");
-                                        Toast.makeText(ShowRecord.this, "该求助已成功删除.", Toast.LENGTH_SHORT).show();
-                                        finish();
+                                        new Function().changeOverage(ShowRecord.this, helpContext);
                                     }
 
                                     @Override
                                     public void onFailure(int i, String s) {
-                                        Log.e("Delete", "Delete Fail.");
-                                        Toast.makeText(ShowRecord.this, "删除失败。", Toast.LENGTH_SHORT).show();
-
-
+                                        new Function().showMessage(ShowRecord.this, "状态更新失败，请检查网络重试。");
                                     }
                                 });
+//                                helpContext.delete(ShowRecord.this, new DeleteListener() {
+//                                    @Override
+//                                    public void onSuccess() {
+//                                        Log.e("Delete", "Delete Success");
+//                                        Toast.makeText(ShowRecord.this, "该求助已成功删除.", Toast.LENGTH_SHORT).show();
+//                                        finish();
+//                                    }
+//
+//                                    @Override
+//                                    public void onFailure(int i, String s) {
+//                                        Log.e("Delete", "Delete Fail.");
+//                                        Toast.makeText(ShowRecord.this, "删除失败。", Toast.LENGTH_SHORT).show();
+//
+//
+//                                    }
+//                                });
                             } else {
-                                Toast.makeText(ShowRecord.this, "如当初一时手快，请点击左侧的申请删除按钮，不能单方面删除喔。", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(ShowRecord.this, "如当初一时手快，请点击左侧的申请删除按钮，不能单方面删除喔。", Toast.LENGTH_SHORT).show();
 
                             }
                         }
@@ -466,7 +554,35 @@ public class ShowRecord extends AppCompatActivity {
                                         btn_getScore.setVisibility(View.VISIBLE);
                                         ratingBar.setVisibility(View.VISIBLE);
                                         new Function().setButton(new ImageButton[]{btn_delete}, btn_complete, false);
-                                        //执行余额变动
+                                        //TODO 执行余额变动
+
+                                        BmobQuery<User> getOverage = new BmobQuery<User>();
+                                        getOverage.getObject(ShowRecord.this, helperId, new GetListener<User>() {
+                                            @Override
+                                            public void onSuccess(User user) {
+                                                Double overage = user.getOverage();
+                                                overage = overage + helpContext.getPay();
+                                                User cUser = new User();
+                                                cUser.setOverage(overage);
+                                                cUser.update(ShowRecord.this, helperId, new UpdateListener() {
+                                                    @Override
+                                                    public void onSuccess() {
+                                                        Log.e("Update", "give money to helper Success!");
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(int i, String s) {
+                                                        Log.e("Update", "give money to helper Fail.");
+
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onFailure(int i, String s) {
+
+                                            }
+                                        });
                                     }
 
                                     @Override
@@ -622,6 +738,8 @@ public class ShowRecord extends AppCompatActivity {
         btn_getScore = (ImageButton) findViewById(R.id.ibtn_getScore);
 
         tv_recordName = (TextView) findViewById(R.id.tv_record_helperName);
+
+        ibtn_rePay = (ImageButton) findViewById(R.id.wxpay);
 
     }
 

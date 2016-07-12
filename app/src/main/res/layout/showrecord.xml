@@ -183,6 +183,13 @@
             android:layout_marginLeft="20dp"
             android:textStyle="bold"
             android:background="@drawable/completebutton" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/wxpay"
+            android:background="@drawable/pay"
+            android:layout_marginLeft="20dp" />
         <!--<Button android:id="@+id/btn_modify" android:text="@string/showRecord_btn_modify" android:layout_width="wrap_content" android:layout_height="wrap_content" />-->
     </LinearLayout>
 
