@@ -27,54 +27,69 @@ public class Function {
     }
 
     public void pushForHelp(Context context, BmobGeoPoint bmobGeoPoint, Float myArea) {
-        String notificationContext = "附近有人请求帮助!如方便，请伸出援助之手。";
-        BmobPushManager bmobPushManager = new BmobPushManager(context);
-        BmobQuery<BmobInstallation> bmobQuery = new BmobQuery<BmobInstallation>();
-        bmobQuery.addWhereWithinRadians("myPoint", bmobGeoPoint, myArea);
-        Log.e("Query", bmobGeoPoint + "");
-        bmobPushManager.setQuery(bmobQuery);
-        bmobPushManager.pushMessage(notificationContext);
+        if (context != null && bmobGeoPoint != null && myArea != null) {
+            String notificationContext = "附近有人请求帮助!如方便，请伸出援助之手。";
+            BmobPushManager<BmobInstallation> bmobPushManager = new BmobPushManager<BmobInstallation>(context);
+            BmobQuery<BmobInstallation> bmobQuery = new BmobQuery<BmobInstallation>();
+
+            bmobQuery.addWhereWithinRadians("myPoint", bmobGeoPoint, myArea);
+
+            Log.e("Query", bmobGeoPoint + "");
+
+            bmobPushManager.setQuery(bmobQuery);
+            bmobPushManager.pushMessage(notificationContext);
+
+        }
     }
 
-    public void pushMessage(Context context, String id,String message) {
-        BmobPushManager bmobPush = new BmobPushManager(context);
-        BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
-        //推送给求助者
-        query.addWhereEqualTo("userId", id);
+    public void pushMessage(Context context, String id, String message) {
+        if (context != null && id != null && message != null) {
+            BmobPushManager<BmobInstallation> bmobPush = new BmobPushManager<BmobInstallation>(context);
+            BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+            //推送给求助者
+            query.addWhereEqualTo("userId", id);
 
-        bmobPush.setQuery(query);
-        bmobPush.pushMessage(message);
+            bmobPush.setQuery(query);
+            bmobPush.pushMessage(message);
+        }
     }
 
 
-    public void showMessage(Context context,String s){
+    public void showMessage(Context context, String s) {
 
-        Toast.makeText(context,s,Toast.LENGTH_SHORT).show();
+        if (s != null) {
+            Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "感谢使用。", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public Double trimNull(String d){
+    public Double trimNull(String d) {
 
-        String[] lTime = d.split("\\.");
+        if (d != null) {
+            String[] lTime = d.split("\\.");
 
-        if (lTime[0].equals(null)||lTime[0].equals("0")||lTime[0].equals("")){
-            lTime[0] = "0";
+            if (lTime[0].equals(null) || lTime[0].equals("0") || lTime[0].equals("")) {
+                lTime[0] = "0";
 
-            String value = lTime[0].concat(".").concat(lTime[1]);
-            Double dd = Double.valueOf(value);
+                String value = lTime[0].concat(".").concat(lTime[1]);
+                Double dd = Double.valueOf(value);
 
-            return dd;
-        }else {
+                return dd;
+            } else {
 
-            return Double.valueOf(d);
+                return Double.valueOf(d);
+            }
+        } else {
+            return null;
         }
 
 
-
     }
 
 
-    protected boolean checkNetworkInfo(Context context){
-        ConnectivityManager conMan = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    protected boolean checkNetworkInfo(Context context) {
+        ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo.State mobile = conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
         Log.e("MyConnect", mobile.toString());
 //        if(mobile== NetworkInfo.State. DISCONNECTED){
@@ -93,7 +108,7 @@ public class Function {
         }
     }
 
-    public void verMobile(final Context context,String s){
+    public void verMobile(final Context context, String s) {
         if (s == null) {
             Toast.makeText(context, "请先登陆。", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(context, Login.class);
@@ -113,40 +128,39 @@ public class Function {
         }
     }
 
-    public void checkCacaheScore(Context context,BmobQuery<Score> query){
+    public void checkCacaheScore(Context context, BmobQuery<Score> query) {
 
-        boolean isCache = query.hasCachedResult(context,Score.class);
-        if(isCache){
+        boolean isCache = query.hasCachedResult(context, Score.class);
+        if (isCache) {
             query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);    // 如果有缓存的话，则设置策略为CACHE_ELSE_NETWORK
-        }else{
+        } else {
             query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);    // 如果没有缓存的话，则设置策略为NETWORK_ELSE_CACHE
         }
     }
 
     /////////////////////////设置按钮是否可用//////////////////////////////
-    public void setButton(ImageButton btn1,boolean boo){
-        if (boo == false){
+    public void setButton(ImageButton btn1, boolean boo) {
+        if (boo == false) {
             btn1.setVisibility(View.GONE);
-        }else
+        } else
             btn1.setVisibility(View.VISIBLE);
     }
 
 
-    public void setButton(ImageButton[] imgbutton,ImageButton button, boolean boo){
-        if (boo == false){
-            for (ImageButton btn:imgbutton){
+    public void setButton(ImageButton[] imgbutton, ImageButton button, boolean boo) {
+        if (boo == false) {
+            for (ImageButton btn : imgbutton) {
                 btn.setVisibility(View.GONE);
 
             }
             button.setVisibility(View.GONE);
-        }else {
-            for (ImageButton btn:imgbutton){
+        } else {
+            for (ImageButton btn : imgbutton) {
                 btn.setVisibility(View.VISIBLE);
             }
             button.setVisibility(View.VISIBLE);
         }
     }
-
 
 
 }

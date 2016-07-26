@@ -14,6 +14,11 @@ android {
 
 
     defaultConfig {
+
+        //生成APK出错添加
+        multiDexEnabled true
+
+
         applicationId "com.example.dawan.near02"
         minSdkVersion 16
         targetSdkVersion 23
@@ -27,6 +32,10 @@ android {
         }
     }
 
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked"
+    }
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
@@ -65,10 +74,10 @@ dependencies {
     compile 'cn.bmob.android:bmob-push:0.8'
     //图片
     compile 'com.github.chrisbanes:PhotoView:1.2.6'
-    compile files('libs/BmobSDK_V3.4.6_0415.jar')
-    compile files('libs/Bmob_Push_V0.8beta_20160420.jar')
-    compile files('libs/BaiduLBS_Android.jar')
-    compile files('libs/baidumapapi_v3_5_0.jar')
+//    compile files('libs/BmobSDK_V3.4.6_0415.jar')
+//    compile files('libs/Bmob_Push_V0.8beta_20160420.jar')
+//    compile files('libs/BaiduLBS_Android.jar')
+//    compile files('libs/baidumapapi_v3_5_0.jar')
     compile files('libs/libammsdk.jar')
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile files('libs/beecloud-2.1.4.jar')

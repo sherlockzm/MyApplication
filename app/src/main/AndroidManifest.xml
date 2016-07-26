@@ -14,28 +14,15 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
     <!-- 消息推送权限 -->
-    <uses-permission android:name="android.permission.READ_LOGS" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
 
     <!-- 支付相关权限 -->
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-//拨打电话权限
-    <uses-permission android:name="android.permission.CALL_PHONE" />
+    //拨打电话权限
     ///////高德定位
-
     <!-- 这个权限用于进行网络定位-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
     <!-- 这个权限用于访问GPS定位-->
@@ -51,13 +38,9 @@
     <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
     <!-- 访问网络，网络定位需要上网-->
-    <uses-permission android:name="android.permission.INTERNET" />
     <!-- SD卡读取权限，用户写入离线定位数据-->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></uses-permission>
 
-
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
@@ -181,7 +164,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="key" />
+            android:value="roXNEdk3PjpsjZagfaxDkc9CNn1AoZYC" />
 
     </application>
 
